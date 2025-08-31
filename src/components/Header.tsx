@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Zap, Database, Settings, Crown, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import AuthModal from './auth/AuthModal';
 import SubscriptionTiers from './subscription/SubscriptionTiers';
 
 interface HeaderProps {
@@ -12,15 +12,15 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onRefresh, onManualScrape, isLoading, lastUpdated }) => {
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignIn = () => {
-    setShowAuthModal(true);
+    navigate('/signin');
   };
 
   const handleUpgrade = () => {
@@ -198,13 +198,6 @@ const Header: React.FC<HeaderProps> = ({ onRefresh, onManualScrape, isLoading, l
       </header>
 
       {/* Modals */}
-      {showAuthModal && (
-        <AuthModal 
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-        />
-      )}
-
       {showSubscriptionModal && (
         <SubscriptionTiers
           onClose={() => setShowSubscriptionModal(false)}
