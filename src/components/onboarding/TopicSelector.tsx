@@ -1,0 +1,266 @@
+import React, { useState, useEffect } from 'react';
+import { Check, Brain, Cpu, Factory, Shield, Wrench } from 'lucide-react';
+import type { AITopic, ContentType } from '../../types/auth';
+import { useAuth } from '../../contexts/AuthContext';
+import { authService } from '../../services/authService';
+import './onboarding.css';
+
+const CATEGORY_ICONS = {
+  technology: Cpu,
+  research: Brain,
+  industry: Factory,
+  ethics: Shield,
+  tools: Wrench
+};
+
+const CONTENT_TYPES: { id: ContentType; name: string; description: string }[] = [
+  { id: 'articles', name: 'Articles', description: 'In-depth analysis and news' },
+  { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews' },
+  { id: 'videos', name: 'Videos', description: 'Visual content and tutorials' },
+  { id: 'events', name: 'Events', description: 'Conferences and webinars' },
+  { id: 'learning', name: 'Learning', description: 'Courses and educational resources' }
+];
+
+interface TopicSelectorProps {
+  onComplete: () => void;
+  onSkip?: () => void;
+}
+
+const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete, onSkip }) => {
+  const [availableTopics, setAvailableTopics] = useState<AITopic[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles']);
+  const [newsletterFrequency, setNewsletterFrequency] = useState<'daily' | 'weekly'>('weekly');
+  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const { updatePreferences, user } = useAuth();
+
+  useEffect(() => {
+    loadAvailableTopics();
+  }, []);
+
+  const loadAvailableTopics = async () => {
+    try {
+      const topics = await authService.getAvailableTopics();
+      setAvailableTopics(topics);
+      
+      // Pre-select some popular topics
+      const defaultTopics = topics.filter(t => 
+        ['Machine Learning', 'AI Tools', 'AI Ethics'].includes(t.name)
+      ).map(t => t.id);
+      setSelectedTopics(defaultTopics);
+    } catch (error) {
+      // Fallback topics if API fails
+      const fallbackTopics: AITopic[] = [
+        { id: '1', name: 'Machine Learning', description: 'Latest ML research and applications', category: 'technology', selected: true },
+        { id: '2', name: 'AI Tools', description: 'New AI tools and platforms', category: 'tools', selected: true },
+        { id: '3', name: 'AI Ethics', description: 'Ethical considerations in AI', category: 'ethics', selected: true },
+        { id: '4', name: 'Computer Vision', description: 'Image and video AI technologies', category: 'technology', selected: false },
+        { id: '5', name: 'Natural Language Processing', description: 'Language AI and chatbots', category: 'technology', selected: false },
+        { id: '6', name: 'AI in Healthcare', description: 'Medical AI applications', category: 'industry', selected: false },
+        { id: '7', name: 'AI Research', description: 'Academic research and papers', category: 'research', selected: false },
+        { id: '8', name: 'Autonomous Vehicles', description: 'Self-driving car technology', category: 'technology', selected: false }
+      ];
+      setAvailableTopics(fallbackTopics);
+      setSelectedTopics(['1', '2', '3']);
+    }
+  };
+
+  const toggleTopic = (topicId: string) => {
+    setSelectedTopics(prev => 
+      prev.includes(topicId) 
+        ? prev.filter(id => id !== topicId)
+        : [...prev, topicId]
+    );
+  };
+
+  const toggleContentType = (contentType: ContentType) => {
+    setSelectedContentTypes(prev => 
+      prev.includes(contentType)
+        ? prev.filter(type => type !== contentType)
+        : [...prev, contentType]
+    );
+  };
+
+  const handleSavePreferences = async () => {
+    if (selectedTopics.length === 0) {
+      alert('Please select at least one topic');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const updatedTopics = availableTopics.map(topic => ({
+        ...topic,
+        selected: selectedTopics.includes(topic.id)
+      }));
+
+      await updatePreferences({
+        topics: updatedTopics,
+        newsletterFrequency,
+        contentTypes: selectedContentTypes,
+        emailNotifications: true
+      });
+      
+      onComplete();
+    } catch (error) {
+      console.error('Failed to save preferences:', error);
+      alert('Failed to save preferences. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const groupedTopics = availableTopics.reduce((groups, topic) => {
+    const category = topic.category;
+    if (!groups[category]) {
+      groups[category] = [];
+    }
+    groups[category].push(topic);
+    return groups;
+  }, {} as Record<string, AITopic[]>);
+
+  if (step === 1) {
+    return (
+      <div className="topic-selector">
+        <div className="topic-selector-header">
+          <h2>Choose Your AI Interests</h2>
+          <p>Select the topics you'd like to stay updated on. You can always change these later.</p>
+          <div className="topic-progress">
+            <span>{selectedTopics.length} topics selected</span>
+          </div>
+        </div>
+
+        <div className="topic-categories">
+          {Object.entries(groupedTopics).map(([category, topics]) => {
+            const IconComponent = CATEGORY_ICONS[category as keyof typeof CATEGORY_ICONS] || Brain;
+            
+            return (
+              <div key={category} className="topic-category">
+                <div className="category-header">
+                  <IconComponent size={20} />
+                  <h3>{category.charAt(0).toUpperCase() + category.slice(1)}</h3>
+                </div>
+                
+                <div className="topic-grid">
+                  {topics.map(topic => (
+                    <button
+                      key={topic.id}
+                      onClick={() => toggleTopic(topic.id)}
+                      className={`topic-card ${selectedTopics.includes(topic.id) ? 'selected' : ''}`}
+                    >
+                      <div className="topic-card-content">
+                        <h4>{topic.name}</h4>
+                        <p>{topic.description}</p>
+                      </div>
+                      {selectedTopics.includes(topic.id) && (
+                        <div className="topic-check">
+                          <Check size={16} />
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="topic-selector-actions">
+          <button onClick={() => setStep(2)} className="btn btn-primary">
+            Next: Content Preferences
+          </button>
+          {onSkip && (
+            <button onClick={onSkip} className="btn btn-ghost">
+              Skip for now
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="topic-selector">
+      <div className="topic-selector-header">
+        <button onClick={() => setStep(1)} className="back-btn">← Back</button>
+        <h2>Content Preferences</h2>
+        <p>Customize how you want to receive your AI news digest</p>
+      </div>
+
+      <div className="preference-section">
+        <h3>Newsletter Frequency</h3>
+        <div className="frequency-options">
+          <label className={`frequency-option ${newsletterFrequency === 'daily' ? 'selected' : ''}`}>
+            <input
+              type="radio"
+              name="frequency"
+              value="daily"
+              checked={newsletterFrequency === 'daily'}
+              onChange={() => setNewsletterFrequency('daily')}
+            />
+            <div className="frequency-content">
+              <h4>Daily</h4>
+              <p>Get the latest AI news every day</p>
+              {user?.subscriptionTier === 'free' && (
+                <span className="premium-badge">Premium Only</span>
+              )}
+            </div>
+          </label>
+          
+          <label className={`frequency-option ${newsletterFrequency === 'weekly' ? 'selected' : ''}`}>
+            <input
+              type="radio"
+              name="frequency"
+              value="weekly"
+              checked={newsletterFrequency === 'weekly'}
+              onChange={() => setNewsletterFrequency('weekly')}
+            />
+            <div className="frequency-content">
+              <h4>Weekly</h4>
+              <p>Weekly digest of the most important AI news</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div className="preference-section">
+        <h3>Content Types</h3>
+        <div className="content-types-grid">
+          {CONTENT_TYPES.map(contentType => (
+            <label
+              key={contentType.id}
+              className={`content-type-option ${selectedContentTypes.includes(contentType.id) ? 'selected' : ''}`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedContentTypes.includes(contentType.id)}
+                onChange={() => toggleContentType(contentType.id)}
+              />
+              <div className="content-type-content">
+                <h4>{contentType.name}</h4>
+                <p>{contentType.description}</p>
+                {(contentType.id === 'events' || contentType.id === 'learning') && user?.subscriptionTier === 'free' && (
+                  <span className="premium-badge">Premium</span>
+                )}
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="topic-selector-actions">
+        <button
+          onClick={handleSavePreferences}
+          disabled={loading || selectedTopics.length === 0}
+          className="btn btn-primary"
+        >
+          {loading ? 'Saving...' : 'Complete Setup'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default TopicSelector;

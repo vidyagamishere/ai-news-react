@@ -1,8 +1,8 @@
 // API service for connecting to AI News Scraper backend
 import axios from 'axios';
 
-// Backend API URL - Update this to match your deployed backend
-const API_BASE_URL = 'https://ai-news-scraper.vercel.app';
+// Backend API URL - Use local development server for testing
+const API_BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:8003';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -137,6 +137,29 @@ export const apiService = {
   // Get auto-update status
   getAutoUpdateStatus: async (): Promise<any> => {
     const response = await api.get('/api/auto-update/status');
+    return response.data;
+  },
+
+  // Content filtering methods
+  getContentTypes: async (): Promise<any> => {
+    const response = await api.get('/api/content-types');
+    return response.data;
+  },
+
+  getContentByType: async (contentType: string, refresh?: boolean): Promise<any> => {
+    const params = refresh ? { refresh: true } : {};
+    const response = await api.get(`/api/content/${contentType}`, { params });
+    return response.data;
+  },
+
+  getUserPreferences: async (): Promise<any> => {
+    const response = await api.get('/api/user-preferences');
+    return response.data;
+  },
+
+  // Generic GET method for new endpoints
+  get: async (endpoint: string, params?: any): Promise<any> => {
+    const response = await api.get(endpoint, { params });
     return response.data;
   },
 };
