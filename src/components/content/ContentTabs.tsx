@@ -27,7 +27,7 @@ interface ContentTabsProps {
   userTier: string;
 }
 
-export default function ContentTabs({ userTier }: ContentTabsProps) {
+export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
@@ -85,7 +85,7 @@ export default function ContentTabs({ userTier }: ContentTabsProps) {
   // All content types are available to all users, ordered professionally
   const availableContentTypes = tabOrder
     .map(key => [key, contentTypes[key]] as [string, ContentType])
-    .filter(([key, info]) => info); // Only include defined content types
+    .filter(([, info]) => info); // Only include defined content types
 
   const currentContent = content[activeTab];
   const isLoading = loading[activeTab];

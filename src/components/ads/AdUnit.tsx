@@ -22,7 +22,7 @@ export default function AdUnit({
   className = '',
   style = {}
 }: AdUnitProps) {
-  const adRef = useRef<HTMLDivElement>(null);
+  const adRef = useRef<HTMLModElement>(null);
   const isAdLoaded = useRef(false);
 
   useEffect(() => {

@@ -5,7 +5,6 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Header from './components/Header';
 import MetricsDashboard from './components/MetricsDashboard';
 import TopStories from './components/TopStories';
-import ContentSection from './components/ContentSection';
 import Loading from './components/Loading';
 import AuthModal from './components/auth/AuthModal';
 import TopicSelector from './components/onboarding/TopicSelector';
@@ -242,12 +241,6 @@ function AppContent() {
     );
   }
 
-  // Filter content based on subscription tier
-  const filteredContent = user?.subscriptionTier === 'premium' ? digest.content : {
-    blog: digest.content.blog,
-    audio: digest.content.audio.slice(0, 2), // Limit audio for free users
-    video: digest.content.video.slice(0, 2)  // Limit video for free users
-  };
 
   return (
     <div className="app authenticated-app">
