@@ -19,6 +19,8 @@ function AppContent() {
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
 
   const { isAuthenticated, user, loading: authLoading } = useAuth();
 
@@ -181,12 +183,33 @@ function AppContent() {
             </div>
 
             <div className="hero-cta">
-              <AuthModal 
-                isOpen={true}
-                onClose={() => {}}
-                initialMode="signup"
-              />
+              <div className="cta-buttons">
+                <button 
+                  className="btn btn-primary btn-large"
+                  onClick={() => {
+                    setAuthMode('signup');
+                    setShowAuthModal(true);
+                  }}
+                >
+                  Get Started Free
+                </button>
+                <button 
+                  className="btn btn-ghost btn-large"
+                  onClick={() => {
+                    setAuthMode('signin');
+                    setShowAuthModal(true);
+                  }}
+                >
+                  Sign In
+                </button>
+              </div>
             </div>
+            
+            <AuthModal 
+              isOpen={showAuthModal}
+              onClose={() => setShowAuthModal(false)}
+              initialMode={authMode}
+            />
           </div>
         </div>
       </div>
