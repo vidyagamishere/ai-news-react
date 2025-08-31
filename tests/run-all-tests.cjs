@@ -5,8 +5,8 @@
  * Orchestrates all tests and generates comprehensive reports
  */
 
-const AuthFlowTester = require('./auth-flow-test');
-const FrontendE2ETester = require('./frontend-e2e-test');
+const AuthFlowTester = require('./auth-flow-test.cjs');
+const FrontendE2ETester = require('./frontend-e2e-test.cjs');
 const fs = require('fs');
 
 class MasterTestRunner {

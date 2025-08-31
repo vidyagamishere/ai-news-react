@@ -1,0 +1,877 @@
+{
+  "testSuite": "AI News Digest - Authentication Flow Tests",
+  "timestamp": "2025-08-31T18:30:07.310Z",
+  "summary": {
+    "total": 22,
+    "passed": 4,
+    "failed": 18,
+    "successRate": "18.2%"
+  },
+  "configuration": {
+    "backendUrl": "http://localhost:8003",
+    "frontendUrl": "http://localhost:5173"
+  },
+  "results": [
+    {
+      "name": "Backend Health Check",
+      "passed": true,
+      "details": {
+        "response": {
+          "status": "healthy",
+          "timestamp": "2025-08-31T18:30:07.193212",
+          "version": "2.0.0",
+          "components": {
+            "database": "healthy",
+            "cache": "healthy",
+            "auth": "healthy",
+            "multimedia": "unavailable",
+            "email": "disabled"
+          },
+          "features": {
+            "authentication": true,
+            "subscription_tiers": true,
+            "multimedia": true,
+            "email_service": false
+          }
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.194Z"
+    },
+    {
+      "name": "Content Types API",
+      "details": {
+        "response": {
+          "content_types": {
+            "all_sources": {
+              "name": "All Sources",
+              "description": "Comprehensive AI content from all our curated sources",
+              "icon": "🌐"
+            },
+            "blogs": {
+              "name": "Blogs",
+              "description": "Expert insights, analysis, and thought leadership articles",
+              "icon": "✍️"
+            },
+            "podcasts": {
+              "name": "Podcasts",
+              "description": "Audio content, interviews, and discussions from AI leaders",
+              "icon": "🎧"
+            },
+            "videos": {
+              "name": "Videos",
+              "description": "Visual content, presentations, and educational videos",
+              "icon": "📹"
+            },
+            "events": {
+              "name": "Events",
+              "description": "AI conferences, webinars, workshops, and networking events",
+              "icon": "📅"
+            },
+            "learn": {
+              "name": "Learn",
+              "description": "Courses, tutorials, educational content, and skill development",
+              "icon": "🎓"
+            }
+          }
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.195Z"
+    },
+    {
+      "name": "Digest API",
+      "passed": {
+        "blog": [
+          {
+            "id": 126,
+            "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+            "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+            "source": "AI Explained YouTube",
+            "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+            "published_date": "2025-07-21T15:15:42",
+            "significanceScore": 7,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 123,
+            "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+            "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+            "source": "AI YouTube - Two Minute Papers",
+            "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+            "published_date": "2025-08-07T10:03:39",
+            "significanceScore": 7,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 92,
+            "title": "In a first, Google has released data on how much energy an AI prompt uses",
+            "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+            "source": "MIT Technology Review",
+            "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+            "published_date": "2025-08-21T12:00:00",
+            "significanceScore": 7,
+            "category": "news",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 124,
+            "title": "GPT-5 has Arrived",
+            "url": "https://www.youtube.com/watch?v=WLdBimUS1IE",
+            "source": "AI Explained YouTube",
+            "description": "GPT-5 will change how hundreds of millions of people use AI. Yes, you might have to forgive the chart crimes, the underwhelming livestream and Altman hype… But it’s a good model. I have read the 50 page system card in full, have the benchmark scores, coding tests, and things you might have missed.\n\nhttps://app.grayswan.ai/ai-explained\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nAnnouncement: https://openai.com/index/introducing-gpt-5/\n\nSystem Card: https://cdn.openai.com/pdf/8124a3ce-ab78-4f06-96eb-49ea29ffb52f/gpt5-system-card-aug7.pdf\nExtra Paper: https://cdn.openai.com/pdf/be60c07b-6bc2-4f54-bcee-4141e1d6c69a/gpt-5-safe_completions.pdf\n\nAltman tweet: https://x.com/sama/status/1953551377873117369\n\nLivestream: https://www.youtube.com/watch?v=0Uu_VJeVVfo\nMETR Report: https://metr.github.io/autonomy-evals-guide/gpt-5-report/\nARC-AGI-2: https://x.com/fchollet/status/1953511631054680085\n\nClaude Opus 4.1: https://www.anthropic.com/news/claude-opus-4-1\nMMMU: https://mmmu-benchmark.github.io/\nCursor Praise: https://x.com/ryolu_/status/1953531724895596669\n\n\n\nNon-hype Newsletter: https://signaltonoise.beehiiv.com/\n\nPodcast: https://aiexplainedopodcast.buzzsprout.com/",
+            "published_date": "2025-08-07T23:03:34",
+            "significanceScore": 6.5,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 122,
+            "title": "New AI Research Solved The Problem Photoshop Never Could!",
+            "url": "https://www.youtube.com/watch?v=Ab9gJv-lrOw",
+            "source": "AI YouTube - Two Minute Papers",
+            "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\n📝 The paper \"Physically Controllable Relighting of Photographs\" is available here:\nhttps://yaksoy.github.io/PhysicalRelighting/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+            "published_date": "2025-08-14T16:10:34",
+            "significanceScore": 6,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 91,
+            "title": "Meet the researcher hosting a scientific conference by and for AI",
+            "url": "https://www.technologyreview.com/2025/08/22/1122304/ai-scientist-research-autonomous-agents/",
+            "source": "MIT Technology Review",
+            "description": "In October, a new academic conference will debut that’s unlike any other. Agents4Science is a one-day online event that will encompass all areas of science, from physics to medicine. All of the work shared will have been researched, written, and reviewed primarily by AI, and will be presented using text-to-speech technology. \nThe conference is the brainchild of Stanford computer scientist James Zou, who studies how humans and AI can best work together. Artificial intelligence has already provided many useful tools for scientists, like DeepMind’s AlphaFold, which helps simulate proteins that are difficult to make physically. More recently, though, progress in large language models and reasoning-enabled AI has advanced the idea that AI can work more or less as autonomously as scientists themselves—proposing hypotheses, running simulations, and designing experiments on their own. \n\nJames Zou’s Agents4Science conference will use text-to-speech to present the work of the AI researchers.COURTESY OF JAMES ZOU\n\n\nThat idea is not without its detractors. Among other issues, many feel AI is not capable of the creative thought needed in research, makes too many mistakes and hallucinations, and may limit opportunities for young researchers. \nNevertheless, a number of scientists and policymakers are very keen on the promise of AI scientists. The US government’s AI Action Plan describes the need to “invest in automated cloud-enabled labs for a range of scientific fields.” Some researchers think AI scientists could unlock scientific discoveries that humans could never find alone. For Zou, the proposition is simple: “AI agents are not limited in time. They could actually meet with us and work with us 24/7.” \nLast month, Zou published an article in Nature with results obtained from his own group of autonomous AI workers. Spurred on by his success, he now wants to see what other AI scientists (that is, scientists that are AI) can accomplish. He describes what a successful paper at Age",
+            "published_date": "2025-08-22T11:00:00",
+            "significanceScore": 6,
+            "category": "news",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 121,
+            "title": "DeepMind Just Made The Most Powerful Game AI Engine!",
+            "url": "https://www.youtube.com/watch?v=YvuEKrJhjos",
+            "source": "AI YouTube - Two Minute Papers",
+            "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nGenie 3:\nhttps://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/\n\nSources:\nhttps://x.com/amoufarek/status/1955776162447102238\nhttps://x.com/amoufarek/status/1955299375548076382\nhttps://x.com/holynski_/status/1953882726656094622\nhttps://x.com/holynski_/status/1953879983535141043\nhttps://x.com/RuiHuang_art/status/1954716703340048877\nhttps://x.com/mattmcgill_/status/1953827141700772186\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+            "published_date": "2025-08-17T18:09:02",
+            "significanceScore": 5.5,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 101,
+            "title": "#478 – Scott Horton: The Case Against War and the Military Industrial Complex",
+            "url": "https://lexfridman.com/scott-horton/?utm_source=rss&utm_medium=rss&utm_campaign=scott-horton",
+            "source": "Lex Fridman Podcast",
+            "description": "Scott Horton is the director of the Libertarian Institute, editorial director of Antiwar.com, host of The Scott Horton Show, co-host of Provoked, and for the past three decades a staunch critic of U.S. military interventionism.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep478-sc\nSee below for timestamps, and to give feedback, submit questions, contact Lex, etc.\nCONTACT LEX:\nFeedback – give feedback to Lex: https://lexfridman.com/survey\nAMA – submit questions, videos or call-in: https://lexfridman.com/ama\nHiring – join our team: https://lexfridman.com/hiring\nOther – other ways to get in touch: https://lexfridman.com/contact\nEPISODE LINKS:\nSupplemental Notes & Corrections: https://lexfridman.com/scott-horton-links-and-notes/\nScott’s X: https://x.com/scotthortonshow\nScott Horton Show: https://youtube.com/@scotthortonshow\nProvoked Show: https://youtube.com/@Provoked_Show\nScott’s Substack: https://scotthortonshow.com/\nScott’s Website: https://scotthorton.org/\nScott’s Books: https://amzn.to/3T9Qg7y\nLibertarian Institute: https://libertarianinstitute.org/\nAntiwar.com: https://antiwar.com/\nSPONSORS:\nTo support this podcast, check out our sponsors & get discounts:\nAllio Capital: AI-powered investment app that uses global macroeconomic trends.\nGo to https://alliocapital.com/\nHampton: Community for high-growth founders and CEOs.\nGo to https://joinhampton.com/lex\nBetterHelp: Online therapy and counseling.\nGo to https://betterhelp.com/lex\nNetSuite: Business management software.\nGo to http://netsuite.com/lex\nAG1: All-in-one daily nutrition drink.\nGo to https://drinkag1.com/lex\nOUTLINE:\n(00:00) – Introduction\n(00:35) – Sponsors, Comments, and Reflections\n(09:14) – From the Cold War to the War on Terror\n(1:02:13) – Iraq War 1\n(1:30:17) – Bin Laden\n(2:29:39) – Afghanistan War\n(2:44:35) – Iraq War 2\n(3:10:59) – Military Industrial Complex\n(3:50:25) – Scott’s life story\n(4:20:15) – Iraq War 2 (continued)\n(5:11:43) – Syria\n(6:05:01) – Iraq War 3\n(",
+            "published_date": "2025-08-24T01:25:12",
+            "significanceScore": 5.5,
+            "category": "audio",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 97,
+            "title": "Shape, Symmetries, and Structure: The Changing Role of Mathematics in Machine Learning Research",
+            "url": "https://thegradient.pub/shape-symmetry-structure/",
+            "source": "The Gradient",
+            "description": "What is the Role of Mathematics in Modern Machine Learning?The past decade has witnessed a shift in how progress is made in machine learning. Research involving carefully designed and mathematically principled architectures result in only marginal improvements while compute-intensive and engineering-first efforts that scale to ever larger training sets and model parameter counts result in remarkable new capabilities unpredicted by existing theory. Mathematics and statistics, once the primary guides of machine learning research, now struggle to provide immediate insight into the latest breakthroughs. This is not the first time that empirical progress in machine learning has outpaced more theory-motivated approaches, yet the magnitude of recent advances has forced us to swallow the bitter pill of the “Bitter Lesson” yet again [1].This shift has prompted speculation about mathematics’ diminished role in machine learning research moving forward. It is already evident that mathematics will have to share the stage with a broader range of perspectives (for instance, biology which has deep experience drawing conclusions about irreducibly complex systems or the social sciences as AI is integrated ever more deeply into society). The increasingly interdisciplinary nature of machine learning should be welcomed as a positive development by all researchers.However, we argue that mathematics remains as relevant as ever; its role is simply evolving. For example, whereas mathematics might once have primarily provided theoretical guarantees on model performance, it may soon be more commonly used for post-hoc explanations of empirical phenomena observed in model training and performance–a role analogous to one that it plays in physics. Similarly, while mathematical intuition might once have guided the design of handcrafted features or architectural details at a granular level, its use may shift to higher-level design choices such as matching architecture to underlying task structure o",
+            "published_date": "2024-11-16T16:46:15",
+            "significanceScore": 5.5,
+            "category": "research",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 93,
+            "title": "Should AI flatter us, fix us, or just inform us?",
+            "url": "https://www.technologyreview.com/2025/08/19/1122021/should-ai-flatter-us-fix-us-or-just-inform-us/",
+            "source": "MIT Technology Review",
+            "description": "How do you want your AI to treat you? \nIt’s a serious question, and it’s one that Sam Altman, OpenAI’s CEO, has clearly been chewing on since GPT-5’s bumpy launch at the start of the month. \nHe faces a trilemma. Should ChatGPT flatter us, at the risk of fueling delusions that can spiral out of hand? Or fix us, which requires us to believe AI can be a therapist despite the evidence to the contrary? Or should it inform us with cold, to-the-point responses that may leave users bored and less likely to stay engaged? \nIt’s safe to say the company has failed to pick a lane. \nBack in April, it reversed a design update after people complained ChatGPT had turned into a suck-up, showering them with glib compliments. GPT-5, released on August 7, was meant to be a bit colder. Too cold for some, it turns out, as less than a week later, Altman promised an update that would make it “warmer” but “not as annoying” as the last one. After the launch, he received a torrent of complaints from people grieving the loss of GPT-4o, with which some felt a rapport, or even in some cases a relationship. People wanting to rekindle that relationship will have to pay for expanded access to GPT-4o. (Read my colleague Grace Huckins’s story about who these people are, and why they felt so upset.)\nIf these are indeed AI’s options—to flatter, fix, or just coldly tell us stuff—the rockiness of this latest update might be due to Altman believing ChatGPT can juggle all three.\nHe recently said that people who cannot tell fact from fiction in their chats with AI—and are therefore at risk of being swayed by flattery into delusion—represent “a small percentage” of ChatGPT’s users. He said the same for people who have romantic relationships with AI. Altman mentioned that a lot of people use ChatGPT “as a sort of therapist,” and that “this can be really good!” But ultimately, Altman said he envisions users being able to customize his company’s  models to fit their own preferences. \nThis ability to juggle all t",
+            "published_date": "2025-08-19T09:00:00",
+            "significanceScore": 5.5,
+            "category": "news",
+            "tags": [],
+            "premium_only": true
+          }
+        ],
+        "audio": [
+          {
+            "id": 126,
+            "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+            "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+            "source": "AI Explained YouTube",
+            "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+            "published_date": "2025-07-21T15:15:42",
+            "significanceScore": 7,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 123,
+            "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+            "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+            "source": "AI YouTube - Two Minute Papers",
+            "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+            "published_date": "2025-08-07T10:03:39",
+            "significanceScore": 7,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 92,
+            "title": "In a first, Google has released data on how much energy an AI prompt uses",
+            "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+            "source": "MIT Technology Review",
+            "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+            "published_date": "2025-08-21T12:00:00",
+            "significanceScore": 7,
+            "category": "news",
+            "tags": [],
+            "premium_only": true
+          }
+        ],
+        "video": [
+          {
+            "id": 126,
+            "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+            "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+            "source": "AI Explained YouTube",
+            "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+            "published_date": "2025-07-21T15:15:42",
+            "significanceScore": 7,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 123,
+            "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+            "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+            "source": "AI YouTube - Two Minute Papers",
+            "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+            "published_date": "2025-08-07T10:03:39",
+            "significanceScore": 7,
+            "category": "video",
+            "tags": [],
+            "premium_only": true
+          },
+          {
+            "id": 92,
+            "title": "In a first, Google has released data on how much energy an AI prompt uses",
+            "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+            "source": "MIT Technology Review",
+            "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+            "published_date": "2025-08-21T12:00:00",
+            "significanceScore": 7,
+            "category": "news",
+            "tags": [],
+            "premium_only": true
+          }
+        ]
+      },
+      "details": {
+        "response": {
+          "badge": "AI Digest",
+          "timestamp": "2025-08-31T18:30:07.199850",
+          "user_tier": "free",
+          "total_articles": 24,
+          "summary": {
+            "metrics": {
+              "totalStories": 24,
+              "highImpact": 0,
+              "categories": 5
+            },
+            "keyPoints": [
+              "AI news aggregated from trusted sources",
+              "Free tier access",
+              "Updated August 31, 2025"
+            ]
+          },
+          "topStories": [
+            {
+              "id": 126,
+              "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+              "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+              "source": "AI Explained YouTube",
+              "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+              "published_date": "2025-07-21T15:15:42",
+              "significanceScore": 7,
+              "category": "video",
+              "tags": [],
+              "premium_only": true
+            },
+            {
+              "id": 123,
+              "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+              "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+              "source": "AI YouTube - Two Minute Papers",
+              "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+              "published_date": "2025-08-07T10:03:39",
+              "significanceScore": 7,
+              "category": "video",
+              "tags": [],
+              "premium_only": true
+            },
+            {
+              "id": 92,
+              "title": "In a first, Google has released data on how much energy an AI prompt uses",
+              "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+              "source": "MIT Technology Review",
+              "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+              "published_date": "2025-08-21T12:00:00",
+              "significanceScore": 7,
+              "category": "news",
+              "tags": [],
+              "premium_only": true
+            },
+            {
+              "id": 124,
+              "title": "GPT-5 has Arrived",
+              "url": "https://www.youtube.com/watch?v=WLdBimUS1IE",
+              "source": "AI Explained YouTube",
+              "description": "GPT-5 will change how hundreds of millions of people use AI. Yes, you might have to forgive the chart crimes, the underwhelming livestream and Altman hype… But it’s a good model. I have read the 50 page system card in full, have the benchmark scores, coding tests, and things you might have missed.\n\nhttps://app.grayswan.ai/ai-explained\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nAnnouncement: https://openai.com/index/introducing-gpt-5/\n\nSystem Card: https://cdn.openai.com/pdf/8124a3ce-ab78-4f06-96eb-49ea29ffb52f/gpt5-system-card-aug7.pdf\nExtra Paper: https://cdn.openai.com/pdf/be60c07b-6bc2-4f54-bcee-4141e1d6c69a/gpt-5-safe_completions.pdf\n\nAltman tweet: https://x.com/sama/status/1953551377873117369\n\nLivestream: https://www.youtube.com/watch?v=0Uu_VJeVVfo\nMETR Report: https://metr.github.io/autonomy-evals-guide/gpt-5-report/\nARC-AGI-2: https://x.com/fchollet/status/1953511631054680085\n\nClaude Opus 4.1: https://www.anthropic.com/news/claude-opus-4-1\nMMMU: https://mmmu-benchmark.github.io/\nCursor Praise: https://x.com/ryolu_/status/1953531724895596669\n\n\n\nNon-hype Newsletter: https://signaltonoise.beehiiv.com/\n\nPodcast: https://aiexplainedopodcast.buzzsprout.com/",
+              "published_date": "2025-08-07T23:03:34",
+              "significanceScore": 6.5,
+              "category": "video",
+              "tags": [],
+              "premium_only": true
+            },
+            {
+              "id": 122,
+              "title": "New AI Research Solved The Problem Photoshop Never Could!",
+              "url": "https://www.youtube.com/watch?v=Ab9gJv-lrOw",
+              "source": "AI YouTube - Two Minute Papers",
+              "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\n📝 The paper \"Physically Controllable Relighting of Photographs\" is available here:\nhttps://yaksoy.github.io/PhysicalRelighting/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+              "published_date": "2025-08-14T16:10:34",
+              "significanceScore": 6,
+              "category": "video",
+              "tags": [],
+              "premium_only": true
+            }
+          ],
+          "content": {
+            "blog": [
+              {
+                "id": 126,
+                "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+                "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+                "source": "AI Explained YouTube",
+                "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+                "published_date": "2025-07-21T15:15:42",
+                "significanceScore": 7,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 123,
+                "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+                "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+                "source": "AI YouTube - Two Minute Papers",
+                "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+                "published_date": "2025-08-07T10:03:39",
+                "significanceScore": 7,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 92,
+                "title": "In a first, Google has released data on how much energy an AI prompt uses",
+                "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+                "source": "MIT Technology Review",
+                "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+                "published_date": "2025-08-21T12:00:00",
+                "significanceScore": 7,
+                "category": "news",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 124,
+                "title": "GPT-5 has Arrived",
+                "url": "https://www.youtube.com/watch?v=WLdBimUS1IE",
+                "source": "AI Explained YouTube",
+                "description": "GPT-5 will change how hundreds of millions of people use AI. Yes, you might have to forgive the chart crimes, the underwhelming livestream and Altman hype… But it’s a good model. I have read the 50 page system card in full, have the benchmark scores, coding tests, and things you might have missed.\n\nhttps://app.grayswan.ai/ai-explained\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nAnnouncement: https://openai.com/index/introducing-gpt-5/\n\nSystem Card: https://cdn.openai.com/pdf/8124a3ce-ab78-4f06-96eb-49ea29ffb52f/gpt5-system-card-aug7.pdf\nExtra Paper: https://cdn.openai.com/pdf/be60c07b-6bc2-4f54-bcee-4141e1d6c69a/gpt-5-safe_completions.pdf\n\nAltman tweet: https://x.com/sama/status/1953551377873117369\n\nLivestream: https://www.youtube.com/watch?v=0Uu_VJeVVfo\nMETR Report: https://metr.github.io/autonomy-evals-guide/gpt-5-report/\nARC-AGI-2: https://x.com/fchollet/status/1953511631054680085\n\nClaude Opus 4.1: https://www.anthropic.com/news/claude-opus-4-1\nMMMU: https://mmmu-benchmark.github.io/\nCursor Praise: https://x.com/ryolu_/status/1953531724895596669\n\n\n\nNon-hype Newsletter: https://signaltonoise.beehiiv.com/\n\nPodcast: https://aiexplainedopodcast.buzzsprout.com/",
+                "published_date": "2025-08-07T23:03:34",
+                "significanceScore": 6.5,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 122,
+                "title": "New AI Research Solved The Problem Photoshop Never Could!",
+                "url": "https://www.youtube.com/watch?v=Ab9gJv-lrOw",
+                "source": "AI YouTube - Two Minute Papers",
+                "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\n📝 The paper \"Physically Controllable Relighting of Photographs\" is available here:\nhttps://yaksoy.github.io/PhysicalRelighting/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+                "published_date": "2025-08-14T16:10:34",
+                "significanceScore": 6,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 91,
+                "title": "Meet the researcher hosting a scientific conference by and for AI",
+                "url": "https://www.technologyreview.com/2025/08/22/1122304/ai-scientist-research-autonomous-agents/",
+                "source": "MIT Technology Review",
+                "description": "In October, a new academic conference will debut that’s unlike any other. Agents4Science is a one-day online event that will encompass all areas of science, from physics to medicine. All of the work shared will have been researched, written, and reviewed primarily by AI, and will be presented using text-to-speech technology. \nThe conference is the brainchild of Stanford computer scientist James Zou, who studies how humans and AI can best work together. Artificial intelligence has already provided many useful tools for scientists, like DeepMind’s AlphaFold, which helps simulate proteins that are difficult to make physically. More recently, though, progress in large language models and reasoning-enabled AI has advanced the idea that AI can work more or less as autonomously as scientists themselves—proposing hypotheses, running simulations, and designing experiments on their own. \n\nJames Zou’s Agents4Science conference will use text-to-speech to present the work of the AI researchers.COURTESY OF JAMES ZOU\n\n\nThat idea is not without its detractors. Among other issues, many feel AI is not capable of the creative thought needed in research, makes too many mistakes and hallucinations, and may limit opportunities for young researchers. \nNevertheless, a number of scientists and policymakers are very keen on the promise of AI scientists. The US government’s AI Action Plan describes the need to “invest in automated cloud-enabled labs for a range of scientific fields.” Some researchers think AI scientists could unlock scientific discoveries that humans could never find alone. For Zou, the proposition is simple: “AI agents are not limited in time. They could actually meet with us and work with us 24/7.” \nLast month, Zou published an article in Nature with results obtained from his own group of autonomous AI workers. Spurred on by his success, he now wants to see what other AI scientists (that is, scientists that are AI) can accomplish. He describes what a successful paper at Age",
+                "published_date": "2025-08-22T11:00:00",
+                "significanceScore": 6,
+                "category": "news",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 121,
+                "title": "DeepMind Just Made The Most Powerful Game AI Engine!",
+                "url": "https://www.youtube.com/watch?v=YvuEKrJhjos",
+                "source": "AI YouTube - Two Minute Papers",
+                "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nGenie 3:\nhttps://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/\n\nSources:\nhttps://x.com/amoufarek/status/1955776162447102238\nhttps://x.com/amoufarek/status/1955299375548076382\nhttps://x.com/holynski_/status/1953882726656094622\nhttps://x.com/holynski_/status/1953879983535141043\nhttps://x.com/RuiHuang_art/status/1954716703340048877\nhttps://x.com/mattmcgill_/status/1953827141700772186\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+                "published_date": "2025-08-17T18:09:02",
+                "significanceScore": 5.5,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 101,
+                "title": "#478 – Scott Horton: The Case Against War and the Military Industrial Complex",
+                "url": "https://lexfridman.com/scott-horton/?utm_source=rss&utm_medium=rss&utm_campaign=scott-horton",
+                "source": "Lex Fridman Podcast",
+                "description": "Scott Horton is the director of the Libertarian Institute, editorial director of Antiwar.com, host of The Scott Horton Show, co-host of Provoked, and for the past three decades a staunch critic of U.S. military interventionism.\nThank you for listening ❤ Check out our sponsors: https://lexfridman.com/sponsors/ep478-sc\nSee below for timestamps, and to give feedback, submit questions, contact Lex, etc.\nCONTACT LEX:\nFeedback – give feedback to Lex: https://lexfridman.com/survey\nAMA – submit questions, videos or call-in: https://lexfridman.com/ama\nHiring – join our team: https://lexfridman.com/hiring\nOther – other ways to get in touch: https://lexfridman.com/contact\nEPISODE LINKS:\nSupplemental Notes & Corrections: https://lexfridman.com/scott-horton-links-and-notes/\nScott’s X: https://x.com/scotthortonshow\nScott Horton Show: https://youtube.com/@scotthortonshow\nProvoked Show: https://youtube.com/@Provoked_Show\nScott’s Substack: https://scotthortonshow.com/\nScott’s Website: https://scotthorton.org/\nScott’s Books: https://amzn.to/3T9Qg7y\nLibertarian Institute: https://libertarianinstitute.org/\nAntiwar.com: https://antiwar.com/\nSPONSORS:\nTo support this podcast, check out our sponsors & get discounts:\nAllio Capital: AI-powered investment app that uses global macroeconomic trends.\nGo to https://alliocapital.com/\nHampton: Community for high-growth founders and CEOs.\nGo to https://joinhampton.com/lex\nBetterHelp: Online therapy and counseling.\nGo to https://betterhelp.com/lex\nNetSuite: Business management software.\nGo to http://netsuite.com/lex\nAG1: All-in-one daily nutrition drink.\nGo to https://drinkag1.com/lex\nOUTLINE:\n(00:00) – Introduction\n(00:35) – Sponsors, Comments, and Reflections\n(09:14) – From the Cold War to the War on Terror\n(1:02:13) – Iraq War 1\n(1:30:17) – Bin Laden\n(2:29:39) – Afghanistan War\n(2:44:35) – Iraq War 2\n(3:10:59) – Military Industrial Complex\n(3:50:25) – Scott’s life story\n(4:20:15) – Iraq War 2 (continued)\n(5:11:43) – Syria\n(6:05:01) – Iraq War 3\n(",
+                "published_date": "2025-08-24T01:25:12",
+                "significanceScore": 5.5,
+                "category": "audio",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 97,
+                "title": "Shape, Symmetries, and Structure: The Changing Role of Mathematics in Machine Learning Research",
+                "url": "https://thegradient.pub/shape-symmetry-structure/",
+                "source": "The Gradient",
+                "description": "What is the Role of Mathematics in Modern Machine Learning?The past decade has witnessed a shift in how progress is made in machine learning. Research involving carefully designed and mathematically principled architectures result in only marginal improvements while compute-intensive and engineering-first efforts that scale to ever larger training sets and model parameter counts result in remarkable new capabilities unpredicted by existing theory. Mathematics and statistics, once the primary guides of machine learning research, now struggle to provide immediate insight into the latest breakthroughs. This is not the first time that empirical progress in machine learning has outpaced more theory-motivated approaches, yet the magnitude of recent advances has forced us to swallow the bitter pill of the “Bitter Lesson” yet again [1].This shift has prompted speculation about mathematics’ diminished role in machine learning research moving forward. It is already evident that mathematics will have to share the stage with a broader range of perspectives (for instance, biology which has deep experience drawing conclusions about irreducibly complex systems or the social sciences as AI is integrated ever more deeply into society). The increasingly interdisciplinary nature of machine learning should be welcomed as a positive development by all researchers.However, we argue that mathematics remains as relevant as ever; its role is simply evolving. For example, whereas mathematics might once have primarily provided theoretical guarantees on model performance, it may soon be more commonly used for post-hoc explanations of empirical phenomena observed in model training and performance–a role analogous to one that it plays in physics. Similarly, while mathematical intuition might once have guided the design of handcrafted features or architectural details at a granular level, its use may shift to higher-level design choices such as matching architecture to underlying task structure o",
+                "published_date": "2024-11-16T16:46:15",
+                "significanceScore": 5.5,
+                "category": "research",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 93,
+                "title": "Should AI flatter us, fix us, or just inform us?",
+                "url": "https://www.technologyreview.com/2025/08/19/1122021/should-ai-flatter-us-fix-us-or-just-inform-us/",
+                "source": "MIT Technology Review",
+                "description": "How do you want your AI to treat you? \nIt’s a serious question, and it’s one that Sam Altman, OpenAI’s CEO, has clearly been chewing on since GPT-5’s bumpy launch at the start of the month. \nHe faces a trilemma. Should ChatGPT flatter us, at the risk of fueling delusions that can spiral out of hand? Or fix us, which requires us to believe AI can be a therapist despite the evidence to the contrary? Or should it inform us with cold, to-the-point responses that may leave users bored and less likely to stay engaged? \nIt’s safe to say the company has failed to pick a lane. \nBack in April, it reversed a design update after people complained ChatGPT had turned into a suck-up, showering them with glib compliments. GPT-5, released on August 7, was meant to be a bit colder. Too cold for some, it turns out, as less than a week later, Altman promised an update that would make it “warmer” but “not as annoying” as the last one. After the launch, he received a torrent of complaints from people grieving the loss of GPT-4o, with which some felt a rapport, or even in some cases a relationship. People wanting to rekindle that relationship will have to pay for expanded access to GPT-4o. (Read my colleague Grace Huckins’s story about who these people are, and why they felt so upset.)\nIf these are indeed AI’s options—to flatter, fix, or just coldly tell us stuff—the rockiness of this latest update might be due to Altman believing ChatGPT can juggle all three.\nHe recently said that people who cannot tell fact from fiction in their chats with AI—and are therefore at risk of being swayed by flattery into delusion—represent “a small percentage” of ChatGPT’s users. He said the same for people who have romantic relationships with AI. Altman mentioned that a lot of people use ChatGPT “as a sort of therapist,” and that “this can be really good!” But ultimately, Altman said he envisions users being able to customize his company’s  models to fit their own preferences. \nThis ability to juggle all t",
+                "published_date": "2025-08-19T09:00:00",
+                "significanceScore": 5.5,
+                "category": "news",
+                "tags": [],
+                "premium_only": true
+              }
+            ],
+            "audio": [
+              {
+                "id": 126,
+                "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+                "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+                "source": "AI Explained YouTube",
+                "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+                "published_date": "2025-07-21T15:15:42",
+                "significanceScore": 7,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 123,
+                "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+                "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+                "source": "AI YouTube - Two Minute Papers",
+                "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+                "published_date": "2025-08-07T10:03:39",
+                "significanceScore": 7,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 92,
+                "title": "In a first, Google has released data on how much energy an AI prompt uses",
+                "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+                "source": "MIT Technology Review",
+                "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+                "published_date": "2025-08-21T12:00:00",
+                "significanceScore": 7,
+                "category": "news",
+                "tags": [],
+                "premium_only": true
+              }
+            ],
+            "video": [
+              {
+                "id": 126,
+                "title": "How Not to Read a Headline on AI (ft. new Olympiad Gold, GPT-5 …)",
+                "url": "https://www.youtube.com/watch?v=g9ZJ8GMBlw4",
+                "source": "AI Explained YouTube",
+                "description": "GPT-5 did what? OpenAI ahead of Google? There are 9 ways to misread the headlines of the last 48 hours, so this video is here to tell you what happened, sans sizzle. It’s been a fairly momentous last few days, so let’s dive in to the International Math Olympiad Gold, GPT-5 alpha release, whether mathematicians are out of jobs, and the white collar impact by year’s end.\n\nJob Board: https://80000hours.org/aiexplained\n\nNew Documentary on Patreon: https://www.patreon.com/posts/our-new-age-of-133960279\n\n\nAI Insiders ($9!): https://www.patreon.com/AIExplained\n\nChapters:\n00:00 - Introduction\n00:18 - AI Beat Mathematicians?\n01:23 - OPENAI vs GOOGLE\n02:42 - Irrelevant to Jobs or …\n06:45 - White-collar jobs gone?\n10:26 - AI is Plateauing?\n12:00 - We Don’t Know the Details…\n14:33 - GPT-5 alpha\n14:54 - Nothing but Exponentials?\n15:53 - No Impact?\n\nAnnouncement: https://x.com/alexwei_/status/1946477742855532918\n\nUCLA Math Prof: https://x.com/ErnestRyu/status/1946699302308635130\n\nChatGPT Agent: https://openai.com/index/introducing-chatgpt-agent/\nLivestream: https://www.youtube.com/watch?v=1jn_RpbPbEc&t=796s\nSystem Card: https://cdn.openai.com/pdf/839e66fc-602c-48bf-81d3-b21eacc3459d/chatgpt_agent_system_card.pdf\n\n\nJerry Tworek (OpenAI): https://x.com/MillionInt/status/1946556255490982022\nhttps://x.com/MillionInt/status/1946558130906968330\n\nNoam Brown Details: https://x.com/polynoamial/status/1946478249187377206\n\nTrieu Tranh Retweet: https://x.com/Mihonarium/status/1946880931723194389\n\nNeel Nanda: https://x.com/NeelNanda5/status/1946602953370173647\n\nTerence Tao: https://mathstodon.xyz/@tao\n\nSam Altman: https://x.com/sama/status/1946569252296929727\n\nMETR Dev Study: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/\n\nRavid Schwatz: https://x.com/ziv_ravid/status/1946378712716562605\n\n\nAlphaEvolve: https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/\n\nhttps://simple-bench.com/\n\nMeta Salary: https://www",
+                "published_date": "2025-07-21T15:15:42",
+                "significanceScore": 7,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 123,
+                "title": "OpenAI’s New Free AI: The Good, The Bad, The Unexpected!",
+                "url": "https://www.youtube.com/watch?v=I1_iXwa-7dA",
+                "source": "AI YouTube - Two Minute Papers",
+                "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ollama.com/download/linux\nThen run ollama run gpt-oss:120b - https://ollama.com/library/gpt-oss:120b\n\nTry it online:\nhttps://gpt-oss.com/\n\n📝 My paper on simulations that look almost like reality is available for free here:\nhttps://rdcu.be/cWPfD \n\nOr this is the orig. Nature Physics link with clickable citations:\nhttps://www.nature.com/articles/s41567-022-01788-5\n\nHumanity's Last Exam:\nhttps://agi.safe.ai/\n\nSources:\nhttps://x.com/flavioad/status/1952792389636198489\nhttps://x.com/kwindla/status/1952947685012717659\nhttps://x.com/productshiv/status/1952793922964734431\nhttps://x.com/philip_kiely/status/1953174333024813340\n\n🙏 We would like to thank our generous Patreon supporters who make Two Minute Papers possible:\nBenji Rabhan, B Shang, Christian Ahlin, Gordon Child, John Le, Juan Benet, Kyle Davis, Loyal Alchemist, Lukas Biewald, Michael Tedder, Owen Skarpness, Richard Sundvall, Steef, Sven Pfiffner, Taras Bobrovytsky, Thomas Krcmar, Tybie Fitzhugh, Ueli Gallizzi\nIf you wish to appear here or pick up other perks, click here: https://www.patreon.com/TwoMinutePapers\n\nMy research: https://cg.tuwien.ac.at/~zsolnai/\nX/Twitter: https://twitter.com/twominutepapers\nThumbnail design: Felícia Zsolnai-Fehér - http://felicia.hu",
+                "published_date": "2025-08-07T10:03:39",
+                "significanceScore": 7,
+                "category": "video",
+                "tags": [],
+                "premium_only": true
+              },
+              {
+                "id": 92,
+                "title": "In a first, Google has released data on how much energy an AI prompt uses",
+                "url": "https://www.technologyreview.com/2025/08/21/1122288/google-gemini-ai-energy/",
+                "source": "MIT Technology Review",
+                "description": "Google has just released a technical report detailing how much energy its Gemini apps use for each query. In total, the median prompt—one that falls in the middle of the range of energy demand—consumes 0.24 watt-hours of electricity, the equivalent of running a standard microwave for about one second. The company also provided average estimates for the water consumption and carbon emissions associated with a text prompt to Gemini.\nIt’s the most transparent estimate yet from a Big Tech company with a popular AI product, and the report includes detailed information about how the company calculated its final estimate. As AI has become more widely adopted, there’s been a growing effort to understand its energy use. But public efforts attempting to directly measure the energy used by AI have been hampered by a lack of full access to the operations of a major tech company. \nEarlier this year, MIT Technology Review published a comprehensive series on AI and energy, at which time none of the major AI companies would reveal their per-prompt energy usage. Google’s new publication, at last, allows for a peek behind the curtain that researchers and analysts have long hoped for.\nThe study focuses on a broad look at energy demand, including not only the power used by the AI chips that run models but also by all the other infrastructure needed to support that hardware. \n“We wanted to be quite comprehensive in all the things we included,” said Jeff Dean, Google’s chief scientist, in an exclusive interview with MIT Technology Review about the new report.\nThat’s significant, because in this measurement, the AI chips—in this case, Google’s custom TPUs, the company’s proprietary equivalent of GPUs—account for just 58% of the total electricity demand of 0.24 watt-hours. \nAnother large portion of the energy is used by equipment needed to support AI-specific hardware: The host machine’s CPU and memory account for another 25% of the total energy used. There’s also backup equipment needed i",
+                "published_date": "2025-08-21T12:00:00",
+                "significanceScore": 7,
+                "category": "news",
+                "tags": [],
+                "premium_only": true
+              }
+            ]
+          }
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.200Z"
+    },
+    {
+      "name": "Topics API",
+      "passed": true,
+      "details": {
+        "response": [
+          {
+            "id": "machine_learning",
+            "name": "Machine Learning",
+            "description": "ML algorithms and techniques",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "nlp",
+            "name": "Natural Language Processing",
+            "description": "Text and language AI",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "computer_vision",
+            "name": "Computer Vision",
+            "description": "Image and video AI",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "robotics",
+            "name": "Robotics",
+            "description": "AI-powered robotics",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "ai_ethics",
+            "name": "AI Ethics",
+            "description": "Ethical AI development",
+            "category": "ethics",
+            "selected": false
+          },
+          {
+            "id": "ai_research",
+            "name": "AI Research",
+            "description": "Latest AI research papers",
+            "category": "research",
+            "selected": false
+          },
+          {
+            "id": "ai_industry",
+            "name": "AI Industry",
+            "description": "Industry applications",
+            "category": "industry",
+            "selected": false
+          },
+          {
+            "id": "ai_startups",
+            "name": "AI Startups",
+            "description": "AI startup ecosystem",
+            "category": "industry",
+            "selected": false
+          }
+        ]
+      },
+      "timestamp": "2025-08-31T18:30:07.201Z"
+    },
+    {
+      "name": "Sign Up - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "user": {
+            "id": "user_SLfs8kANDiVNDtFC9LH3Aw",
+            "email": "test.1756665007201@example.com",
+            "name": "Test User",
+            "profile_image": null,
+            "subscription_tier": "free",
+            "preferences": {
+              "topics": [],
+              "newsletter_frequency": "weekly",
+              "email_notifications": true,
+              "content_types": [
+                "articles"
+              ]
+            },
+            "created_at": "2025-08-31T18:30:07.222062",
+            "last_login_at": null,
+            "is_active": true
+          },
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl9TTGZzOGtBTkRpVk5EdEZDOUxIM0F3IiwiZW1haWwiOiJ0ZXN0LjE3NTY2NjUwMDcyMDFAZXhhbXBsZS5jb20iLCJuYW1lIjoiVGVzdCBVc2VyIiwic3Vic2NyaXB0aW9uX3RpZXIiOiJmcmVlIiwiZXhwIjoxNzU5MjU3MDA3LCJpYXQiOjE3NTY2NjUwMDd9.qK-NkbIUGMFCeeZiIP8vpAxDRlEegaL6OSfgyL2fgHA",
+          "message": "Authentication successful"
+        },
+        "testUser": {
+          "name": "Test User",
+          "email": "test.1756665007201@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.222Z"
+    },
+    {
+      "name": "Sign Up - Missing Name",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 422
+      },
+      "timestamp": "2025-08-31T18:30:07.223Z"
+    },
+    {
+      "name": "Sign Up - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 422
+      },
+      "timestamp": "2025-08-31T18:30:07.224Z"
+    },
+    {
+      "name": "Sign Up - Short Password",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Authentication successful"
+      },
+      "timestamp": "2025-08-31T18:30:07.244Z"
+    },
+    {
+      "name": "Sign Up - Empty Fields",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 422
+      },
+      "timestamp": "2025-08-31T18:30:07.246Z"
+    },
+    {
+      "name": "Sign In - Positive Flow",
+      "passed": true,
+      "details": {
+        "response": {
+          "user": {
+            "id": "user_zvt9bZUU4jfEw1S711i7dQ",
+            "email": "login.test.1756665007246@example.com",
+            "name": "Login Test User",
+            "profile_image": null,
+            "subscription_tier": "free",
+            "preferences": {
+              "topics": [],
+              "newsletter_frequency": "weekly",
+              "email_notifications": true,
+              "content_types": [
+                "articles"
+              ]
+            },
+            "created_at": "2025-08-31T18:30:07.265560",
+            "last_login_at": null,
+            "is_active": true
+          },
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl96dnQ5YlpVVTRqZkV3MVM3MTFpN2RRIiwiZW1haWwiOiJsb2dpbi50ZXN0LjE3NTY2NjUwMDcyNDZAZXhhbXBsZS5jb20iLCJuYW1lIjoiTG9naW4gVGVzdCBVc2VyIiwic3Vic2NyaXB0aW9uX3RpZXIiOiJmcmVlIiwiZXhwIjoxNzU5MjU3MDA3LCJpYXQiOjE3NTY2NjUwMDd9.RDZVTvg3gzWVwHeGh-_4oHPy2KbTG32mCum9wZpq-gk",
+          "message": "Authentication successful"
+        },
+        "testUser": {
+          "name": "Login Test User",
+          "email": "login.test.1756665007246@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.286Z"
+    },
+    {
+      "name": "Sign In - Invalid Email",
+      "details": {
+        "expected": 401,
+        "actual": 401
+      },
+      "timestamp": "2025-08-31T18:30:07.287Z"
+    },
+    {
+      "name": "Sign In - Wrong Password",
+      "details": {
+        "expected": 401,
+        "actual": 401
+      },
+      "timestamp": "2025-08-31T18:30:07.307Z"
+    },
+    {
+      "name": "Sign In - Missing Credentials",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 422
+      },
+      "timestamp": "2025-08-31T18:30:07.307Z"
+    },
+    {
+      "name": "Sign In - Invalid Email Format",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 422
+      },
+      "timestamp": "2025-08-31T18:30:07.308Z"
+    },
+    {
+      "name": "Google Auth - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": [
+            {
+              "type": "missing",
+              "loc": [
+                "body",
+                "id_token"
+              ],
+              "msg": "Field required",
+              "input": {
+                "idToken": "mock-google-token-12345"
+              },
+              "url": "https://errors.pydantic.dev/2.11/v/missing"
+            }
+          ]
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.308Z"
+    },
+    {
+      "name": "Google Auth - Missing Token",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": [
+            {
+              "type": "missing",
+              "loc": [
+                "body",
+                "id_token"
+              ],
+              "msg": "Field required",
+              "input": {},
+              "url": "https://errors.pydantic.dev/2.11/v/missing"
+            }
+          ]
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.308Z"
+    },
+    {
+      "name": "Authenticated Endpoints",
+      "passed": false,
+      "details": {
+        "error": "No test token available"
+      },
+      "timestamp": "2025-08-31T18:30:07.308Z"
+    },
+    {
+      "name": "Content Filtering - blogs",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Not Found"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.309Z"
+    },
+    {
+      "name": "Content Filtering - podcasts",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Not Found"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.309Z"
+    },
+    {
+      "name": "Content Filtering - videos",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Not Found"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.309Z"
+    },
+    {
+      "name": "Content Filtering - events",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Not Found"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.310Z"
+    },
+    {
+      "name": "Content Filtering - learn",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Not Found"
+        }
+      },
+      "timestamp": "2025-08-31T18:30:07.310Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix underlying issues",
+    "Critical authentication issues detected - fix before deployment"
+  ]
+}
