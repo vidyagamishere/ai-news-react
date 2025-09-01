@@ -1,8 +1,8 @@
 // API service for connecting to AI News Scraper backend
 import axios from 'axios';
 
-// Backend API URL - Use local development server for testing
-const API_BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:8003';
+// Backend API URL - Use deployed Vercel backend
+const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -111,7 +111,7 @@ export const apiService = {
 
   // Get health status
   getHealth: async (): Promise<HealthResponse> => {
-    const response = await api.get('/health');
+    const response = await api.get('/api/health');
     return response.data;
   },
 

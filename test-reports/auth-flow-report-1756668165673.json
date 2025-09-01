@@ -1,0 +1,214 @@
+{
+  "testSuite": "AI News Digest - Authentication Flow Tests",
+  "timestamp": "2025-08-31T19:22:45.673Z",
+  "summary": {
+    "total": 22,
+    "passed": 0,
+    "failed": 22,
+    "successRate": "0.0%"
+  },
+  "configuration": {
+    "backendUrl": "https://ai-news-scraper-kw6nqjcjz.vercel.app",
+    "frontendUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Backend Health Check",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::7qpx8-1756668164251-2d435b91917b\n"
+      },
+      "timestamp": "2025-08-31T19:22:44.247Z"
+    },
+    {
+      "name": "Content Types API",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::gq5t4-1756668164351-2038d1dbef10\n"
+      },
+      "timestamp": "2025-08-31T19:22:44.360Z"
+    },
+    {
+      "name": "Digest API",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::g5jfd-1756668164466-bedc837d0a0c\n"
+      },
+      "timestamp": "2025-08-31T19:22:44.439Z"
+    },
+    {
+      "name": "Topics API",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::g5jfd-1756668164542-2b14d0bc7aa1\n"
+      },
+      "timestamp": "2025-08-31T19:22:44.498Z"
+    },
+    {
+      "name": "Sign Up - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::hh6tw-1756668164600-36fd8a706880\n",
+        "testUser": {
+          "name": "Test User",
+          "email": "test.1756668164498@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-08-31T19:22:44.581Z"
+    },
+    {
+      "name": "Sign Up - Missing Name",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:44.639Z"
+    },
+    {
+      "name": "Sign Up - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:44.701Z"
+    },
+    {
+      "name": "Sign Up - Short Password",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:44.758Z"
+    },
+    {
+      "name": "Sign Up - Empty Fields",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:44.817Z"
+    },
+    {
+      "name": "Sign In - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::s9qlk-1756668164979-4e36c24bc257\n",
+        "testUser": {
+          "name": "Login Test User",
+          "email": "login.test.1756668164817@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-08-31T19:22:44.990Z"
+    },
+    {
+      "name": "Sign In - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:45.045Z"
+    },
+    {
+      "name": "Sign In - Wrong Password",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:45.103Z"
+    },
+    {
+      "name": "Sign In - Missing Credentials",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:45.164Z"
+    },
+    {
+      "name": "Sign In - Invalid Email Format",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 404
+      },
+      "timestamp": "2025-08-31T19:22:45.219Z"
+    },
+    {
+      "name": "Google Auth - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::s22ft-1756668165346-79f8d2d7aa09\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.304Z"
+    },
+    {
+      "name": "Google Auth - Missing Token",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::s22ft-1756668165413-0c1a21e4a2c2\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.369Z"
+    },
+    {
+      "name": "Authenticated Endpoints",
+      "passed": false,
+      "details": {
+        "error": "No test token available"
+      },
+      "timestamp": "2025-08-31T19:22:45.369Z"
+    },
+    {
+      "name": "Content Filtering - blogs",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::s22ft-1756668165478-2da3bb002c6f\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.433Z"
+    },
+    {
+      "name": "Content Filtering - podcasts",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::gjrhw-1756668165537-e2ddcf8a05b7\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.493Z"
+    },
+    {
+      "name": "Content Filtering - videos",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::gjrhw-1756668165597-1f6a72ef2b49\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.552Z"
+    },
+    {
+      "name": "Content Filtering - events",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::gq5t4-1756668165656-b0da0e632183\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.609Z"
+    },
+    {
+      "name": "Content Filtering - learn",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::4t4zj-1756668165715-92df402f869f\n"
+      },
+      "timestamp": "2025-08-31T19:22:45.673Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix underlying issues",
+    "Critical authentication issues detected - fix before deployment"
+  ]
+}

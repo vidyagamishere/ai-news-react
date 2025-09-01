@@ -1,0 +1,92 @@
+{
+  "testSuite": "AI News Digest - Frontend E2E Tests",
+  "timestamp": "2025-08-31T18:52:36.103Z",
+  "summary": {
+    "total": 9,
+    "passed": 0,
+    "failed": 9,
+    "successRate": "0.0%"
+  },
+  "configuration": {
+    "frontendUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Landing Page Load",
+      "passed": false,
+      "details": {
+        "error": "Navigating frame was detached"
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Navigation to Sign Up",
+      "passed": false,
+      "details": {
+        "error": "Attempted to use detached Frame '111C88C7FA1698C5ADD41045905ECEF5'."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Navigation to Sign In",
+      "passed": false,
+      "details": {
+        "error": "Attempted to use detached Frame '111C88C7FA1698C5ADD41045905ECEF5'."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Sign Up Form Validation",
+      "passed": false,
+      "details": {
+        "error": "Attempted to use detached Frame '111C88C7FA1698C5ADD41045905ECEF5'."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Sign Up Flow - Complete",
+      "passed": false,
+      "details": {
+        "error": "Attempted to use detached Frame '111C88C7FA1698C5ADD41045905ECEF5'."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Responsive Design - Mobile",
+      "passed": false,
+      "details": {
+        "error": "Protocol error (Emulation.setTouchEmulationEnabled): Session closed. Most likely the page has been closed."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Responsive Design - Tablet",
+      "passed": false,
+      "details": {
+        "error": "Protocol error (Emulation.setTouchEmulationEnabled): Session closed. Most likely the page has been closed."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Responsive Design - Desktop",
+      "passed": false,
+      "details": {
+        "error": "Protocol error (Emulation.setTouchEmulationEnabled): Session closed. Most likely the page has been closed."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    },
+    {
+      "name": "Responsive Design - 4K",
+      "passed": false,
+      "details": {
+        "error": "Protocol error (Emulation.setTouchEmulationEnabled): Session closed. Most likely the page has been closed."
+      },
+      "timestamp": "2025-08-31T18:52:36.089Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix UI/UX issues",
+    "Fix responsive design issues for better mobile experience",
+    "Fix navigation and routing issues"
+  ]
+}

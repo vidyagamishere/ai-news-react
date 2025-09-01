@@ -1,0 +1,94 @@
+{
+  "testSuite": "AI News Digest - Frontend E2E Tests",
+  "timestamp": "2025-08-31T20:11:10.031Z",
+  "summary": {
+    "total": 9,
+    "passed": 6,
+    "failed": 3,
+    "successRate": "66.7%"
+  },
+  "configuration": {
+    "frontendUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Landing Page Load",
+      "passed": false,
+      "details": {
+        "title": "AI News Through AI | Personalized AI Industry Updates & Learning Hub",
+        "heading": "AI News Through AI",
+        "buttonCount": 2
+      },
+      "timestamp": "2025-08-31T20:10:07.021Z"
+    },
+    {
+      "name": "Navigation to Sign Up",
+      "passed": true,
+      "details": {
+        "currentUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app/signup",
+        "heading": "Join AI News Digest"
+      },
+      "timestamp": "2025-08-31T20:10:08.186Z"
+    },
+    {
+      "name": "Navigation to Sign In",
+      "passed": true,
+      "details": {
+        "currentUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app/signin",
+        "heading": "Welcome back"
+      },
+      "timestamp": "2025-08-31T20:10:09.014Z"
+    },
+    {
+      "name": "Sign Up Form Validation",
+      "passed": false,
+      "details": {
+        "error": "Waiting for selector `.auth-form` failed"
+      },
+      "timestamp": "2025-08-31T20:10:39.098Z"
+    },
+    {
+      "name": "Sign Up Flow - Complete",
+      "passed": false,
+      "details": {
+        "error": "Waiting for selector `.auth-form` failed"
+      },
+      "timestamp": "2025-08-31T20:11:09.216Z"
+    },
+    {
+      "name": "Responsive Design - Mobile",
+      "passed": true,
+      "details": {
+        "viewport": "375x667"
+      },
+      "timestamp": "2025-08-31T20:11:09.517Z"
+    },
+    {
+      "name": "Responsive Design - Tablet",
+      "passed": true,
+      "details": {
+        "viewport": "768x1024"
+      },
+      "timestamp": "2025-08-31T20:11:09.678Z"
+    },
+    {
+      "name": "Responsive Design - Desktop",
+      "passed": true,
+      "details": {
+        "viewport": "1280x720"
+      },
+      "timestamp": "2025-08-31T20:11:09.822Z"
+    },
+    {
+      "name": "Responsive Design - 4K",
+      "passed": true,
+      "details": {
+        "viewport": "2560x1440"
+      },
+      "timestamp": "2025-08-31T20:11:09.972Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix UI/UX issues"
+  ]
+}

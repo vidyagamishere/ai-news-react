@@ -1,0 +1,337 @@
+{
+  "testSuite": "AI News Digest - Complete Test Suite",
+  "timestamp": "2025-08-31T20:11:10.032Z",
+  "configuration": {
+    "backendUrl": "https://ai-news-scraper-liuwaf82h.vercel.app",
+    "frontendUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+  },
+  "overall": {
+    "startTime": "2025-08-31T20:10:02.725Z",
+    "endTime": "2025-08-31T20:11:10.032Z",
+    "duration": 67307,
+    "totalTests": 31,
+    "totalPassed": 6,
+    "totalFailed": 25,
+    "overallSuccessRate": "19.4%"
+  },
+  "authFlowResults": {
+    "testSuite": "AI News Digest - Authentication Flow Tests",
+    "timestamp": "2025-08-31T20:10:04.383Z",
+    "summary": {
+      "total": 22,
+      "passed": 0,
+      "failed": 22,
+      "successRate": "0.0%"
+    },
+    "configuration": {
+      "backendUrl": "https://ai-news-scraper-liuwaf82h.vercel.app",
+      "frontendUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+    },
+    "results": [
+      {
+        "name": "Backend Health Check",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::9pj96-1756671002912-236e59f51c43\n"
+        },
+        "timestamp": "2025-08-31T20:10:02.934Z"
+      },
+      {
+        "name": "Content Types API",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::rqvgd-1756671002984-810722533b97\n"
+        },
+        "timestamp": "2025-08-31T20:10:02.993Z"
+      },
+      {
+        "name": "Digest API",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::ztvwc-1756671003042-8374ba933d62\n"
+        },
+        "timestamp": "2025-08-31T20:10:03.098Z"
+      },
+      {
+        "name": "Topics API",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::6d5dp-1756671003149-55d6d7c83031\n"
+        },
+        "timestamp": "2025-08-31T20:10:03.156Z"
+      },
+      {
+        "name": "Sign Up - Positive Flow",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::jncx6-1756671003213-0b07e517c366\n",
+          "testUser": {
+            "name": "Test User",
+            "email": "test.1756671003156@example.com",
+            "password": "[REDACTED]"
+          }
+        },
+        "timestamp": "2025-08-31T20:10:03.278Z"
+      },
+      {
+        "name": "Sign Up - Missing Name",
+        "passed": false,
+        "details": {
+          "expected": 400,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.342Z"
+      },
+      {
+        "name": "Sign Up - Invalid Email",
+        "passed": false,
+        "details": {
+          "expected": 400,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.410Z"
+      },
+      {
+        "name": "Sign Up - Short Password",
+        "passed": false,
+        "details": {
+          "expected": 400,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.468Z"
+      },
+      {
+        "name": "Sign Up - Empty Fields",
+        "passed": false,
+        "details": {
+          "expected": 400,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.526Z"
+      },
+      {
+        "name": "Sign In - Positive Flow",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::txhr4-1756671003633-22cac6621c82\n",
+          "testUser": {
+            "name": "Login Test User",
+            "email": "login.test.1756671003526@example.com",
+            "password": "[REDACTED]"
+          }
+        },
+        "timestamp": "2025-08-31T20:10:03.640Z"
+      },
+      {
+        "name": "Sign In - Invalid Email",
+        "passed": false,
+        "details": {
+          "expected": 401,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.696Z"
+      },
+      {
+        "name": "Sign In - Wrong Password",
+        "passed": false,
+        "details": {
+          "expected": 401,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.755Z"
+      },
+      {
+        "name": "Sign In - Missing Credentials",
+        "passed": false,
+        "details": {
+          "expected": 400,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.814Z"
+      },
+      {
+        "name": "Sign In - Invalid Email Format",
+        "passed": false,
+        "details": {
+          "expected": 400,
+          "actual": 404
+        },
+        "timestamp": "2025-08-31T20:10:03.870Z"
+      },
+      {
+        "name": "Google Auth - Positive Flow",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::6qlbn-1756671003920-877f7aa61913\n"
+        },
+        "timestamp": "2025-08-31T20:10:03.925Z"
+      },
+      {
+        "name": "Google Auth - Missing Token",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::vqs4g-1756671003976-dde96ec7324a\n"
+        },
+        "timestamp": "2025-08-31T20:10:03.984Z"
+      },
+      {
+        "name": "Authenticated Endpoints",
+        "passed": false,
+        "details": {
+          "error": "No test token available"
+        },
+        "timestamp": "2025-08-31T20:10:03.984Z"
+      },
+      {
+        "name": "Content Filtering - blogs",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::jncx6-1756671004036-4a56e0f67c40\n"
+        },
+        "timestamp": "2025-08-31T20:10:04.041Z"
+      },
+      {
+        "name": "Content Filtering - podcasts",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::6j7ct-1756671004115-324550d49e65\n"
+        },
+        "timestamp": "2025-08-31T20:10:04.125Z"
+      },
+      {
+        "name": "Content Filtering - videos",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::kx8xl-1756671004175-8bfca159c30d\n"
+        },
+        "timestamp": "2025-08-31T20:10:04.272Z"
+      },
+      {
+        "name": "Content Filtering - events",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::kx8xl-1756671004321-fc51f01cc023\n"
+        },
+        "timestamp": "2025-08-31T20:10:04.326Z"
+      },
+      {
+        "name": "Content Filtering - learn",
+        "passed": false,
+        "details": {
+          "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::jncx6-1756671004376-a344c04db806\n"
+        },
+        "timestamp": "2025-08-31T20:10:04.382Z"
+      }
+    ],
+    "recommendations": [
+      "Review failed test cases and fix underlying issues",
+      "Critical authentication issues detected - fix before deployment"
+    ]
+  },
+  "frontendE2EResults": {
+    "testSuite": "AI News Digest - Frontend E2E Tests",
+    "timestamp": "2025-08-31T20:11:10.031Z",
+    "summary": {
+      "total": 9,
+      "passed": 6,
+      "failed": 3,
+      "successRate": "66.7%"
+    },
+    "configuration": {
+      "frontendUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+    },
+    "results": [
+      {
+        "name": "Landing Page Load",
+        "passed": false,
+        "details": {
+          "title": "AI News Through AI | Personalized AI Industry Updates & Learning Hub",
+          "heading": "AI News Through AI",
+          "buttonCount": 2
+        },
+        "timestamp": "2025-08-31T20:10:07.021Z"
+      },
+      {
+        "name": "Navigation to Sign Up",
+        "passed": true,
+        "details": {
+          "currentUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app/signup",
+          "heading": "Join AI News Digest"
+        },
+        "timestamp": "2025-08-31T20:10:08.186Z"
+      },
+      {
+        "name": "Navigation to Sign In",
+        "passed": true,
+        "details": {
+          "currentUrl": "https://ai-news-react-qf5o55qtx-vijayan-subramaniyans-projects-0c70c64d.vercel.app/signin",
+          "heading": "Welcome back"
+        },
+        "timestamp": "2025-08-31T20:10:09.014Z"
+      },
+      {
+        "name": "Sign Up Form Validation",
+        "passed": false,
+        "details": {
+          "error": "Waiting for selector `.auth-form` failed"
+        },
+        "timestamp": "2025-08-31T20:10:39.098Z"
+      },
+      {
+        "name": "Sign Up Flow - Complete",
+        "passed": false,
+        "details": {
+          "error": "Waiting for selector `.auth-form` failed"
+        },
+        "timestamp": "2025-08-31T20:11:09.216Z"
+      },
+      {
+        "name": "Responsive Design - Mobile",
+        "passed": true,
+        "details": {
+          "viewport": "375x667"
+        },
+        "timestamp": "2025-08-31T20:11:09.517Z"
+      },
+      {
+        "name": "Responsive Design - Tablet",
+        "passed": true,
+        "details": {
+          "viewport": "768x1024"
+        },
+        "timestamp": "2025-08-31T20:11:09.678Z"
+      },
+      {
+        "name": "Responsive Design - Desktop",
+        "passed": true,
+        "details": {
+          "viewport": "1280x720"
+        },
+        "timestamp": "2025-08-31T20:11:09.822Z"
+      },
+      {
+        "name": "Responsive Design - 4K",
+        "passed": true,
+        "details": {
+          "viewport": "2560x1440"
+        },
+        "timestamp": "2025-08-31T20:11:09.972Z"
+      }
+    ],
+    "recommendations": [
+      "Review failed test cases and fix UI/UX issues"
+    ]
+  },
+  "criticalIssues": [
+    {
+      "severity": "CRITICAL",
+      "area": "Authentication",
+      "description": "Basic authentication flows are failing",
+      "impact": "Users cannot register or login to the application"
+    }
+  ],
+  "recommendations": [
+    "🚨 Major issues detected. Significant fixes required before deployment.",
+    "🔥 CRITICAL: Authentication system has failures - immediate attention required."
+  ]
+}
