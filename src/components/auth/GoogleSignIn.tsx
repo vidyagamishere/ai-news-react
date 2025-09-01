@@ -18,7 +18,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
 
   useEffect(() => {
     // Load Google Identity Services script
-    if (!window.google && googleClientId && googleClientId !== 'your_google_oauth_client_id.googleusercontent.com') {
+    if (!window.google && googleClientId && googleClientId !== '450435096536-tbor1sbkbq27si62ps7khr5fdat5indb.apps.googleusercontent.com') {
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
@@ -51,7 +51,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
   };
 
   const handleGoogleSignIn = async () => {
-    if (!googleClientId || googleClientId === 'your_google_oauth_client_id.googleusercontent.com') {
+    if (!googleClientId || googleClientId === '450435096536-tbor1sbkbq27si62ps7khr5fdat5indb.apps.googleusercontent.com.googleusercontent.com') {
       alert('Google Sign In not configured. Please use email/password for now.');
       return;
     }

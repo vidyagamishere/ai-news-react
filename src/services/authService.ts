@@ -29,7 +29,7 @@ class AuthService {
   }
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    return this.request('/auth/login', {
+    return this.request('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
@@ -41,35 +41,35 @@ class AuthService {
     }
 
     const { confirmPassword, ...signupData } = credentials;
-    return this.request('/auth/signup', {
+    return this.request('/api/auth/signup', {
       method: 'POST',
       body: JSON.stringify(signupData),
     });
   }
 
   async validateToken(_token: string): Promise<User> {
-    return this.request('/auth/profile');
+    return this.request('/api/auth/profile');
   }
 
   async updateUserPreferences(preferences: Partial<User['preferences']>): Promise<User> {
-    return this.request('/auth/preferences', {
+    return this.request('/api/auth/preferences', {
       method: 'PUT',
       body: JSON.stringify(preferences),
     });
   }
 
   async upgradeSubscription(): Promise<User> {
-    return this.request('/subscription/upgrade', {
+    return this.request('/api/subscription/upgrade', {
       method: 'POST',
     });
   }
 
   async getAvailableTopics(): Promise<AITopic[]> {
-    return this.request('/topics');
+    return this.request('/api/topics');
   }
 
   async googleLogin(idToken: string): Promise<AuthResponse> {
-    return this.request('/auth/google', {
+    return this.request('/api/auth/google', {
       method: 'POST',
       body: JSON.stringify({ idToken }),
     });
