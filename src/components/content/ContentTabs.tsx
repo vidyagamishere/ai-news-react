@@ -51,7 +51,7 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
 
   const loadContentTypes = async () => {
     try {
-      const response: ContentTypesResponse = await apiService.get('/content-types');
+      const response: ContentTypesResponse = await apiService.get('/api/content-types');
       setContentTypes(response.content_types);
     } catch (err) {
       console.error('Failed to load content types:', err);
@@ -64,7 +64,7 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
       setLoading(prev => ({ ...prev, [contentType]: true }));
       setError(null);
 
-      const response: ContentResponse = await apiService.get(`/content/${contentType}`);
+      const response: ContentResponse = await apiService.get(`/api/content/${contentType}`);
       setContent(prev => ({ ...prev, [contentType]: response }));
     } catch (err) {
       console.error(`Failed to load ${contentType} content:`, err);
