@@ -25,14 +25,15 @@ export default function AdUnit({
   const adRef = useRef<HTMLModElement>(null);
   const isAdLoaded = useRef(false);
 
+  // Check if ads are enabled
+  const adsEnabled = import.meta.env.VITE_ENABLE_ADS === 'true';
+  
+  // Don't render anything if ads are disabled
+  if (!adsEnabled) {
+    return null;
+  }
+
   useEffect(() => {
-    // Only load ads in production or when specifically enabled
-    const isProduction = import.meta.env.PROD;
-    const adsEnabled = import.meta.env.VITE_ENABLE_ADS === 'true';
-    
-    if (!isProduction && !adsEnabled) {
-      return;
-    }
 
     // Load Google AdSense script if not already loaded
     if (!window.adsbygoogle) {
@@ -55,21 +56,6 @@ export default function AdUnit({
       }
     }
   }, []);
-
-  // Don't render ads in development unless specifically enabled
-  const isProduction = import.meta.env.PROD;
-  const adsEnabled = import.meta.env.VITE_ENABLE_ADS === 'true';
-  
-  if (!isProduction && !adsEnabled) {
-    return (
-      <div className={`ad-placeholder ${className}`} style={style}>
-        <div className="ad-placeholder-content">
-          <span>📢 Ad Space</span>
-          <span className="ad-placeholder-text">Google Ads will appear here in production</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`ad-container ${className}`} style={style}>

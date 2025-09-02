@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const hasCompletedOnboarding = user.preferences.topics.some(t => t.selected);
+      const hasCompletedOnboarding = user.preferences?.topics?.some(t => t.selected) || false;
       if (!hasCompletedOnboarding) {
         setShowOnboarding(true);
         return;
@@ -228,21 +228,25 @@ const Dashboard: React.FC = () => {
           keyPoints={digest.summary.keyPoints}
         />
         
-        <AdUnit 
-          adSlot="1234567890"
-          adFormat="horizontal"
-          className="header-ad"
-        />
+        {import.meta.env.VITE_ENABLE_ADS === 'true' && (
+          <AdUnit 
+            adSlot="1234567890"
+            adFormat="horizontal"
+            className="header-ad"
+          />
+        )}
         
         <TopStories stories={digest.topStories} />
         
         <ContentTabs userTier={user?.subscriptionTier || 'free'} />
         
-        <AdUnit 
-          adSlot="2345678901"
-          adFormat="rectangle"
-          className="content-ad"
-        />
+        {import.meta.env.VITE_ENABLE_ADS === 'true' && (
+          <AdUnit 
+            adSlot="2345678901"
+            adFormat="rectangle"
+            className="content-ad"
+          />
+        )}
 
         {user?.subscriptionTier === 'free' && (
           <div className="upgrade-section">
@@ -251,11 +255,13 @@ const Dashboard: React.FC = () => {
         )}
       </main>
       
-      <AdUnit 
-        adSlot="3456789012"
-        adFormat="horizontal"
-        className="footer-ad"
-      />
+      {import.meta.env.VITE_ENABLE_ADS === 'true' && (
+        <AdUnit 
+          adSlot="3456789012"
+          adFormat="horizontal"
+          className="footer-ad"
+        />
+      )}
       
       <footer className="footer modern-footer">
         <div className="footer-content">

@@ -40,10 +40,10 @@ const Landing: React.FC = () => {
 
           <div className="hero-cta">
             <div className="cta-buttons">
-              <Link to="/signup" className="btn btn-primary btn-large">
+              <Link to="/auth?mode=signup" className="btn btn-primary btn-large">
                 Get Started Free
               </Link>
-              <Link to="/signin" className="btn btn-ghost btn-large">
+              <Link to="/auth?mode=signin" className="btn btn-ghost btn-large">
                 Sign In
               </Link>
             </div>

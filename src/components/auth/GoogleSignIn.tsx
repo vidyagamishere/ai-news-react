@@ -15,10 +15,15 @@ declare global {
 const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
   const { loading, googleLogin } = useAuth();
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  
+  // Don't render Google Sign-In if not configured
+  if (!googleClientId) {
+    return null;
+  }
 
   useEffect(() => {
     // Load Google Identity Services script
-    if (!window.google && googleClientId && googleClientId !== '450435096536-tbor1sbkbq27si62ps7khr5fdat5indb.apps.googleusercontent.com') {
+    if (!window.google && googleClientId) {
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
@@ -51,7 +56,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
   };
 
   const handleGoogleSignIn = async () => {
-    if (!googleClientId || googleClientId === '450435096536-tbor1sbkbq27si62ps7khr5fdat5indb.apps.googleusercontent.com.googleusercontent.com') {
+    if (!googleClientId) {
       alert('Google Sign In not configured. Please use email/password for now.');
       return;
     }

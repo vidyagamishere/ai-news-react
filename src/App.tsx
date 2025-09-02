@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Landing from './pages/Landing';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import Auth from './pages/Auth';
+import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Loading from './components/Loading';
 import './App.css';
@@ -54,19 +54,27 @@ function AppContent() {
         } 
       />
       <Route 
-        path="/signin" 
+        path="/auth" 
         element={
           <PublicRoute>
-            <SignIn />
+            <Auth />
           </PublicRoute>
         } 
       />
       <Route 
+        path="/signin" 
+        element={<Navigate to="/auth" replace />}
+      />
+      <Route 
         path="/signup" 
+        element={<Navigate to="/auth" replace />}
+      />
+      <Route 
+        path="/onboarding" 
         element={
-          <PublicRoute>
-            <SignUp />
-          </PublicRoute>
+          <ProtectedRoute>
+            <Onboarding />
+          </ProtectedRoute>
         } 
       />
       <Route 

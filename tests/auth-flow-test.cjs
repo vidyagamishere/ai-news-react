@@ -91,7 +91,7 @@ class AuthFlowTester {
   // Backend API Tests
   async testBackendHealth() {
     try {
-      const response = await this.makeRequest(`${this.baseUrl}/health`);
+      const response = await this.makeRequest(`${this.baseUrl}/api/health`);
       const passed = response.status === 200 && response.data.status === 'healthy';
       this.logTest('Backend Health Check', passed, { response: response.data });
     } catch (error) {
@@ -128,7 +128,7 @@ class AuthFlowTester {
 
   async testTopicsAPI() {
     try {
-      const response = await this.makeRequest(`${this.baseUrl}/topics`);
+      const response = await this.makeRequest(`${this.baseUrl}/api/topics`);
       const passed = response.status === 200 && Array.isArray(response.data);
       this.logTest('Topics API', passed, { response: response.data });
     } catch (error) {
@@ -145,7 +145,7 @@ class AuthFlowTester {
         password: 'TestPassword123!'
       };
 
-      const response = await this.makeRequest(`${this.baseUrl}/auth/signup`, {
+      const response = await this.makeRequest(`${this.baseUrl}/api/auth/signup`, {
         method: 'POST',
         body: testUser
       });
@@ -196,7 +196,7 @@ class AuthFlowTester {
 
     for (const testCase of testCases) {
       try {
-        const response = await this.makeRequest(`${this.baseUrl}/auth/signup`, {
+        const response = await this.makeRequest(`${this.baseUrl}/api/auth/signup`, {
           method: 'POST',
           body: testCase.data
         });
@@ -222,7 +222,7 @@ class AuthFlowTester {
         password: 'LoginTestPassword123!'
       };
 
-      await this.makeRequest(`${this.baseUrl}/auth/signup`, {
+      await this.makeRequest(`${this.baseUrl}/api/auth/signup`, {
         method: 'POST',
         body: testUser
       });
@@ -276,7 +276,7 @@ class AuthFlowTester {
 
     for (const testCase of testCases) {
       try {
-        const response = await this.makeRequest(`${this.baseUrl}/auth/login`, {
+        const response = await this.makeRequest(`${this.baseUrl}/api/auth/login`, {
           method: 'POST',
           body: testCase.data
         });
@@ -295,7 +295,7 @@ class AuthFlowTester {
 
   async testGoogleAuthFlow() {
     try {
-      const response = await this.makeRequest(`${this.baseUrl}/auth/google`, {
+      const response = await this.makeRequest(`${this.baseUrl}/api/auth/google`, {
         method: 'POST',
         body: { idToken: 'mock-google-token-12345' }
       });
@@ -329,7 +329,7 @@ class AuthFlowTester {
 
     try {
       // Test profile endpoint
-      const profileResponse = await this.makeRequest(`${this.baseUrl}/auth/profile`, {
+      const profileResponse = await this.makeRequest(`${this.baseUrl}/api/auth/profile`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${this.testToken}` }
       });
@@ -340,7 +340,7 @@ class AuthFlowTester {
       });
 
       // Test preferences update
-      const prefsResponse = await this.makeRequest(`${this.baseUrl}/auth/preferences`, {
+      const prefsResponse = await this.makeRequest(`${this.baseUrl}/api/auth/preferences`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${this.testToken}` },
         body: {

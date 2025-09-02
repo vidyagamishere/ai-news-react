@@ -84,8 +84,8 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
 
   // All content types are available to all users, ordered professionally
   const availableContentTypes = tabOrder
-    .map(key => [key, contentTypes[key]] as [string, ContentType])
-    .filter(([, info]) => info); // Only include defined content types
+    .map(key => [key, contentTypes?.[key]] as [string, ContentType | undefined])
+    .filter(([, info]) => info && info.name); // Only include defined content types with required properties
 
   const currentContent = content[activeTab];
   const isLoading = loading[activeTab];
@@ -102,8 +102,8 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
               onClick={() => handleTabClick(key)}
               disabled={false}
             >
-              <span className="tab-icon">{info.icon}</span>
-              <span className="tab-name">{info.name}</span>
+              <span className="tab-icon">{info?.icon || '📄'}</span>
+              <span className="tab-name">{info?.name || key}</span>
             </button>
           ))}
         </div>
@@ -128,8 +128,8 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
             {/* Content Header */}
             <div className="content-header">
               <div className="content-title">
-                <span className="content-icon">{currentContent.content_info.icon}</span>
-                <h2>{currentContent.content_info.name}</h2>
+                <span className="content-icon">{currentContent.content_info?.icon || '📄'}</span>
+                <h2>{currentContent.content_info?.name || 'Content'}</h2>
                 <span className="content-count">
                   {currentContent.total} {currentContent.total === 1 ? 'item' : 'items'}
                 </span>
@@ -141,7 +141,7 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
               </div>
             </div>
 
-            <p className="content-description">{currentContent.content_info.description}</p>
+            <p className="content-description">{currentContent.content_info?.description || 'Loading content...'}</p>
 
             {/* Content Stats */}
             <div className="content-stats">
@@ -208,9 +208,9 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
             ) : (
               <div className="no-content">
                 <div className="no-content-icon">📭</div>
-                <h3>No {currentContent.content_info.name.toLowerCase()} available</h3>
+                <h3>No {currentContent.content_info?.name?.toLowerCase() || 'content'} available</h3>
                 <p>
-                  We're working to bring you the latest {currentContent.content_info.name.toLowerCase()}. 
+                  We're working to bring you the latest {currentContent.content_info?.name?.toLowerCase() || 'content'}. 
                   Check back soon or try refreshing.
                 </p>
                 <button onClick={handleRefresh} className="refresh-button">
