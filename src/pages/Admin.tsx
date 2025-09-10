@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Save, X, ExternalLink, RefreshCw } from 'lucide-react';
 import apiService from '../services/api';
+import AdminValidation from '../components/AdminValidation';
 
 interface AISource {
   name: string;
@@ -211,6 +212,9 @@ const Admin: React.FC = () => {
 
   return (
     <div className="admin-container">
+      {/* Add the validation component at the top */}
+      <AdminValidation />
+      
       <div className="admin-header">
         <h1>🔧 AI Sources Admin Panel</h1>
         <div className="admin-actions">
