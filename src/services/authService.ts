@@ -55,7 +55,7 @@ class AuthService {
     });
   }
 
-  async validateToken(token: string): Promise<User> {
+  async validateToken(_token: string): Promise<User> {
     return this.request('/api/auth/profile');
   }
 
