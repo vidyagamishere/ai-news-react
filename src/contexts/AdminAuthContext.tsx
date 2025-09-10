@@ -9,6 +9,8 @@ interface AdminAuthContextType {
   isLoading: boolean;
   isCurrentUserAdmin: boolean;
   checkAdminAccess: () => boolean;
+  handleMainAuthLogin: (email: string, password: string) => Promise<boolean>;
+  createAdminUserSession: () => void;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
@@ -125,6 +127,43 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setAdminApiKey(null);
   };
 
+  const handleMainAuthLogin = async (email: string, password: string): Promise<boolean> => {
+    // Check if this is an admin login attempt
+    if (email === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+      // Create a mock admin user session in the main auth context
+      createAdminUserSession();
+      return true;
+    }
+    return false;
+  };
+
+  const createAdminUserSession = () => {
+    // Create a mock admin user for the main auth context
+    const adminUser = {
+      id: 'admin-user',
+      email: 'admin@vidyagam.com',
+      name: 'Admin User',
+      emailVerified: true,
+      createdAt: new Date().toISOString(),
+      preferences: {
+        onboardingCompleted: true,
+        topics: []
+      },
+      subscriptionTier: 'premium' as const
+    };
+
+    // Store in localStorage to simulate auth
+    localStorage.setItem('authToken', 'admin-mock-token');
+    localStorage.setItem('adminUser', JSON.stringify(adminUser));
+    
+    // Grant admin access
+    setIsAdminAuthenticated(true);
+    setAdminApiKey(ADMIN_CREDENTIALS.apiKey);
+    
+    // Trigger page reload to let the main auth context pick up the admin session
+    window.location.reload();
+  };
+
   const value = {
     isAdminAuthenticated,
     adminApiKey,
@@ -132,7 +171,9 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     adminLogout,
     isLoading,
     isCurrentUserAdmin,
-    checkAdminAccess
+    checkAdminAccess,
+    handleMainAuthLogin,
+    createAdminUserSession
   };
 
   return (
