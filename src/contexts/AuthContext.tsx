@@ -153,6 +153,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    // Check if this was an admin user
+    const wasAdminUser = localStorage.getItem('adminUser') !== null;
+    
     localStorage.removeItem('authToken');
     localStorage.removeItem('adminUser');
     localStorage.removeItem('adminAuth');
@@ -162,7 +165,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loading: false,
       error: null
     });
-    window.location.href = '/auth';
+    
+    // Redirect admin users to admin login, regular users to regular auth
+    window.location.href = wasAdminUser ? '/admin/login' : '/auth';
   };
 
   const updatePreferences = async (preferences: Partial<User['preferences']>) => {

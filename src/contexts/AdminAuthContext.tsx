@@ -123,8 +123,12 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const adminLogout = () => {
     localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminUser');
+    localStorage.removeItem('authToken');
     setIsAdminAuthenticated(false);
     setAdminApiKey(null);
+    // Redirect to admin login instead of regular auth
+    window.location.href = '/admin/login';
   };
 
   const handleMainAuthLogin = async (email: string, password: string): Promise<boolean> => {
