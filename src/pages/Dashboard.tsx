@@ -250,7 +250,10 @@ const Dashboard: React.FC = () => {
                 />
               )}
               
-              <ContentTabs userTier={user?.subscriptionTier || 'free'} />
+              <ContentTabs 
+                userTier={user?.subscriptionTier || 'free'} 
+                topStories={digest.topStories} 
+              />
               
               <div className="metrics-section">
                 <MetricsDashboard 

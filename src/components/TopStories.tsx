@@ -16,7 +16,7 @@ const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
     <div className="top-stories">
       <h2 className="section-title">🔥 Top Stories</h2>
       <div className="stories-list">
-        {stories.slice(0, 10).map((story, index) => (
+        {stories.slice(0, 5).map((story, index) => (
           <div 
             key={index} 
             className="story-item clickable-story"

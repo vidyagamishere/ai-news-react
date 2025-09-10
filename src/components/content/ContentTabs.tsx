@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { apiService } from '../../services/api';
+import { apiService, type TopStory } from '../../services/api';
 import Loading from '../Loading';
 import SmartImage from '../SmartImage';
 import './ContentTabs.css';
@@ -27,9 +27,10 @@ interface ContentTypesResponse {
 
 interface ContentTabsProps {
   userTier: string;
+  topStories?: TopStory[];
 }
 
-export default function ContentTabs({ userTier }: ContentTabsProps) {
+export default function ContentTabs({ userTier, topStories = [] }: ContentTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
@@ -53,19 +54,32 @@ export default function ContentTabs({ userTier }: ContentTabsProps) {
     const title = article.title || '';
     const source = article.source || '';
     
-    if (title.length < 10) return 'Click to read the full article for detailed insights.';
+    if (title.length < 10) return 'This article provides detailed insights and analysis on the latest developments. Click to read comprehensive coverage of key topics, expert perspectives, and industry implications that will enhance your understanding of the subject matter.';
     
     const summaryTemplates: Record<string, (title: string, source: string) => string> = {
-      'all_sources': (t, _s) => `Latest development from ${_s}: ${t.length > 100 ? t.substring(0, 100) + '...' : t}`,
-      'blogs': (t, _s) => `Expert analysis from ${_s}: This article explores ${t.toLowerCase().includes('ai') || t.toLowerCase().includes('machine') ? 'artificial intelligence applications and implications' : 'emerging technology trends and practical implementations'}.`,
-      'podcasts': (t, _s) => `Audio discussion from ${_s}: Listen to expert insights on ${t.toLowerCase().includes('interview') ? 'industry perspectives and experiences' : 'current developments and future predictions'}.`,
-      'videos': (t, _s) => `Video content from ${_s}: Watch detailed explanations and demonstrations ${t.toLowerCase().includes('tutorial') ? 'with step-by-step guidance' : 'covering key concepts and applications'}.`,
-      'events': (t, _s) => `Upcoming event: ${t} - Connect with the AI community and learn from industry leaders at this ${t.toLowerCase().includes('conference') ? 'major conference' : 'networking opportunity'}.`,
-      'learn': (t, _s) => `Educational resource from ${_s}: ${t.toLowerCase().includes('course') ? 'Structured learning program' : 'Knowledge resource'} designed to advance your understanding of AI concepts and applications.`
+      'all_sources': (title, source) => `This comprehensive article from ${source} explores "${title}" and the latest developments in AI technology. The piece provides detailed analysis and expert insights into emerging trends and their potential impact on the industry. Readers will gain valuable understanding of current innovations and future implications. The content offers practical perspectives that help contextualize recent advancements. Essential reading for staying informed about the rapidly evolving AI landscape.`,
+      'blogs': (title, source) => `This expert analysis from ${source} titled "${title}" delves deep into artificial intelligence applications and emerging technological implementations. The article provides comprehensive insights into industry trends and practical applications of AI systems. Readers will discover detailed explanations of complex concepts and their real-world implications. The content offers valuable perspectives from industry professionals and researchers. Perfect for understanding both technical aspects and strategic considerations in AI development.`,
+      'podcasts': (title, source) => `This engaging audio discussion from ${source} on "${title}" features expert insights on current AI developments and future predictions. Listeners will hear in-depth conversations about industry perspectives and professional experiences in the field. The podcast explores emerging trends and their potential impact on various sectors. Expert guests share valuable knowledge about challenges and opportunities in AI implementation. Ideal for gaining diverse viewpoints on the evolving artificial intelligence landscape.`,
+      'videos': (title, source) => `This informative video content from ${source} about "${title}" provides detailed explanations and visual demonstrations of key AI concepts and applications. Viewers will see comprehensive coverage of technological implementations and practical use cases. The content includes expert commentary and real-world examples that illustrate complex topics. Visual learners will appreciate the clear presentations and step-by-step guidance provided. Essential viewing for understanding both theoretical foundations and practical applications.`,
+      'events': (title, source) => `This upcoming event "${title}" hosted by ${source} offers valuable opportunities to connect with the AI community and learn from industry leaders at this significant gathering. Attendees will participate in discussions about cutting-edge developments and network with professionals across the field. The event features presentations from experts and researchers sharing their latest findings. Participants will gain insights into emerging trends and future directions in artificial intelligence. An excellent opportunity for professional development and industry networking.`,
+      'learn': (title, source) => `This educational resource from ${source} on "${title}" provides structured learning opportunities designed to advance understanding of AI concepts and practical applications. The content covers essential topics with comprehensive explanations and guided instruction. Learners will develop both theoretical knowledge and practical skills through well-designed curriculum. The resource includes examples and exercises that reinforce key concepts and principles. Perfect for building expertise in artificial intelligence technologies and methodologies.`
     };
     
     const generator = summaryTemplates[contentType] || summaryTemplates['all_sources'];
     return generator(title, source);
+  };
+
+  const filterOutTopStories = (articles: any[]): any[] => {
+    if (!topStories || topStories.length === 0) return articles;
+    
+    const topStoryUrls = new Set(topStories.slice(0, 5).map(story => story.url));
+    const topStoryTitles = new Set(topStories.slice(0, 5).map(story => story.title.toLowerCase()));
+    
+    return articles.filter(article => {
+      if (topStoryUrls.has(article.url)) return false;
+      if (topStoryTitles.has(article.title?.toLowerCase())) return false;
+      return true;
+    });
   };
 
   // Define tab order and tier access
@@ -233,7 +247,7 @@ export default function ContentTabs({ userTier }: ContentTabsProps) {
             {currentContent.articles && currentContent.articles.length > 0 ? (
               <div className="articles-list">
                 <h3>Latest Content</h3>
-                {currentContent.articles.map((article, index) => (
+                {(activeTab === 'all_sources' ? filterOutTopStories(currentContent.articles) : currentContent.articles).map((article, index) => (
                   <article key={index} className="article-card" itemScope itemType="https://schema.org/Article">
                     <h4 itemProp="headline">{article.title || 'Untitled'}</h4>
                     
