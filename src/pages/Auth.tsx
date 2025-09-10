@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useAdminAuth } from '../contexts/AdminAuthContext';
 import GoogleSignIn from '../components/auth/GoogleSignIn';
 import '../components/auth/auth.css';
 import './auth.css';
@@ -24,7 +23,6 @@ const Auth: React.FC = () => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   
   const { login, signup, loading, error, isAuthenticated, sendOTP } = useAuth();
-  const { handleMainAuthLogin } = useAdminAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,15 +77,6 @@ const Auth: React.FC = () => {
     
     try {
       if (mode === 'signin') {
-        // Check if this is an admin login attempt first
-        const isAdminLogin = await handleMainAuthLogin(formData.email, formData.password);
-        if (isAdminLogin) {
-          // Admin login successful, redirect to admin panel
-          navigate('/admin');
-          return;
-        }
-        
-        // Regular user login
         await login({ email: formData.email, password: formData.password });
         // Existing users go directly to dashboard
         navigate('/dashboard');

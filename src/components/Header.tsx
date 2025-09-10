@@ -18,8 +18,13 @@ const Header: React.FC<HeaderProps> = () => {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { isAuthenticated, user, logout } = useAuth();
-  const { isCurrentUserAdmin } = useAdminAuth();
+  const { isAdminAuthenticated, adminUser, adminLogout } = useAdminAuth();
   const navigate = useNavigate();
+
+  // Determine which user and auth state to use
+  const effectiveUser = isAdminAuthenticated ? adminUser : user;
+  const isEffectivelyAuthenticated = isAuthenticated || isAdminAuthenticated;
+  const effectiveLogout = isAdminAuthenticated ? adminLogout : logout;
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -40,7 +45,7 @@ const Header: React.FC<HeaderProps> = () => {
   };
 
   const handleLogout = () => {
-    logout();
+    effectiveLogout();
     setShowUserMenu(false);
   };
 
@@ -59,9 +64,9 @@ const Header: React.FC<HeaderProps> = () => {
                 </h1>
               </div>
               <div className="desktop-user-section">
-                {isAuthenticated && user ? (
+                {isEffectivelyAuthenticated && effectiveUser ? (
                   <div className="desktop-user-greeting">
-                    <p className="user-greeting-text">Hello, {user.name || 'User'}</p>
+                    <p className="user-greeting-text">Hello, {effectiveUser.name || 'User'}</p>
                   </div>
                 ) : (
                   <div className="auth-buttons">
@@ -109,9 +114,9 @@ const Header: React.FC<HeaderProps> = () => {
               </div>
               
               <div className="desktop-user-actions">
-                {isAuthenticated && user && (
+                {isEffectivelyAuthenticated && effectiveUser && (
                   <>
-                    {user.subscriptionTier === 'premium' && (
+                    {effectiveUser.subscriptionTier === 'premium' && (
                       <div className="desktop-action-item">
                         <div className="desktop-action-icon premium-action">
                           <Crown size={16} />
@@ -119,7 +124,7 @@ const Header: React.FC<HeaderProps> = () => {
                         <span className="desktop-action-label">Premium</span>
                       </div>
                     )}
-                    {isCurrentUserAdmin && (
+                    {isAdminAuthenticated && (
                       <div className="desktop-action-item">
                         <button 
                           onClick={() => navigate('/admin')}
@@ -213,9 +218,9 @@ const Header: React.FC<HeaderProps> = () => {
               </div>
               
               <div className="mobile-actions">
-                {isAuthenticated && user ? (
+                {isEffectivelyAuthenticated && effectiveUser ? (
                   <div className="mobile-user-actions">
-                    {user.subscriptionTier === 'premium' && (
+                    {effectiveUser.subscriptionTier === 'premium' && (
                       <div className="mobile-action-item">
                         <div className="mobile-action-icon premium-action">
                           <Crown size={12} />
@@ -223,7 +228,7 @@ const Header: React.FC<HeaderProps> = () => {
                         <span className="mobile-action-label">Premium</span>
                       </div>
                     )}
-                    {isCurrentUserAdmin && (
+                    {isAdminAuthenticated && (
                       <div className="mobile-action-item">
                         <button 
                           onClick={() => navigate('/admin')}

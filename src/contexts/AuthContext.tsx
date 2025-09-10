@@ -40,21 +40,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
-        // Check if this is an admin user first
-        const adminUser = localStorage.getItem('adminUser');
-        if (adminUser && token === 'admin-mock-token') {
-          // Load admin user session
-          const user = JSON.parse(adminUser);
-          setAuthState({
-            isAuthenticated: true,
-            user,
-            loading: false,
-            error: null
-          });
-          return;
-        }
-        
-        // Regular user validation
         const user = await authService.validateToken(token);
         setAuthState({
           isAuthenticated: true,
@@ -67,7 +52,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error) {
       localStorage.removeItem('authToken');
-      localStorage.removeItem('adminUser');
       setAuthState({
         isAuthenticated: false,
         user: null,
@@ -153,21 +137,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    // Check if this was an admin user
-    const wasAdminUser = localStorage.getItem('adminUser') !== null;
-    
     localStorage.removeItem('authToken');
-    localStorage.removeItem('adminUser');
-    localStorage.removeItem('adminAuth');
     setAuthState({
       isAuthenticated: false,
       user: null,
       loading: false,
       error: null
     });
-    
-    // Redirect admin users to admin login, regular users to regular auth
-    window.location.href = wasAdminUser ? '/admin/login' : '/auth';
+    window.location.href = '/auth';
   };
 
   const updatePreferences = async (preferences: Partial<User['preferences']>) => {

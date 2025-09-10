@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Crown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useAdminAuth } from '../contexts/AdminAuthContext';
 import { apiService, type DigestResponse } from '../services/api';
 import Header from '../components/Header';
 import MetricsDashboard from '../components/MetricsDashboard';
@@ -22,7 +21,6 @@ const Dashboard: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const { user } = useAuth();
-  const { isCurrentUserAdmin } = useAdminAuth();
   const navigate = useNavigate();
 
   const fetchDigest = async (refresh = false) => {
@@ -76,12 +74,6 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      // Redirect admin users to admin panel
-      if (isCurrentUserAdmin) {
-        navigate('/admin');
-        return;
-      }
-
       // Check if email is verified for new users
       if (!user.emailVerified && new Date(user.createdAt).getTime() > Date.now() - (24 * 60 * 60 * 1000)) {
         // New user (within 24 hours) without verified email should be redirected to verification
@@ -110,7 +102,7 @@ const Dashboard: React.FC = () => {
     }
     
     fetchDigest(false);
-  }, [user, navigate, isCurrentUserAdmin]);
+  }, [user, navigate]);
 
   useEffect(() => {
     if (user) {
