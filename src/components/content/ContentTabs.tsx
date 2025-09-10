@@ -248,7 +248,22 @@ export default function ContentTabs({ userTier, topStories = [] }: ContentTabsPr
               <div className="articles-list">
                 <h3>Latest Content</h3>
                 {(activeTab === 'all_sources' ? filterOutTopStories(currentContent.articles) : currentContent.articles).map((article, index) => (
-                  <article key={index} className="article-card" itemScope itemType="https://schema.org/Article">
+                  <article 
+                    key={index} 
+                    className="article-card clickable-article" 
+                    itemScope 
+                    itemType="https://schema.org/Article"
+                    onClick={() => article.url && window.open(article.url, '_blank', 'noopener,noreferrer')}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        article.url && window.open(article.url, '_blank', 'noopener,noreferrer');
+                      }
+                    }}
+                    style={{ cursor: article.url ? 'pointer' : 'default' }}
+                  >
                     <h4 itemProp="headline">{article.title || 'Untitled'}</h4>
                     
                     {(article.imageUrl || article.thumbnail_url) && (
@@ -265,6 +280,7 @@ export default function ContentTabs({ userTier, topStories = [] }: ContentTabsPr
                     
                     <div className="article-summary" itemProp="description">
                       {article.ai_summary || article.summary || generateArticleSummary(article, activeTab)}
+                      <span className="llm-summary-badge" title="Enhanced 5-sentence AI summary">🤖</span>
                     </div>
                     
                     <p className="article-source">
@@ -276,19 +292,12 @@ export default function ContentTabs({ userTier, topStories = [] }: ContentTabsPr
                           • {new Date(article.published_date).toLocaleDateString()}
                         </span>
                       )}
+                      {article.url && (
+                        <span className="external-link-indicator" title="Click anywhere to open article">🔗</span>
+                      )}
                     </p>
                     
-                    {article.url && (
-                      <a 
-                        href={article.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="read-more"
-                        itemProp="url"
-                      >
-                        Read More →
-                      </a>
-                    )}
+                    <meta itemProp="url" content={article.url || ''} />
                     <meta itemProp="datePublished" content={article.published_date || new Date().toISOString()} />
                   </article>
                 ))}
