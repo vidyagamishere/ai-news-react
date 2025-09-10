@@ -28,9 +28,11 @@ interface ContentTypesResponse {
 interface ContentTabsProps {
   userTier: string;
   topStories?: TopStory[];
+  isArchive?: boolean;
+  archiveContent?: Record<string, any[]>;
 }
 
-export default function ContentTabs({ userTier, topStories = [] }: ContentTabsProps) {
+export default function ContentTabs({ userTier, topStories = [], isArchive = false, archiveContent }: ContentTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
@@ -96,12 +98,24 @@ export default function ContentTabs({ userTier, topStories = [] }: ContentTabsPr
     loadContentTypes();
   }, []);
 
-  // Load content for active tab
+  // Load content for active tab (skip API calls in archive mode)
   useEffect(() => {
-    if (activeTab && !content[activeTab] && !loading[activeTab]) {
+    if (isArchive && archiveContent) {
+      // Use archive content directly
+      const archiveResponse = {
+        content_type: activeTab,
+        content_info: contentTypes[activeTab] || { name: activeTab.replace('_', ' ').toUpperCase(), description: '', icon: '📄' },
+        articles: archiveContent[activeTab === 'all_sources' ? 'blog' : activeTab] || [],
+        total: archiveContent[activeTab === 'all_sources' ? 'blog' : activeTab]?.length || 0,
+        sources_available: 1,
+        user_tier: userTier,
+        featured_sources: []
+      };
+      setContent(prev => ({ ...prev, [activeTab]: archiveResponse }));
+    } else if (!isArchive && activeTab && !content[activeTab] && !loading[activeTab]) {
       loadContent(activeTab);
     }
-  }, [activeTab]);
+  }, [activeTab, isArchive, archiveContent, contentTypes]);
 
   const loadContentTypes = async () => {
     try {

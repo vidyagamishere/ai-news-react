@@ -6,6 +6,7 @@ import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
+import Archive from './pages/Archive';
 import EmailVerification from './pages/EmailVerification';
 import OTPVerification from './pages/OTPVerification';
 import Preferences from './pages/Preferences';
@@ -116,6 +117,14 @@ function AppContent() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/archive" 
+        element={
+          <ProtectedRoute>
+            <Archive />
           </ProtectedRoute>
         } 
       />

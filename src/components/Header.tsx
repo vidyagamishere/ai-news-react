@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Settings, Crown, Power } from 'lucide-react';
+import { Brain, Settings, Crown, Power, Archive } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
 import SubscriptionTiers from './subscription/SubscriptionTiers';
@@ -137,6 +137,16 @@ const Header: React.FC<HeaderProps> = () => {
                         <span className="desktop-action-label">Admin</span>
                       </div>
                     )}
+                    <div className="desktop-action-item">
+                      <button 
+                        onClick={() => navigate('/archive')}
+                        className="desktop-action-icon archive-action"
+                        title="Archive"
+                      >
+                        <Archive size={16} />
+                      </button>
+                      <span className="desktop-action-label">Archive</span>
+                    </div>
                     <div className="desktop-action-item">
                       <button 
                         onClick={() => navigate('/preferences')}
