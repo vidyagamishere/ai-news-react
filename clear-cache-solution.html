@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache & Test Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 AI News App - Clear Cache & Test</h1>
+    
+    <div class="info">
+        <h3>Issue:</h3>
+        <p>The backend has been fixed to show "Dhanyashree Vijayan" instead of "Test User", but you might be seeing cached data.</p>
+    </div>
+    
+    <div class="info">
+        <h3>Solution:</h3>
+        <p>Clear your browser cache and login tokens, then test the new login.</p>
+    </div>
+    
+    <h3>🛠️ Automatic Fix:</h3>
+    <button class="button" onclick="clearCacheAndTest()">Clear Cache & Test Login</button>
+    <button class="button" onclick="testLoginOnly()">Test Current Login</button>
+    
+    <div id="status"></div>
+    
+    <h3>📝 Manual Steps:</h3>
+    <ol>
+        <li>Clear localStorage: <button class="button" onclick="clearStorage()">Clear Now</button></li>
+        <li>Hard refresh page: Press <code>Ctrl+F5</code> or <code>Cmd+Shift+R</code></li>
+        <li>Visit: <a href="https://ai-news-react.vercel.app" target="_blank">https://ai-news-react.vercel.app</a></li>
+        <li>Login with: <strong>dhanyashreevijayan@gmail.com</strong> / <strong>Arunmugam1!</strong></li>
+    </ol>
+
+    <script>
+        const API_BASE = 'https://ai-news-scraper.vercel.app';
+        
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            sessionStorage.clear();
+            showStatus('✅ Browser storage cleared!', 'success');
+        }
+        
+        async function testLoginOnly() {
+            showStatus('🔍 Testing current login...', 'info');
+            
+            const credentials = {
+                email: 'dhanyashreevijayan@gmail.com',
+                password: 'Arunmugam1!'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(credentials)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.user) {
+                    const userName = data.user.name;
+                    if (userName === 'Dhanyashree Vijayan') {
+                        showStatus(`🎉 SUCCESS! Login works correctly.<br>
+                                   📛 Name: ${userName}<br>
+                                   📧 Email: ${data.user.email}<br>
+                                   ✅ The backend fix is working!`, 'success');
+                    } else {
+                        showStatus(`⚠️ Login works but name might be cached.<br>
+                                   📛 Showing: ${userName}<br>
+                                   📧 Email: ${data.user.email}<br>
+                                   💡 Try clearing cache and testing again.`, 'error');
+                    }
+                } else {
+                    showStatus(`❌ Login failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function clearCacheAndTest() {
+            showStatus('🧹 Clearing cache and testing...', 'info');
+            
+            // Clear storage
+            clearStorage();
+            
+            // Wait a moment
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test login
+            await testLoginOnly();
+        }
+        
+        // Auto-test on page load
+        window.onload = () => {
+            testLoginOnly();
+        };
+    </script>
+</body>
+</html>

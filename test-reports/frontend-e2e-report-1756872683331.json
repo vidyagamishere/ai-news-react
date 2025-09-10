@@ -1,0 +1,92 @@
+{
+  "testSuite": "AI News Digest - Frontend E2E Tests",
+  "timestamp": "2025-09-03T04:11:23.331Z",
+  "summary": {
+    "total": 9,
+    "passed": 0,
+    "failed": 9,
+    "successRate": "0.0%"
+  },
+  "configuration": {
+    "frontendUrl": "http://localhost:5173"
+  },
+  "results": [
+    {
+      "name": "Landing Page Load",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.117Z"
+    },
+    {
+      "name": "Navigation to Sign Up",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.138Z"
+    },
+    {
+      "name": "Navigation to Sign In",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.162Z"
+    },
+    {
+      "name": "Sign Up Form Validation",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173/signup"
+      },
+      "timestamp": "2025-09-03T04:11:23.178Z"
+    },
+    {
+      "name": "Sign Up Flow - Complete",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173/signup"
+      },
+      "timestamp": "2025-09-03T04:11:23.196Z"
+    },
+    {
+      "name": "Responsive Design - Mobile",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.220Z"
+    },
+    {
+      "name": "Responsive Design - Tablet",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.241Z"
+    },
+    {
+      "name": "Responsive Design - Desktop",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.262Z"
+    },
+    {
+      "name": "Responsive Design - 4K",
+      "passed": false,
+      "details": {
+        "error": "net::ERR_CONNECTION_REFUSED at http://localhost:5173"
+      },
+      "timestamp": "2025-09-03T04:11:23.280Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix UI/UX issues",
+    "Fix responsive design issues for better mobile experience",
+    "Fix navigation and routing issues"
+  ]
+}

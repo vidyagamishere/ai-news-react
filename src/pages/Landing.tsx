@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 
 const Landing: React.FC = () => {
   return (
     <div className="app landing-app">
+      <SEO 
+        title="AI News Through AI | Personalized AI Industry Updates & Learning Hub"
+        description="Get personalized AI news, events, and learning resources curated by AI. Daily digest of artificial intelligence breakthroughs, conferences, courses, and industry insights."
+        keywords="AI news, artificial intelligence, machine learning, AI events, AI courses, AI conferences, AI learning, tech news, AI industry updates, personalized news"
+        url="/"
+      />
       <Header 
         onRefresh={() => {}}
         onManualScrape={() => {}}
@@ -50,6 +58,8 @@ const Landing: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };

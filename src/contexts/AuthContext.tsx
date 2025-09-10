@@ -9,6 +9,8 @@ interface AuthContextType extends AuthState {
   logout: () => void;
   updatePreferences: (preferences: Partial<User['preferences']>) => Promise<void>;
   upgradeSubscription: () => Promise<void>;
+  sendOTP: (email: string, name?: string) => Promise<void>;
+  verifyOTP: (email: string, otp: string, userData: any) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
     user: null,
-    loading: true,
+    loading: false,
     error: null
   });
 
@@ -34,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const initializeAuth = async () => {
+    setAuthState(prev => ({ ...prev, loading: true }));
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -82,14 +85,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = async (credentials: SignupCredentials) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }));
     try {
-      const { user, token } = await authService.signup(credentials);
-      localStorage.setItem('authToken', token);
-      setAuthState({
-        isAuthenticated: true,
-        user,
-        loading: false,
-        error: null
-      });
+      const response = await authService.signup(credentials);
+      
+      // Check if response indicates OTP verification is required
+      if ('emailVerificationRequired' in response && response.emailVerificationRequired) {
+        setAuthState(prev => ({ ...prev, loading: false }));
+        // Throw special error to trigger OTP flow in Auth component
+        throw new Error('OTP_VERIFICATION_REQUIRED');
+      }
+      
+      // Normal signup success - user is logged in
+      if ('user' in response && 'token' in response) {
+        const { user, token } = response;
+        localStorage.setItem('authToken', token);
+        setAuthState({
+          isAuthenticated: true,
+          user,
+          loading: false,
+          error: null
+        });
+      }
     } catch (error) {
       setAuthState(prev => ({
         ...prev,
@@ -129,6 +144,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loading: false,
       error: null
     });
+    window.location.href = '/auth';
   };
 
   const updatePreferences = async (preferences: Partial<User['preferences']>) => {
@@ -136,7 +152,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       const updatedUser = await authService.updateUserPreferences(preferences);
-      setAuthState(prev => ({ ...prev, user: updatedUser }));
+      
+      // Preserve existing user data, especially name, if the backend doesn't return it properly
+      const preservedUser = {
+        ...authState.user, // Keep existing user data
+        ...updatedUser,     // Override with updated data from backend
+        name: updatedUser.name || authState.user.name, // Ensure name is preserved
+        email: updatedUser.email || authState.user.email, // Ensure email is preserved
+        preferences: {
+          ...authState.user.preferences, // Keep existing preferences
+          ...updatedUser.preferences,    // Override with new preferences
+        }
+      };
+      
+      setAuthState(prev => ({ ...prev, user: preservedUser }));
     } catch (error) {
       throw error;
     }
@@ -153,6 +182,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const sendOTP = async (email: string, name?: string) => {
+    try {
+      await authService.sendOTP(email, name);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const verifyOTP = async (email: string, otp: string, userData: any) => {
+    try {
+      const { user, token: authToken } = await authService.verifyOTP(email, otp, userData);
+      localStorage.setItem('authToken', authToken);
+      setAuthState({
+        isAuthenticated: true,
+        user,
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      setAuthState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'OTP verification failed'
+      }));
+      throw error;
+    }
+  };
+
   const value: AuthContextType = {
     ...authState,
     login,
@@ -160,7 +216,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     googleLogin,
     logout,
     updatePreferences,
-    upgradeSubscription
+    upgradeSubscription,
+    sendOTP,
+    verifyOTP
   };
 
   return (

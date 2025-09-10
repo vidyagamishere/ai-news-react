@@ -301,16 +301,43 @@
 
 /* Mobile responsiveness */
 @media (max-width: 480px) {
+  .auth-modal-overlay {
+    padding: 10px;
+    overflow-x: hidden;
+  }
+
   .auth-modal {
     margin: 10px;
     border-radius: 12px;
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    overflow-x: hidden;
   }
   
   .auth-modal-content {
     padding: 24px 20px 20px;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
   
   .auth-title {
     font-size: 24px;
+  }
+
+  .auth-form {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .form-group {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form-input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }

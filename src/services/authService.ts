@@ -7,6 +7,14 @@ interface AuthResponse {
   token: string;
 }
 
+interface OTPResponse {
+  message: string;
+  email: string;
+  emailVerificationRequired: boolean;
+  otpSent: boolean;
+  expiresInMinutes: number;
+}
+
 class AuthService {
   private async request(endpoint: string, options: RequestInit = {}) {
     const token = localStorage.getItem('authToken');
@@ -35,7 +43,7 @@ class AuthService {
     });
   }
 
-  async signup(credentials: SignupCredentials): Promise<AuthResponse> {
+  async signup(credentials: SignupCredentials): Promise<AuthResponse | OTPResponse> {
     if (credentials.password !== credentials.confirmPassword) {
       throw new Error('Passwords do not match');
     }
@@ -72,6 +80,20 @@ class AuthService {
     return this.request('/api/auth/google', {
       method: 'POST',
       body: JSON.stringify({ idToken }),
+    });
+  }
+
+  async sendOTP(email: string, name?: string): Promise<void> {
+    return this.request('/api/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email, name }),
+    });
+  }
+
+  async verifyOTP(email: string, otp: string, userData: any): Promise<AuthResponse> {
+    return this.request('/api/auth/verify-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email, otp, userData }),
     });
   }
 }

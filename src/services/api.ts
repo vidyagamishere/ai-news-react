@@ -1,7 +1,7 @@
-// API service for connecting to AI News Scraper backend
+// API service for connecting to AI News Scraper backend with admin validation
 import axios from 'axios';
 
-// Backend API URL - Use deployed Vercel backend
+// Backend API URL - Stable domain that won't change between deployments
 const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
 
 const api = axios.create({
@@ -16,6 +16,7 @@ const api = axios.create({
 export interface Article {
   title: string;
   description: string;
+  content_summary?: string; // LLM-generated summary
   source: string;
   time: string;
   impact: 'high' | 'medium' | 'low';
@@ -26,6 +27,7 @@ export interface Article {
   rankingScore?: number;
   priority?: number;
   thumbnail_url?: string;
+  imageUrl?: string;
   audio_url?: string;
   duration?: number;
 }
@@ -42,6 +44,9 @@ export interface TopStory {
   source: string;
   significanceScore: number;
   url: string;
+  imageUrl?: string;
+  summary?: string;
+  content_summary?: string; // LLM-generated summary
 }
 
 export interface DigestResponse {
@@ -160,6 +165,45 @@ export const apiService = {
   // Generic GET method for new endpoints
   get: async (endpoint: string, params?: any): Promise<any> => {
     const response = await api.get(endpoint, { params });
+    return response.data;
+  },
+
+  // Admin validation endpoints
+  validateSources: async (adminKey: string, options?: {
+    contentType?: string;
+    priority?: number;
+    timeout?: number;
+    maxConcurrent?: number;
+  }): Promise<any> => {
+    const response = await api.post('/api/admin/validate-sources', options || {}, {
+      headers: { 'X-Admin-Key': adminKey }
+    });
+    return response.data;
+  },
+
+  validateSingleSource: async (adminKey: string, sourceData: {
+    name: string;
+    rss_url: string;
+    website?: string;
+    content_type?: string;
+  }): Promise<any> => {
+    const response = await api.post('/api/admin/validate-single-source', sourceData, {
+      headers: { 'X-Admin-Key': adminKey }
+    });
+    return response.data;
+  },
+
+  quickTest: async (adminKey: string): Promise<any> => {
+    const response = await api.get('/api/admin/quick-test', {
+      headers: { 'X-Admin-Key': adminKey }
+    });
+    return response.data;
+  },
+
+  getValidationStatus: async (adminKey: string): Promise<any> => {
+    const response = await api.get('/api/admin/validation-status', {
+      headers: { 'X-Admin-Key': adminKey }
+    });
     return response.data;
   },
 };

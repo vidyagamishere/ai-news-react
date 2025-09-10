@@ -100,9 +100,11 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete, onSkip }) => 
         topics: updatedTopics,
         newsletterFrequency,
         contentTypes: selectedContentTypes,
-        emailNotifications: true
+        emailNotifications: true,
+        onboardingCompleted: true
       });
       
+      localStorage.setItem('onboardingComplete', 'true');
       onComplete();
     } catch (error) {
       console.error('Failed to save preferences:', error);

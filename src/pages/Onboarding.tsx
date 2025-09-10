@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Check, Brain, Briefcase, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { authService } from '../services/authService';
 import type { ContentType } from '../types/auth';
 import './onboarding.css';
 
 interface OnboardingData {
+  age: string;
+  industry: string;
   occupation: string;
   experienceLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   selectedTopics: string[];
@@ -35,6 +36,20 @@ const aiTopics: AITopic[] = [
   { id: 'ai-tools', name: 'AI Tools & Platforms', description: 'Development frameworks and tools', category: 'Tools' }
 ];
 
+const industries = [
+  'Technology',
+  'Healthcare',
+  'Finance',
+  'Education',
+  'Manufacturing',
+  'Retail',
+  'Media & Entertainment',
+  'Government',
+  'Non-profit',
+  'Consulting',
+  'Other'
+];
+
 const occupations = [
   'Software Engineer/Developer',
   'Data Scientist',
@@ -49,6 +64,15 @@ const occupations = [
   'Other'
 ];
 
+const ageRanges = [
+  '18-24',
+  '25-34',
+  '35-44',
+  '45-54',
+  '55-64',
+  '65+'
+];
+
 const experienceLevels = [
   { id: 'beginner', name: 'Beginner', description: 'New to AI, want to learn the basics' },
   { id: 'intermediate', name: 'Intermediate', description: 'Some AI knowledge, building practical skills' },
@@ -60,6 +84,8 @@ const Onboarding: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
+    age: '',
+    industry: '',
     occupation: '',
     experienceLevel: 'intermediate',
     selectedTopics: aiTopics.filter(t => t.defaultSelected).map(t => t.id),
@@ -69,7 +95,7 @@ const Onboarding: React.FC = () => {
 
   const { user, updatePreferences } = useAuth();
   const navigate = useNavigate();
-  const totalSteps = 5;
+  const totalSteps = 7;
 
   useEffect(() => {
     // Redirect if user is not authenticated
@@ -105,9 +131,17 @@ const Onboarding: React.FC = () => {
       return;
     }
 
+    if (onboardingData.selectedTopics.length < 3) {
+      alert('Please select at least 3 topics of interest to continue.');
+      return;
+    }
+
     setLoading(true);
     
     try {
+      // Mark onboarding as complete first
+      localStorage.setItem('onboardingComplete', 'true');
+      
       // Convert onboarding data to user preferences format
       const preferences = {
         topics: aiTopics.map(topic => ({
@@ -119,41 +153,37 @@ const Onboarding: React.FC = () => {
         })),
         newsletterFrequency: 'daily' as const,
         emailNotifications: onboardingData.subscribeNewsletter,
-        contentTypes: ['articles', 'videos', 'events', 'learning'] as ContentType[]
+        contentTypes: ['articles', 'videos', 'events', 'learning'] as ContentType[],
+        onboardingCompleted: true
       };
 
-      // Update user preferences
-      await updatePreferences(preferences);
+      // Try to update preferences, but don't block navigation if it fails
+      try {
+        await updatePreferences(preferences);
+        console.log('Preferences updated successfully');
+      } catch (prefError) {
+        console.warn('Failed to save preferences, but continuing to dashboard:', prefError);
+      }
 
-      // Store additional analytics data (occupation, experience level)
-      const analyticsData = {
-        occupation: onboardingData.occupation,
-        experienceLevel: onboardingData.experienceLevel,
-        onboardingCompletedAt: new Date().toISOString()
-      };
-
-      // Send analytics data to backend - using any to bypass type restrictions
-      await (authService.updateUserPreferences as any)({
-        ...preferences,
-        analytics: analyticsData
-      });
-
-      navigate('/dashboard');
+      // Navigate to dashboard using window.location for reliable navigation
+      console.log('Onboarding complete, navigating to dashboard...');
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Failed to complete onboarding:', error);
       alert('Failed to save preferences. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
 
   const isStepValid = () => {
     switch (currentStep) {
-      case 1: return onboardingData.occupation.length > 0;
-      case 2: return onboardingData.experienceLevel.length > 0;
-      case 3: return onboardingData.selectedTopics.length >= 3;
-      case 4: return true; // Newsletter is optional
-      case 5: return onboardingData.acceptTerms;
+      case 1: return onboardingData.age.length > 0;
+      case 2: return onboardingData.industry.length > 0;
+      case 3: return onboardingData.occupation.length > 0;
+      case 4: return onboardingData.experienceLevel.length > 0;
+      case 5: return onboardingData.selectedTopics.length >= 3;
+      case 6: return true; // Newsletter is optional
+      case 7: return onboardingData.acceptTerms;
       default: return false;
     }
   };
@@ -171,8 +201,11 @@ const Onboarding: React.FC = () => {
       <div className="onboarding-container">
         <div className="onboarding-header">
           <div className="welcome-message">
-            <h1>Welcome to AI News Digest!</h1>
-            <p>Let's personalize your AI learning experience</p>
+            <div className="onboarding-logo">
+              <div className="neural-icon">🧠</div>
+              <h1>Welcome to Vidyagam Learning</h1>
+            </div>
+            <p>Let's personalize your AI intelligence experience</p>
           </div>
           
           <div className="progress-bar">
@@ -189,8 +222,56 @@ const Onboarding: React.FC = () => {
         </div>
 
         <div className="onboarding-content">
-          {/* Step 1: Occupation */}
+          {/* Step 1: Age Range */}
           {currentStep === 1 && (
+            <div className="step-content">
+              <div className="step-header">
+                <div className="step-icon">👤</div>
+                <h2>What's your age range?</h2>
+                <p>This helps us provide age-appropriate content and insights</p>
+              </div>
+              
+              <div className="age-grid">
+                {ageRanges.map(ageRange => (
+                  <button
+                    key={ageRange}
+                    type="button"
+                    className={`age-card ${onboardingData.age === ageRange ? 'selected' : ''}`}
+                    onClick={() => setOnboardingData(prev => ({ ...prev, age: ageRange }))}
+                  >
+                    {ageRange}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Industry */}
+          {currentStep === 2 && (
+            <div className="step-content">
+              <div className="step-header">
+                <div className="step-icon">🏢</div>
+                <h2>What industry do you work in?</h2>
+                <p>We'll show you industry-specific AI applications and trends</p>
+              </div>
+              
+              <div className="industry-grid">
+                {industries.map(industry => (
+                  <button
+                    key={industry}
+                    type="button"
+                    className={`industry-card ${onboardingData.industry === industry ? 'selected' : ''}`}
+                    onClick={() => setOnboardingData(prev => ({ ...prev, industry }))}
+                  >
+                    {industry}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Occupation */}
+          {currentStep === 3 && (
             <div className="step-content">
               <div className="step-header">
                 <Briefcase size={48} className="step-icon" />
@@ -213,8 +294,8 @@ const Onboarding: React.FC = () => {
             </div>
           )}
 
-          {/* Step 2: Experience Level */}
-          {currentStep === 2 && (
+          {/* Step 4: Experience Level */}
+          {currentStep === 4 && (
             <div className="step-content">
               <div className="step-header">
                 <Brain size={48} className="step-icon" />
@@ -238,8 +319,8 @@ const Onboarding: React.FC = () => {
             </div>
           )}
 
-          {/* Step 3: Topic Selection */}
-          {currentStep === 3 && (
+          {/* Step 5: Topic Selection */}
+          {currentStep === 5 && (
             <div className="step-content">
               <div className="step-header">
                 <BookOpen size={48} className="step-icon" />
@@ -282,8 +363,8 @@ const Onboarding: React.FC = () => {
             </div>
           )}
 
-          {/* Step 4: Newsletter Subscription */}
-          {currentStep === 4 && (
+          {/* Step 6: Newsletter Subscription */}
+          {currentStep === 6 && (
             <div className="step-content">
               <div className="step-header">
                 <div className="step-icon">📧</div>
@@ -320,8 +401,8 @@ const Onboarding: React.FC = () => {
             </div>
           )}
 
-          {/* Step 5: Terms and Conditions */}
-          {currentStep === 5 && (
+          {/* Step 7: Terms and Conditions */}
+          {currentStep === 7 && (
             <div className="step-content">
               <div className="step-header">
                 <div className="step-icon">📋</div>
@@ -375,6 +456,19 @@ const Onboarding: React.FC = () => {
                 Back
               </button>
             )}
+            
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.setItem('onboardingComplete', 'true');
+                console.log('Skipping onboarding, navigating to dashboard...');
+                window.location.href = '/dashboard';
+              }}
+              className="btn btn-ghost"
+              disabled={loading}
+            >
+              Skip for now
+            </button>
           </div>
 
           <div className="actions-right">
@@ -405,22 +499,30 @@ const Onboarding: React.FC = () => {
         <div className="onboarding-summary">
           <div className="summary-grid">
             <div className={`summary-item ${currentStep >= 1 ? 'completed' : ''}`}>
+              <div className="step-icon">👤</div>
+              <span>Age</span>
+            </div>
+            <div className={`summary-item ${currentStep >= 2 ? 'completed' : ''}`}>
+              <div className="step-icon">🏢</div>
+              <span>Industry</span>
+            </div>
+            <div className={`summary-item ${currentStep >= 3 ? 'completed' : ''}`}>
               <Briefcase size={16} />
               <span>Occupation</span>
             </div>
-            <div className={`summary-item ${currentStep >= 2 ? 'completed' : ''}`}>
+            <div className={`summary-item ${currentStep >= 4 ? 'completed' : ''}`}>
               <Brain size={16} />
               <span>Experience</span>
             </div>
-            <div className={`summary-item ${currentStep >= 3 ? 'completed' : ''}`}>
+            <div className={`summary-item ${currentStep >= 5 ? 'completed' : ''}`}>
               <BookOpen size={16} />
               <span>Topics</span>
             </div>
-            <div className={`summary-item ${currentStep >= 4 ? 'completed' : ''}`}>
+            <div className={`summary-item ${currentStep >= 6 ? 'completed' : ''}`}>
               <div className="step-icon">📧</div>
               <span>Newsletter</span>
             </div>
-            <div className={`summary-item ${currentStep >= 5 ? 'completed' : ''}`}>
+            <div className={`summary-item ${currentStep >= 7 ? 'completed' : ''}`}>
               <div className="step-icon">📋</div>
               <span>Terms</span>
             </div>

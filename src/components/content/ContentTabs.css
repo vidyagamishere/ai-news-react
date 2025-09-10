@@ -6,7 +6,7 @@
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   overflow: hidden;
-  margin: 24px 0;
+  margin: 0;
   border: 1px solid rgba(226, 232, 240, 0.6);
 }
 
@@ -14,27 +14,36 @@
 .tab-navigation {
   background: linear-gradient(135deg, #fafbfc 0%, #f7fafc 100%);
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  padding: 20px 24px;
+  padding: 16px 24px;
   backdrop-filter: blur(10px);
 }
 
 .tab-list {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 0;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;
+}
+
+.tab-list::-webkit-scrollbar {
+  display: none;
 }
 
 .tab-button {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
+  gap: 8px;
+  padding: 12px 20px;
   border: 2px solid transparent;
-  border-radius: 30px;
-  background: #ffffff;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
   color: #64748b;
   font-weight: 600;
   font-size: 14px;
@@ -44,6 +53,9 @@
   white-space: nowrap;
   letter-spacing: 0.2px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .tab-button:hover {
@@ -71,6 +83,25 @@
 .tab-button:disabled:hover {
   transform: none;
   box-shadow: none;
+}
+
+.tab-button.premium-locked {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px dashed #d1d5db;
+}
+
+.tab-button.premium-locked:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.premium-lock {
+  color: #f59e0b;
+  font-size: 12px;
+  margin-left: 4px;
 }
 
 .tab-icon {
@@ -131,18 +162,19 @@
 
 /* Content Display */
 .tab-content {
-  padding: 32px 24px;
-  min-height: 400px;
+  padding: 24px;
+  min-height: 500px;
   background: #ffffff;
+  overflow: visible;
 }
 
 .content-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  align-items: center;
+  margin-bottom: 8px;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
 }
 
 .content-title {
@@ -196,18 +228,18 @@
 
 .content-description {
   color: #64748b;
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 16px;
 }
 
 /* Content Stats */
 .content-stats {
   display: flex;
-  gap: 20px;
-  padding: 16px 0;
+  gap: 16px;
+  padding: 12px 0;
   border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .stat {
@@ -284,6 +316,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
+  margin-top: 0;
 }
 
 .article-card {
@@ -325,6 +358,51 @@
   font-weight: 600;
   margin: 0 0 8px 0;
   line-height: 1.4;
+}
+
+/* Article Images - Enhanced Non-intrusive Design */
+.article-image {
+  margin: 12px 0 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  max-width: 350px;
+  aspect-ratio: 16/9;
+  position: relative;
+}
+
+.article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.article-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.02) 100%);
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.article-card:hover .article-image {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.article-card:hover .article-image img {
+  transform: scale(1.02);
 }
 
 .article-source {
@@ -411,8 +489,9 @@
 
 .loading-state {
   text-align: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   color: #64748b;
+  margin: 24px 0;
 }
 
 /* Desktop Large (1920px+) - 4K/5K displays */
@@ -672,6 +751,8 @@
     padding: 12px;
     margin-bottom: 12px;
     border-radius: 8px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .article-card h4 {
@@ -685,5 +766,15 @@
   
   .read-more {
     font-size: 13px;
+  }
+
+  .article-image {
+    max-width: 100%;
+    margin: 8px 0 12px 0;
+  }
+
+  .tab-content {
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }

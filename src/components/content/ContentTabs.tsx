@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiService } from '../../services/api';
 import Loading from '../Loading';
+import SmartImage from '../SmartImage';
 import './ContentTabs.css';
 
 interface ContentType {
@@ -17,6 +18,7 @@ interface ContentResponse {
   sources_available: number;
   user_tier: string;
   featured_sources: Array<{name: string, website: string}>;
+  topic_summary?: string;
 }
 
 interface ContentTypesResponse {
@@ -27,15 +29,53 @@ interface ContentTabsProps {
   userTier: string;
 }
 
-export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
+export default function ContentTabs({ userTier }: ContentTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
 
-  // Define tab order for professional presentation
+  const getTopicSummary = (contentType: string, contentInfo: ContentType): string => {
+    const summaries: Record<string, string> = {
+      'all_sources': 'Comprehensive coverage of AI developments from trusted industry publications, research institutions, and thought leaders. This curated feed aggregates the most significant breakthroughs, trends, and insights across the entire artificial intelligence landscape.',
+      'blogs': 'In-depth analysis and expert perspectives from leading AI practitioners, researchers, and industry veterans. These blog posts offer detailed explanations of complex concepts, practical implementations, and strategic insights into AI adoption.',
+      'podcasts': 'Audio conversations with AI pioneers, startup founders, and technology leaders discussing emerging trends, challenges, and opportunities. Perfect for staying informed while commuting or multitasking.',
+      'videos': 'Visual learning content including conference talks, technical tutorials, product demos, and expert interviews. Ideal for understanding complex AI concepts through demonstrations and visual explanations.',
+      'events': 'Upcoming conferences, workshops, webinars, and networking opportunities in the AI community. Stay connected with the latest gatherings where breakthrough research and industry developments are first announced.',
+      'learn': 'Educational resources including courses, tutorials, research papers, and certification programs. Structured learning paths for advancing your AI knowledge from beginner to expert level.'
+    };
+    
+    return summaries[contentType] || contentInfo.description || 'Discover the latest content in this category.';
+  };
+
+  const generateArticleSummary = (article: any, contentType: string): string => {
+    const title = article.title || '';
+    const source = article.source || '';
+    
+    if (title.length < 10) return 'Click to read the full article for detailed insights.';
+    
+    const summaryTemplates: Record<string, (title: string, source: string) => string> = {
+      'all_sources': (t, _s) => `Latest development from ${_s}: ${t.length > 100 ? t.substring(0, 100) + '...' : t}`,
+      'blogs': (t, _s) => `Expert analysis from ${_s}: This article explores ${t.toLowerCase().includes('ai') || t.toLowerCase().includes('machine') ? 'artificial intelligence applications and implications' : 'emerging technology trends and practical implementations'}.`,
+      'podcasts': (t, _s) => `Audio discussion from ${_s}: Listen to expert insights on ${t.toLowerCase().includes('interview') ? 'industry perspectives and experiences' : 'current developments and future predictions'}.`,
+      'videos': (t, _s) => `Video content from ${_s}: Watch detailed explanations and demonstrations ${t.toLowerCase().includes('tutorial') ? 'with step-by-step guidance' : 'covering key concepts and applications'}.`,
+      'events': (t, _s) => `Upcoming event: ${t} - Connect with the AI community and learn from industry leaders at this ${t.toLowerCase().includes('conference') ? 'major conference' : 'networking opportunity'}.`,
+      'learn': (t, _s) => `Educational resource from ${_s}: ${t.toLowerCase().includes('course') ? 'Structured learning program' : 'Knowledge resource'} designed to advance your understanding of AI concepts and applications.`
+    };
+    
+    const generator = summaryTemplates[contentType] || summaryTemplates['all_sources'];
+    return generator(title, source);
+  };
+
+  // Define tab order and tier access
   const tabOrder = ['all_sources', 'blogs', 'podcasts', 'videos', 'events', 'learn'];
+  const premiumTabs: string[] = []; // All tabs are now available to all users
+  
+  const isTabAccessible = (tabKey: string): boolean => {
+    if (!premiumTabs.includes(tabKey)) return true;
+    return userTier === 'premium';
+  };
 
   // Load available content types on mount
   useEffect(() => {
@@ -65,6 +105,16 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
       setError(null);
 
       const response: ContentResponse = await apiService.get(`/api/content/${contentType}`);
+      
+      // Sort articles by date (latest first)
+      if (response.articles && response.articles.length > 0) {
+        response.articles.sort((a, b) => {
+          const dateA = new Date(a.published_date || a.date || 0).getTime();
+          const dateB = new Date(b.published_date || b.date || 0).getTime();
+          return dateB - dateA;
+        });
+      }
+      
       setContent(prev => ({ ...prev, [contentType]: response }));
     } catch (err) {
       console.error(`Failed to load ${contentType} content:`, err);
@@ -98,12 +148,14 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
           {availableContentTypes.map(([key, info]) => (
             <button
               key={key}
-              className={`tab-button ${activeTab === key ? 'active' : ''}`}
-              onClick={() => handleTabClick(key)}
-              disabled={false}
+              className={`tab-button ${activeTab === key ? 'active' : ''} ${!isTabAccessible(key) ? 'premium-locked' : ''}`}
+              onClick={() => isTabAccessible(key) ? handleTabClick(key) : null}
+              disabled={!isTabAccessible(key)}
+              title={!isTabAccessible(key) ? 'Upgrade to Premium to access this content' : ''}
             >
               <span className="tab-icon">{info?.icon || '📄'}</span>
               <span className="tab-name">{info?.name || key}</span>
+              {!isTabAccessible(key) && <span className="premium-lock">🔒</span>}
             </button>
           ))}
         </div>
@@ -124,7 +176,7 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
         {isLoading ? (
           <Loading message={`Loading ${contentTypes[activeTab]?.name || activeTab}...`} />
         ) : currentContent ? (
-          <div className="content-section">
+          <>
             {/* Content Header */}
             <div className="content-header">
               <div className="content-title">
@@ -141,7 +193,9 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
               </div>
             </div>
 
-            <p className="content-description">{currentContent.content_info?.description || 'Loading content...'}</p>
+            <div className="topic-summary">
+              <p className="content-description">{getTopicSummary(activeTab, currentContent.content_info)}</p>
+            </div>
 
             {/* Content Stats */}
             <div className="content-stats">
@@ -182,14 +236,34 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
                 {currentContent.articles.map((article, index) => (
                   <article key={index} className="article-card" itemScope itemType="https://schema.org/Article">
                     <h4 itemProp="headline">{article.title || 'Untitled'}</h4>
+                    
+                    {(article.imageUrl || article.thumbnail_url) && (
+                      <SmartImage
+                        src={article.imageUrl || article.thumbnail_url}
+                        alt={article.title || 'Article image'}
+                        className="article-image-smart"
+                        fallbackType="placeholder"
+                        aspectRatio="16/9"
+                        maxWidth="350px"
+                        lazy={true}
+                      />
+                    )}
+                    
+                    <div className="article-summary" itemProp="description">
+                      {article.ai_summary || article.summary || generateArticleSummary(article, activeTab)}
+                    </div>
+                    
                     <p className="article-source">
                       <span itemProp="publisher" itemScope itemType="https://schema.org/Organization">
                         <span itemProp="name">{article.source || 'Unknown Source'}</span>
                       </span>
+                      {article.published_date && (
+                        <span className="article-date">
+                          • {new Date(article.published_date).toLocaleDateString()}
+                        </span>
+                      )}
                     </p>
-                    {article.summary && (
-                      <p className="article-summary" itemProp="description">{article.summary}</p>
-                    )}
+                    
                     {article.url && (
                       <a 
                         href={article.url} 
@@ -218,7 +292,7 @@ export default function ContentTabs({ userTier: _ }: ContentTabsProps) {
                 </button>
               </div>
             )}
-          </div>
+          </>
         ) : (
           <div className="loading-state">
             <p>Select a tab to view content</p>

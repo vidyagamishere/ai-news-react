@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink, Clock, Star, Play, Headphones } from 'lucide-react';
 import type { Article } from '../services/api';
+import SmartImage from './SmartImage';
 
 interface ArticleCardProps {
   article: Article;
@@ -37,8 +38,16 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   return (
     <div className={`article-card ${article.type}`}>
       {article.type === 'video' && article.thumbnail_url && (
-        <div className="article-thumbnail">
-          <img src={article.thumbnail_url} alt={article.title} />
+        <div className="article-thumbnail-container">
+          <SmartImage
+            src={article.thumbnail_url}
+            alt={article.title}
+            className="article-thumbnail-smart"
+            fallbackType="placeholder"
+            aspectRatio="16/9"
+            maxWidth="400px"
+            lazy={true}
+          />
           <div className="play-overlay">
             <Play />
           </div>
@@ -86,7 +95,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           </a>
         </h3>
         
-        <p className="article-description">{article.description}</p>
+        <p className="article-description">
+          {article.content_summary || article.description}
+          {article.content_summary && (
+            <span className="llm-summary-badge" title="AI-generated summary">🤖</span>
+          )}
+        </p>
         
         <div className="article-footer">
           <span className="read-time">{article.readTime}</span>

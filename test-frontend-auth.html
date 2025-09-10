@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Frontend Auth</title>
+</head>
+<body>
+    <h1>Test Frontend Authentication</h1>
+    <div id="result"></div>
+    
+    <script>
+        const API_BASE = 'https://ai-news-scraper-ln76nqcdr.vercel.app';
+        
+        async function testLogin() {
+            console.log('Testing frontend login...');
+            
+            const credentials = {
+                email: 'dhanyashreevijayan@gmail.com',
+                password: 'Arunmugam1!'
+            };
+            
+            try {
+                // Simulate exactly what the frontend does
+                const token = localStorage.getItem('authToken');
+                
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token && { Authorization: `Bearer ${token}` })
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(credentials)
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ message: 'Request failed' }));
+                    console.log('Error response:', error);
+                    document.getElementById('result').innerHTML = 
+                        `<div style="color: red;">Login failed: ${error.message || 'Request failed'}</div>`;
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('Success response:', data);
+                document.getElementById('result').innerHTML = 
+                    `<div style="color: green;">Login successful! Token: ${data.token}</div>`;
+                    
+            } catch (error) {
+                console.error('Request error:', error);
+                document.getElementById('result').innerHTML = 
+                    `<div style="color: red;">Request error: ${error.message}</div>`;
+            }
+        }
+        
+        // Test immediately
+        testLogin();
+    </script>
+</body>
+</html>

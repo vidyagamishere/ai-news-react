@@ -22,7 +22,8 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
   }
 
   useEffect(() => {
-    // Load Google Identity Services script
+    // Load Google Identity Services script with FedCM compliance
+    // FedCM (Federated Credential Management) is now mandatory as of Oct 2024
     if (!window.google && googleClientId) {
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
@@ -37,7 +38,11 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
             callback: handleGoogleResponse,
             auto_select: false,
             cancel_on_tap_outside: true,
-            //use_fedcm_for_prompt: false
+            use_fedcm_for_prompt: true,
+            // Additional FedCM compliance settings
+            context: 'signin',
+            ux_mode: 'popup',
+            itp_support: true
           });
         }
       };

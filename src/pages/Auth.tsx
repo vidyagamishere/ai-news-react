@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Mail, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import GoogleSignIn from '../components/auth/GoogleSignIn';
 import '../components/auth/auth.css';
@@ -17,11 +17,12 @@ const Auth: React.FC = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    acceptTerms: false
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   
-  const { login, signup, loading, error, isAuthenticated } = useAuth();
+  const { login, signup, loading, error, isAuthenticated, sendOTP } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,6 +56,10 @@ const Auth: React.FC = () => {
       } else if (formData.password !== formData.confirmPassword) {
         errors.confirmPassword = 'Passwords do not match';
       }
+      
+      if (!formData.acceptTerms) {
+        errors.acceptTerms = 'You must accept the Terms of Service';
+      }
     }
     
     return errors;
@@ -76,9 +81,19 @@ const Auth: React.FC = () => {
         // Existing users go directly to dashboard
         navigate('/dashboard');
       } else {
-        await signup(formData);
-        // New users go to onboarding to collect preferences
-        navigate('/onboarding');
+        try {
+          await signup(formData);
+          // If signup succeeds, user is logged in and goes to onboarding
+          navigate('/onboarding');
+        } catch (signupError: any) {
+          if (signupError.message === 'OTP_VERIFICATION_REQUIRED') {
+            // Backend requires OTP verification
+            await sendOTP(formData.email, formData.name);
+            navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
+          } else {
+            throw signupError;
+          }
+        }
       }
     } catch (err) {
       // Error is handled in AuthContext
@@ -86,7 +101,7 @@ const Auth: React.FC = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear field error when user starts typing
     if (formErrors[field]) {
@@ -95,8 +110,8 @@ const Auth: React.FC = () => {
   };
 
   const handleGoogleSuccess = () => {
-    // Google users should go to onboarding to complete profile
-    navigate('/onboarding');
+    // Let Dashboard component handle routing based on user state
+    navigate('/dashboard');
   };
 
   const switchMode = (newMode: AuthMode) => {
@@ -105,7 +120,8 @@ const Auth: React.FC = () => {
       name: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      acceptTerms: false
     });
     setFormErrors({});
   };
@@ -114,37 +130,70 @@ const Auth: React.FC = () => {
 
   return (
     <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-header">
-          <Link to="/" className="back-link">
-            <ArrowLeft size={20} />
-            Back to Home
-          </Link>
-          
-          <div className="auth-brand">
-            <h1>AI News Digest</h1>
-            <p>{isSignIn ? 'Sign in to your account' : 'Create your account'}</p>
+      <div className="auth-layout">
+        <div className="auth-left-panel">
+          <div className="auth-branding">
+            <div className="brand-content">
+              <div className="brand-logo">
+                <div className="neural-icon">🧠</div>
+                <h1>Vidyagam Learning</h1>
+              </div>
+              <h2>Where AI Minds Connect</h2>
+              <p>Join 50,000+ AI researchers, engineers, and visionaries accessing breakthrough intelligence curated by advanced neural networks.</p>
+              
+              <div className="brand-features">
+                <div className="brand-feature">
+                  <div className="feature-icon">🚀</div>
+                  <div>
+                    <strong>Quantum-Speed Intelligence</strong>
+                    <span>Real-time AI developments before they break mainstream</span>
+                  </div>
+                </div>
+                <div className="brand-feature">
+                  <div className="feature-icon">🔬</div>
+                  <div>
+                    <strong>Research-Grade Insights</strong>
+                    <span>Direct pipeline from labs to your dashboard</span>
+                  </div>
+                </div>
+                <div className="brand-feature">
+                  <div className="feature-icon">🎯</div>
+                  <div>
+                    <strong>Neural Personalization</strong>
+                    <span>AI that learns your technical interests</span>
+                  </div>
+                </div>
+                <div className="brand-feature">
+                  <div className="feature-icon">🏛️</div>
+                  <div>
+                    <strong>Elite Network Access</strong>
+                    <span>Trusted by DeepMind, OpenAI, and top AI labs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="auth-card">
-          {/* Mode Toggle */}
-          <div className="auth-toggle">
-            <button
-              type="button"
-              className={`toggle-btn ${isSignIn ? 'active' : ''}`}
-              onClick={() => switchMode('signin')}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              className={`toggle-btn ${!isSignIn ? 'active' : ''}`}
-              onClick={() => switchMode('signup')}
-            >
-              Sign Up
-            </button>
-          </div>
+        <div className="auth-right-panel">
+          <div className="auth-form-container">
+            {/* Mode Toggle */}
+            <div className="auth-toggle">
+              <button
+                type="button"
+                className={`toggle-btn ${isSignIn ? 'active' : ''}`}
+                onClick={() => switchMode('signin')}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                className={`toggle-btn ${!isSignIn ? 'active' : ''}`}
+                onClick={() => switchMode('signup')}
+              >
+                Sign Up
+              </button>
+            </div>
 
           <div className="auth-card-header">
             <h2>{isSignIn ? 'Welcome back' : 'Join AI News Digest'}</h2>
@@ -248,6 +297,27 @@ const Auth: React.FC = () => {
               </div>
             )}
 
+            {!isSignIn && (
+              <div className="form-group">
+                <div className="terms-checkbox">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.acceptTerms}
+                      onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
+                      required={!isSignIn}
+                    />
+                    <span className="checkbox-checkmark"></span>
+                    I accept the <Link to="/terms" target="_blank">Terms of Service</Link> and{' '}
+                    <Link to="/privacy" target="_blank">Privacy Policy</Link>
+                  </label>
+                </div>
+                {formErrors.acceptTerms && (
+                  <div className="field-error">{formErrors.acceptTerms}</div>
+                )}
+              </div>
+            )}
+
             {error && (
               <div className="auth-error">
                 {error}
@@ -306,6 +376,7 @@ const Auth: React.FC = () => {
                 </div>
               </>
             )}
+            </div>
           </div>
         </div>
       </div>

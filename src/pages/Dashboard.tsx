@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Crown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { apiService, type DigestResponse } from '../services/api';
 import Header from '../components/Header';
@@ -8,8 +9,8 @@ import TopStories from '../components/TopStories';
 import ContentTabs from '../components/content/ContentTabs';
 import Loading from '../components/Loading';
 import TopicSelector from '../components/onboarding/TopicSelector';
-import SubscriptionTiers from '../components/subscription/SubscriptionTiers';
 import AdUnit from '../components/ads/AdUnit';
+import SEO from '../components/SEO';
 
 const Dashboard: React.FC = () => {
   const [digest, setDigest] = useState<DigestResponse | null>(null);
@@ -20,6 +21,7 @@ const Dashboard: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const fetchDigest = async (refresh = false) => {
     try {
@@ -31,6 +33,14 @@ const Dashboard: React.FC = () => {
       setLastRefresh(new Date());
       
       console.log('Digest loaded:', data);
+      
+      // Log enhanced backend features
+      if (data.admin_features) {
+        console.log('✅ Enhanced backend with admin validation active');
+      }
+      if (data.enhanced) {
+        console.log('✅ Enhanced scraping with free AI sources active');
+      }
     } catch (err) {
       console.error('Failed to fetch digest:', err);
       setError('Failed to load AI news digest. Please try again.');
@@ -64,20 +74,45 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const hasCompletedOnboarding = user.preferences?.topics?.some(t => t.selected) || false;
-      if (!hasCompletedOnboarding) {
+      // Check if email is verified for new users
+      if (!user.emailVerified && new Date(user.createdAt).getTime() > Date.now() - (24 * 60 * 60 * 1000)) {
+        // New user (within 24 hours) without verified email should be redirected to verification
+        navigate('/verify-email?email=' + encodeURIComponent(user.email));
+        return;
+      }
+
+      // For verified users, check onboarding status
+      const hasCompletedOnboarding = user.preferences?.onboardingCompleted || 
+                                   localStorage.getItem('onboardingComplete') === 'true' ||
+                                   user.preferences?.topics?.some(t => t.selected) || false;
+      
+      // Check if user has any personalization data (indicates they've used the app before)
+      const hasUserData = user.preferences?.newsletterFrequency || 
+                          user.preferences?.contentTypes?.length > 0 ||
+                          user.preferences?.emailNotifications !== undefined;
+      
+      // Only show onboarding for users without any previous data AND created recently
+      const isNewUser = new Date(user.createdAt).getTime() > Date.now() - (5 * 60 * 1000);
+      const needsOnboarding = !hasCompletedOnboarding && !hasUserData && isNewUser;
+      
+      if (needsOnboarding) {
         setShowOnboarding(true);
         return;
       }
     }
     
     fetchDigest(false);
-  }, [user]);
+  }, [user, navigate]);
 
   useEffect(() => {
     if (user) {
-      const isNewUser = new Date(user.createdAt).getTime() > Date.now() - 5000;
-      if (isNewUser && !showOnboarding) {
+      // Only show welcome for truly new users who haven't completed onboarding
+      const isNewUser = new Date(user.createdAt).getTime() > Date.now() - (5 * 60 * 1000);
+      const hasCompletedOnboarding = user.preferences?.onboardingCompleted || 
+                                   localStorage.getItem('onboardingComplete') === 'true' ||
+                                   user.preferences?.topics?.some(t => t.selected) || false;
+      
+      if (isNewUser && !showOnboarding && !hasCompletedOnboarding) {
         setShowWelcome(true);
       }
     }
@@ -180,6 +215,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="app authenticated-app">
+      <SEO 
+        title="AI News Dashboard - Personalized AI Insights"
+        description="Your personalized AI news dashboard with latest breakthroughs, industry insights, and research updates."
+        url="/dashboard"
+      />
       <Header 
         onRefresh={handleRefresh}
         onManualScrape={handleManualScrape}
@@ -194,68 +234,64 @@ const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {user?.subscriptionTier === 'free' && (
-        <div className="upgrade-banner">
-          <div className="upgrade-content">
-            <span>🚀 Upgrade to Premium for daily digests, AI events, and exclusive content</span>
-            <button 
-              onClick={() => setShowWelcome(true)} 
-              className="btn btn-small btn-primary"
-            >
-              Upgrade Now
-            </button>
-          </div>
-        </div>
-      )}
       
       <main className="main-content">
-        <div className="digest-header">
-          <div className="digest-meta">
-            <span className="digest-badge">{digest.badge}</span>
-            <span className="digest-time">
-              Updated: {new Date(digest.timestamp).toLocaleString()}
-            </span>
-            {user && (
-              <span className="personalized-badge">
-                Personalized for {user.name}
-              </span>
-            )}
+        <div className="main-content-contained">
+          
+          <div className="dashboard-layout">
+            <div className="dashboard-main">
+              <TopStories stories={digest.topStories} />
+              
+              {import.meta.env.VITE_ENABLE_ADS === 'true' && digest.topStories && digest.topStories.length > 0 && (
+                <AdUnit 
+                  adSlot="1234567890"
+                  adFormat="horizontal"
+                  className="header-ad"
+                />
+              )}
+              
+              <ContentTabs userTier={user?.subscriptionTier || 'free'} />
+              
+              <div className="metrics-section">
+                <MetricsDashboard 
+                  metrics={digest.summary.metrics}
+                />
+              </div>
+            </div>
+            
+            <div className="dashboard-sidebar">
+              {import.meta.env.VITE_ENABLE_ADS === 'true' && digest.topStories && digest.topStories.length > 0 && (
+                <AdUnit 
+                  adSlot="2345678901"
+                  adFormat="rectangle"
+                  className="sidebar-ad"
+                />
+              )}
+
+              {user?.subscriptionTier === 'free' && (
+                <div className="sidebar-upgrade">
+                  <div className="upgrade-card">
+                    <div className="upgrade-header">
+                      <Crown size={24} className="upgrade-icon" />
+                      <h3>Upgrade to Premium</h3>
+                    </div>
+                    <div className="upgrade-features">
+                      <div className="feature-item">✨ Daily AI digests</div>
+                      <div className="feature-item">🎯 Personalized content</div>
+                      <div className="feature-item">📱 Mobile access</div>
+                    </div>
+                    <button className="upgrade-btn">
+                      Upgrade Now
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        
-        <MetricsDashboard 
-          metrics={digest.summary.metrics}
-          keyPoints={digest.summary.keyPoints}
-        />
-        
-        {import.meta.env.VITE_ENABLE_ADS === 'true' && (
-          <AdUnit 
-            adSlot="1234567890"
-            adFormat="horizontal"
-            className="header-ad"
-          />
-        )}
-        
-        <TopStories stories={digest.topStories} />
-        
-        <ContentTabs userTier={user?.subscriptionTier || 'free'} />
-        
-        {import.meta.env.VITE_ENABLE_ADS === 'true' && (
-          <AdUnit 
-            adSlot="2345678901"
-            adFormat="rectangle"
-            className="content-ad"
-          />
-        )}
-
-        {user?.subscriptionTier === 'free' && (
-          <div className="upgrade-section">
-            <SubscriptionTiers showOnlyUpgrade={false} />
-          </div>
-        )}
       </main>
       
-      {import.meta.env.VITE_ENABLE_ADS === 'true' && (
+      {import.meta.env.VITE_ENABLE_ADS === 'true' && digest.topStories && digest.topStories.length > 0 && (
         <AdUnit 
           adSlot="3456789012"
           adFormat="horizontal"
@@ -265,23 +301,22 @@ const Dashboard: React.FC = () => {
       
       <footer className="footer modern-footer">
         <div className="footer-content">
-          <div className="footer-left">
-            <p>AI News Digest - Powered by AI News Scraper API</p>
+          <div className="footer-center">
+            <p>Copyright @2025 by Vidyagam Learning LLC</p>
             <div className="footer-links">
               <Link to="/privacy">Privacy Policy</Link>
               <Link to="/terms">Terms of Service</Link>
               <Link to="/about">About</Link>
+              <a 
+                href="/admin-validation" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: '#667eea', fontSize: '12px' }}
+                title="Admin Panel (requires admin key)"
+              >
+                🛠️ Admin
+              </a>
             </div>
-          </div>
-          <div className="footer-right">
-            <a 
-              href="https://ai-news-scraper.vercel.app/health" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="api-status"
-            >
-              API Status
-            </a>
           </div>
         </div>
       </footer>

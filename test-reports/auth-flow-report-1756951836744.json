@@ -1,0 +1,456 @@
+{
+  "testSuite": "AI News Digest - Authentication Flow Tests",
+  "timestamp": "2025-09-04T02:10:36.743Z",
+  "summary": {
+    "total": 22,
+    "passed": 5,
+    "failed": 17,
+    "successRate": "22.7%"
+  },
+  "configuration": {
+    "backendUrl": "https://ai-news-scraper-9s2fmt80k.vercel.app",
+    "frontendUrl": "https://ai-news-react-ldkkw0frl-vijayan-subramaniyans-projects-0c70c64d.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Backend Health Check",
+      "passed": true,
+      "details": {
+        "response": {
+          "status": "healthy",
+          "timestamp": "2025-09-04T02:10:34.645563",
+          "components": {
+            "api": true,
+            "database": true,
+            "scraper": true,
+            "multimedia": true,
+            "scheduler": true
+          },
+          "sources_info": {
+            "total_sources": 116,
+            "enabled_sources": 116,
+            "refresh_interval_hours": 8,
+            "next_refresh": "2025-09-04T10:10:34.645574",
+            "refresh_needed": false
+          }
+        }
+      },
+      "timestamp": "2025-09-04T02:10:34.604Z"
+    },
+    {
+      "name": "Content Types API",
+      "details": {
+        "response": {
+          "content_types": {
+            "all_sources": {
+              "name": "All Sources",
+              "description": "Comprehensive AI content",
+              "icon": "🌐"
+            },
+            "blogs": {
+              "name": "Blogs",
+              "description": "Expert insights and analysis",
+              "icon": "✍️"
+            },
+            "podcasts": {
+              "name": "Podcasts",
+              "description": "Audio content and interviews",
+              "icon": "🎧"
+            },
+            "videos": {
+              "name": "Videos",
+              "description": "Visual content and presentations",
+              "icon": "📹"
+            },
+            "events": {
+              "name": "Events",
+              "description": "AI conferences and workshops",
+              "icon": "📅"
+            },
+            "learn": {
+              "name": "Learn",
+              "description": "Courses and tutorials",
+              "icon": "🎓"
+            }
+          }
+        }
+      },
+      "timestamp": "2025-09-04T02:10:34.748Z"
+    },
+    {
+      "name": "Digest API",
+      "passed": {
+        "blog": [
+          {
+            "title": "The State of AI in 2024: Key Developments",
+            "description": "Comprehensive overview of major AI breakthroughs this year including GPT-4 Turbo, Gemini Pro, and Claude 3.",
+            "source": "AI Research",
+            "time": "2h ago",
+            "impact": "high",
+            "type": "blog",
+            "url": "https://ai-research.com/state-of-ai-2024",
+            "readTime": "8 min read",
+            "significanceScore": 9.1
+          }
+        ],
+        "audio": [
+          {
+            "title": "Lex Fridman: Future of AGI with Sam Altman",
+            "description": "In-depth discussion on artificial general intelligence development and timeline.",
+            "source": "Lex Fridman Podcast",
+            "time": "1d ago",
+            "impact": "high",
+            "type": "audio",
+            "url": "https://lexfridman.com/sam-altman-agi",
+            "audio_url": "https://lexfridman.com/sam-altman-agi.mp3",
+            "duration": 7200,
+            "significanceScore": 8.9
+          }
+        ],
+        "video": [
+          {
+            "title": "Two Minute Papers: Neural Radiance Fields Breakthrough",
+            "description": "Latest developments in NeRF technology for 3D scene reconstruction.",
+            "source": "Two Minute Papers",
+            "time": "6h ago",
+            "impact": "medium",
+            "type": "video",
+            "url": "https://youtube.com/watch?v=nerf-breakthrough",
+            "thumbnail_url": "https://img.youtube.com/vi/nerf-breakthrough/maxresdefault.jpg",
+            "duration": 720,
+            "significanceScore": 7.6
+          }
+        ]
+      },
+      "details": {
+        "response": {
+          "summary": {
+            "keyPoints": [
+              "• OpenAI continues advancing multimodal AI capabilities",
+              "• Google DeepMind releases new reasoning models",
+              "• Microsoft integrates AI across enterprise products",
+              "• Meta focuses on open-source AI development",
+              "• NVIDIA announces new AI chip architectures",
+              "• Anthropic enhances Claude's reasoning abilities",
+              "• Hugging Face expands open-source AI ecosystem",
+              "• Stanford AI research breaks new ground in LLMs"
+            ],
+            "metrics": {
+              "totalUpdates": 290,
+              "highImpact": 72,
+              "newResearch": 58,
+              "industryMoves": 101,
+              "sourcesScraped": 116,
+              "lastRefresh": "2025-09-04T02:10:34.936202",
+              "nextRefresh": "2025-09-04T10:10:34.645574",
+              "refreshNeeded": false
+            }
+          },
+          "topStories": [
+            {
+              "title": "OpenAI GPT-4 Turbo with Vision Available in API",
+              "source": "OpenAI",
+              "significanceScore": 9.2,
+              "url": "https://openai.com/blog/gpt-4-turbo-with-vision"
+            },
+            {
+              "title": "Google Gemini Pro: Advancing Multimodal AI",
+              "source": "Google DeepMind",
+              "significanceScore": 8.8,
+              "url": "https://deepmind.google/technologies/gemini/"
+            }
+          ],
+          "content": {
+            "blog": [
+              {
+                "title": "The State of AI in 2024: Key Developments",
+                "description": "Comprehensive overview of major AI breakthroughs this year including GPT-4 Turbo, Gemini Pro, and Claude 3.",
+                "source": "AI Research",
+                "time": "2h ago",
+                "impact": "high",
+                "type": "blog",
+                "url": "https://ai-research.com/state-of-ai-2024",
+                "readTime": "8 min read",
+                "significanceScore": 9.1
+              }
+            ],
+            "audio": [
+              {
+                "title": "Lex Fridman: Future of AGI with Sam Altman",
+                "description": "In-depth discussion on artificial general intelligence development and timeline.",
+                "source": "Lex Fridman Podcast",
+                "time": "1d ago",
+                "impact": "high",
+                "type": "audio",
+                "url": "https://lexfridman.com/sam-altman-agi",
+                "audio_url": "https://lexfridman.com/sam-altman-agi.mp3",
+                "duration": 7200,
+                "significanceScore": 8.9
+              }
+            ],
+            "video": [
+              {
+                "title": "Two Minute Papers: Neural Radiance Fields Breakthrough",
+                "description": "Latest developments in NeRF technology for 3D scene reconstruction.",
+                "source": "Two Minute Papers",
+                "time": "6h ago",
+                "impact": "medium",
+                "type": "video",
+                "url": "https://youtube.com/watch?v=nerf-breakthrough",
+                "thumbnail_url": "https://img.youtube.com/vi/nerf-breakthrough/maxresdefault.jpg",
+                "duration": 720,
+                "significanceScore": 7.6
+              }
+            ]
+          },
+          "timestamp": "2025-09-04T02:10:34.936243",
+          "badge": "Live Update"
+        }
+      },
+      "timestamp": "2025-09-04T02:10:34.896Z"
+    },
+    {
+      "name": "Topics API",
+      "passed": true,
+      "details": {
+        "response": [
+          {
+            "id": "machine-learning",
+            "name": "Machine Learning",
+            "description": "ML algorithms and applications"
+          },
+          {
+            "id": "nlp",
+            "name": "Natural Language Processing",
+            "description": "Text and language AI"
+          },
+          {
+            "id": "computer-vision",
+            "name": "Computer Vision",
+            "description": "Image and video AI"
+          },
+          {
+            "id": "robotics",
+            "name": "Robotics",
+            "description": "AI in robotics and automation"
+          },
+          {
+            "id": "ethics",
+            "name": "AI Ethics",
+            "description": "Ethical considerations in AI"
+          }
+        ]
+      },
+      "timestamp": "2025-09-04T02:10:34.988Z"
+    },
+    {
+      "name": "Sign Up - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "user": {
+            "id": "1",
+            "name": "Test User",
+            "email": "user@example.com",
+            "subscriptionTier": "free",
+            "emailVerified": true,
+            "preferences": {
+              "topics": [
+                {
+                  "id": "machine-learning",
+                  "name": "Machine Learning",
+                  "description": "ML algorithms and applications",
+                  "category": "technology",
+                  "selected": false
+                },
+                {
+                  "id": "nlp",
+                  "name": "Natural Language Processing",
+                  "description": "Text and language AI",
+                  "category": "technology",
+                  "selected": false
+                },
+                {
+                  "id": "computer-vision",
+                  "name": "Computer Vision",
+                  "description": "Image and video AI",
+                  "category": "technology",
+                  "selected": false
+                }
+              ],
+              "newsletterFrequency": "daily",
+              "emailNotifications": true,
+              "contentTypes": [
+                "articles"
+              ]
+            },
+            "createdAt": "2025-09-04T02:10:35.176829",
+            "lastLoginAt": "2025-09-04T02:10:35.176852"
+          },
+          "token": "jwt-token-signup-123"
+        },
+        "testUser": {
+          "name": "Test User",
+          "email": "test.1756951834989@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-09-04T02:10:35.136Z"
+    },
+    {
+      "name": "Sign Up - Missing Name",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200
+      },
+      "timestamp": "2025-09-04T02:10:35.230Z"
+    },
+    {
+      "name": "Sign Up - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200
+      },
+      "timestamp": "2025-09-04T02:10:35.379Z"
+    },
+    {
+      "name": "Sign Up - Short Password",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200
+      },
+      "timestamp": "2025-09-04T02:10:35.472Z"
+    },
+    {
+      "name": "Sign Up - Empty Fields",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200
+      },
+      "timestamp": "2025-09-04T02:10:35.566Z"
+    },
+    {
+      "name": "Sign In - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::pjc69-1756951835752-eb6d07235025\n",
+        "testUser": {
+          "name": "Login Test User",
+          "email": "login.test.1756951835566@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-09-04T02:10:35.705Z"
+    },
+    {
+      "name": "Sign In - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 400,
+        "error": "Missing credentials"
+      },
+      "timestamp": "2025-09-04T02:10:35.806Z"
+    },
+    {
+      "name": "Sign In - Wrong Password",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 400,
+        "error": "Missing credentials"
+      },
+      "timestamp": "2025-09-04T02:10:35.903Z"
+    },
+    {
+      "name": "Sign In - Missing Credentials",
+      "passed": "Missing credentials",
+      "details": {
+        "expected": 400,
+        "actual": 400,
+        "error": "Missing credentials"
+      },
+      "timestamp": "2025-09-04T02:10:35.994Z"
+    },
+    {
+      "name": "Sign In - Invalid Email Format",
+      "passed": "Missing credentials",
+      "details": {
+        "expected": 400,
+        "actual": 400,
+        "error": "Missing credentials"
+      },
+      "timestamp": "2025-09-04T02:10:36.080Z"
+    },
+    {
+      "name": "Google Auth - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "error": "Missing idToken",
+          "message": "Google ID token is required"
+        }
+      },
+      "timestamp": "2025-09-04T02:10:36.170Z"
+    },
+    {
+      "name": "Google Auth - Missing Token",
+      "passed": false,
+      "details": {
+        "response": "The page could not be found\n\nNOT_FOUND\n\ncle1::jx2hs-1756951836274-18a7c07ad890\n"
+      },
+      "timestamp": "2025-09-04T02:10:36.225Z"
+    },
+    {
+      "name": "Authenticated Endpoints",
+      "passed": false,
+      "details": {
+        "error": "No test token available"
+      },
+      "timestamp": "2025-09-04T02:10:36.225Z"
+    },
+    {
+      "name": "Content Filtering - blogs",
+      "details": {
+        "response": "HTTP/1.0 404 Not Found\r\nServer: BaseHTTP/0.6 Python/3.12.11\r\nDate: Thu, 04 Sep 2025 02:10:36 GMT\r\nContent-Type: application/json\r\n\r\n{\"error\": \"Not found\", \"path\": \"api/digest/blogs\"}"
+      },
+      "timestamp": "2025-09-04T02:10:36.327Z"
+    },
+    {
+      "name": "Content Filtering - podcasts",
+      "details": {
+        "response": "HTTP/1.0 404 Not Found\r\nServer: BaseHTTP/0.6 Python/3.12.11\r\nDate: Thu, 04 Sep 2025 02:10:36 GMT\r\nContent-Type: application/json\r\n\r\n{\"error\": \"Not found\", \"path\": \"api/digest/podcasts\"}"
+      },
+      "timestamp": "2025-09-04T02:10:36.419Z"
+    },
+    {
+      "name": "Content Filtering - videos",
+      "details": {
+        "response": "HTTP/1.0 404 Not Found\r\nServer: BaseHTTP/0.6 Python/3.12.11\r\nDate: Thu, 04 Sep 2025 02:10:36 GMT\r\nContent-Type: application/json\r\n\r\n{\"error\": \"Not found\", \"path\": \"api/digest/videos\"}"
+      },
+      "timestamp": "2025-09-04T02:10:36.530Z"
+    },
+    {
+      "name": "Content Filtering - events",
+      "details": {
+        "response": "HTTP/1.0 404 Not Found\r\nServer: BaseHTTP/0.6 Python/3.12.11\r\nDate: Thu, 04 Sep 2025 02:10:36 GMT\r\nContent-Type: application/json\r\n\r\n{\"error\": \"Not found\", \"path\": \"api/digest/events\"}"
+      },
+      "timestamp": "2025-09-04T02:10:36.622Z"
+    },
+    {
+      "name": "Content Filtering - learn",
+      "details": {
+        "response": "HTTP/1.0 404 Not Found\r\nServer: BaseHTTP/0.6 Python/3.12.11\r\nDate: Thu, 04 Sep 2025 02:10:36 GMT\r\nContent-Type: application/json\r\n\r\n{\"error\": \"Not found\", \"path\": \"api/digest/learn\"}"
+      },
+      "timestamp": "2025-09-04T02:10:36.743Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix underlying issues",
+    "Critical authentication issues detected - fix before deployment"
+  ]
+}

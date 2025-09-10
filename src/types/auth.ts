@@ -7,6 +7,8 @@ export interface User {
   preferences: UserPreferences;
   createdAt: string;
   lastLoginAt: string;
+  emailVerified?: boolean;
+  emailVerifiedAt?: string;
 }
 
 export interface UserPreferences {
@@ -14,6 +16,7 @@ export interface UserPreferences {
   newsletterFrequency: 'daily' | 'weekly';
   emailNotifications: boolean;
   contentTypes: ContentType[];
+  onboardingCompleted?: boolean;
 }
 
 export interface AITopic {
@@ -41,6 +44,7 @@ export interface LoginCredentials {
 export interface SignupCredentials extends LoginCredentials {
   name: string;
   confirmPassword: string;
+  acceptTerms: boolean;
 }
 
 export interface SubscriptionTier {
