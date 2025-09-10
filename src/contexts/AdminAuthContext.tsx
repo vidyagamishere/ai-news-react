@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 interface AdminAuthContextType {
   isAdminAuthenticated: boolean;
@@ -6,34 +7,71 @@ interface AdminAuthContextType {
   adminLogin: (username: string, password: string) => Promise<boolean>;
   adminLogout: () => void;
   isLoading: boolean;
+  isCurrentUserAdmin: boolean;
+  checkAdminAccess: () => boolean;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
 // Admin credentials (in production, these should be environment variables)
 const ADMIN_CREDENTIALS = {
-  username: 'admin',
+  username: 'admin@vidyagam.com',
   password: 'admin123', // Change this to a secure password
   apiKey: process.env.REACT_APP_ADMIN_API_KEY || 'admin-api-key-2024'
 };
+
+// Admin emails that have admin access
+const ADMIN_EMAILS = [
+  'admin@vidyagam.com',
+  'vidyagam@gmail.com' // Add additional admin emails here if needed
+];
 
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [adminApiKey, setAdminApiKey] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { user, isAuthenticated } = useAuth();
+
+  // Check if current user is an admin
+  const checkAdminAccess = (): boolean => {
+    return !!(isAuthenticated && user && ADMIN_EMAILS.includes(user.email));
+  };
+
+  const isCurrentUserAdmin = checkAdminAccess() || false;
 
   useEffect(() => {
+    // Auto-grant admin access if user is logged in with admin email
+    if (isCurrentUserAdmin) {
+      setIsAdminAuthenticated(true);
+      setAdminApiKey(ADMIN_CREDENTIALS.apiKey);
+      localStorage.setItem('adminAuth', JSON.stringify({
+        isAuthenticated: true,
+        apiKey: ADMIN_CREDENTIALS.apiKey,
+        timestamp: Date.now(),
+        viaMainAuth: true
+      }));
+      setIsLoading(false);
+      return;
+    }
+
     // Check if admin is already logged in (stored in localStorage)
     const savedAuth = localStorage.getItem('adminAuth');
     if (savedAuth) {
       try {
-        const { isAuthenticated, apiKey, timestamp } = JSON.parse(savedAuth);
+        const { isAuthenticated, apiKey, timestamp, viaMainAuth } = JSON.parse(savedAuth);
         // Check if authentication is still valid (24 hours)
         const isValid = Date.now() - timestamp < 24 * 60 * 60 * 1000;
         
         if (isAuthenticated && isValid && apiKey) {
-          setIsAdminAuthenticated(true);
-          setAdminApiKey(apiKey);
+          // If it was via main auth, verify user is still admin
+          if (viaMainAuth && !isCurrentUserAdmin) {
+            localStorage.removeItem('adminAuth');
+            setIsAdminAuthenticated(false);
+            setAdminApiKey(null);
+          } else {
+            setIsAdminAuthenticated(true);
+            setAdminApiKey(apiKey);
+          }
         } else {
           // Clear expired auth
           localStorage.removeItem('adminAuth');
@@ -44,7 +82,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     }
     setIsLoading(false);
-  }, []);
+  }, [isCurrentUserAdmin, user, isAuthenticated]);
 
   const adminLogin = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true);
@@ -53,12 +91,14 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Check credentials
-      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+      // Check credentials (support both email and old username format)
+      if ((username === ADMIN_CREDENTIALS.username || username === 'admin') && 
+          password === ADMIN_CREDENTIALS.password) {
         const authData = {
           isAuthenticated: true,
           apiKey: ADMIN_CREDENTIALS.apiKey,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          viaDirectLogin: true
         };
         
         // Save to localStorage
@@ -90,7 +130,9 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     adminApiKey,
     adminLogin,
     adminLogout,
-    isLoading
+    isLoading,
+    isCurrentUserAdmin,
+    checkAdminAccess
   };
 
   return (

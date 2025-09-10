@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Brain, Settings, Crown, Power } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useAdminAuth } from '../contexts/AdminAuthContext';
 import SubscriptionTiers from './subscription/SubscriptionTiers';
 
 interface HeaderProps {
@@ -17,6 +18,7 @@ const Header: React.FC<HeaderProps> = () => {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { isAuthenticated, user, logout } = useAuth();
+  const { isCurrentUserAdmin } = useAdminAuth();
   const navigate = useNavigate();
 
   // Close user menu when clicking outside
@@ -117,17 +119,19 @@ const Header: React.FC<HeaderProps> = () => {
                         <span className="desktop-action-label">Premium</span>
                       </div>
                     )}
-                    <div className="desktop-action-item">
-                      <button 
-                        onClick={() => navigate('/admin/login')}
-                        className="desktop-action-icon admin-action"
-                        title="Admin Panel"
-                        style={{ background: '#667eea', color: 'white' }}
-                      >
-                        <Settings size={16} />
-                      </button>
-                      <span className="desktop-action-label">Admin</span>
-                    </div>
+                    {isCurrentUserAdmin && (
+                      <div className="desktop-action-item">
+                        <button 
+                          onClick={() => navigate('/admin')}
+                          className="desktop-action-icon admin-action"
+                          title="Admin Panel"
+                          style={{ background: '#667eea', color: 'white' }}
+                        >
+                          <Settings size={16} />
+                        </button>
+                        <span className="desktop-action-label">Admin</span>
+                      </div>
+                    )}
                     <div className="desktop-action-item">
                       <button 
                         onClick={() => navigate('/preferences')}
@@ -219,17 +223,19 @@ const Header: React.FC<HeaderProps> = () => {
                         <span className="mobile-action-label">Premium</span>
                       </div>
                     )}
-                    <div className="mobile-action-item">
-                      <button 
-                        onClick={() => navigate('/admin/login')}
-                        className="mobile-action-icon admin-action"
-                        title="Admin Panel"
-                        style={{ background: '#667eea', color: 'white' }}
-                      >
-                        <Settings size={12} />
-                      </button>
-                      <span className="mobile-action-label">Admin</span>
-                    </div>
+                    {isCurrentUserAdmin && (
+                      <div className="mobile-action-item">
+                        <button 
+                          onClick={() => navigate('/admin')}
+                          className="mobile-action-icon admin-action"
+                          title="Admin Panel"
+                          style={{ background: '#667eea', color: 'white' }}
+                        >
+                          <Settings size={12} />
+                        </button>
+                        <span className="mobile-action-label">Admin</span>
+                      </div>
+                    )}
                     <div className="mobile-action-item">
                       <button 
                         onClick={() => navigate('/preferences')}
