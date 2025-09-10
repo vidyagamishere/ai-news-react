@@ -62,6 +62,8 @@ export interface DigestResponse {
   };
   timestamp: string;
   badge: string;
+  enhanced?: boolean;
+  admin_features?: boolean;
 }
 
 export interface HealthResponse {
