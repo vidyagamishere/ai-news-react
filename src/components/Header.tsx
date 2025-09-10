@@ -119,6 +119,17 @@ const Header: React.FC<HeaderProps> = () => {
                     )}
                     <div className="desktop-action-item">
                       <button 
+                        onClick={() => navigate('/admin/login')}
+                        className="desktop-action-icon admin-action"
+                        title="Admin Panel"
+                        style={{ background: '#667eea', color: 'white' }}
+                      >
+                        <Settings size={16} />
+                      </button>
+                      <span className="desktop-action-label">Admin</span>
+                    </div>
+                    <div className="desktop-action-item">
+                      <button 
                         onClick={() => navigate('/preferences')}
                         className="desktop-action-icon settings-action"
                         title="Settings"
@@ -208,6 +219,17 @@ const Header: React.FC<HeaderProps> = () => {
                         <span className="mobile-action-label">Premium</span>
                       </div>
                     )}
+                    <div className="mobile-action-item">
+                      <button 
+                        onClick={() => navigate('/admin/login')}
+                        className="mobile-action-icon admin-action"
+                        title="Admin Panel"
+                        style={{ background: '#667eea', color: 'white' }}
+                      >
+                        <Settings size={12} />
+                      </button>
+                      <span className="mobile-action-label">Admin</span>
+                    </div>
                     <div className="mobile-action-item">
                       <button 
                         onClick={() => navigate('/preferences')}

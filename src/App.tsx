@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import Onboarding from './pages/Onboarding';
@@ -12,6 +13,8 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import About from './pages/About';
 import Admin from './pages/Admin';
+import AdminLogin from './pages/AdminLogin';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import Loading from './components/Loading';
 import './App.css';
 import './pages/legal.css';
@@ -119,7 +122,15 @@ function AppContent() {
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/about" element={<About />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route 
+        path="/admin" 
+        element={
+          <ProtectedAdminRoute>
+            <Admin />
+          </ProtectedAdminRoute>
+        } 
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -128,9 +139,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <AdminAuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AdminAuthProvider>
     </AuthProvider>
   );
 }

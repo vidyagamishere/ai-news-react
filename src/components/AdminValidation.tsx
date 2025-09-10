@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { apiService } from '../services/api';
+import { useAdminAuth } from '../contexts/AdminAuthContext';
 
 const AdminValidation: React.FC = () => {
-  const [adminKey, setAdminKey] = useState('');
+  const { adminApiKey, adminLogout } = useAdminAuth();
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleQuickTest = async () => {
-    if (!adminKey.trim()) {
-      setError('Please enter admin API key');
+    if (!adminApiKey) {
+      setError('Admin not authenticated');
       return;
     }
 
     setLoading(true);
     setError('');
     try {
-      const result = await apiService.quickTest(adminKey);
+      const result = await apiService.quickTest(adminApiKey);
       setResults(result);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Quick test failed');
@@ -26,15 +27,15 @@ const AdminValidation: React.FC = () => {
   };
 
   const handleValidateAll = async () => {
-    if (!adminKey.trim()) {
-      setError('Please enter admin API key');
+    if (!adminApiKey) {
+      setError('Admin not authenticated');
       return;
     }
 
     setLoading(true);
     setError('');
     try {
-      const result = await apiService.validateSources(adminKey, {
+      const result = await apiService.validateSources(adminApiKey, {
         priority: 1,
         timeout: 10,
         maxConcurrent: 5
@@ -48,15 +49,15 @@ const AdminValidation: React.FC = () => {
   };
 
   const handleValidateByType = async (contentType: string) => {
-    if (!adminKey.trim()) {
-      setError('Please enter admin API key');
+    if (!adminApiKey) {
+      setError('Admin not authenticated');
       return;
     }
 
     setLoading(true);
     setError('');
     try {
-      const result = await apiService.validateSources(adminKey, {
+      const result = await apiService.validateSources(adminApiKey, {
         contentType,
         priority: 1,
         timeout: 15
@@ -71,27 +72,33 @@ const AdminValidation: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h2>🔧 Admin Source Validation</h2>
-      
-      {/* API Key Input */}
-      <div style={{ marginBottom: '20px' }}>
-        <label htmlFor="adminKey" style={{ display: 'block', marginBottom: '5px' }}>
-          Admin API Key:
-        </label>
-        <input
-          id="adminKey"
-          type="password"
-          value={adminKey}
-          onChange={(e) => setAdminKey(e.target.value)}
-          placeholder="Enter your admin API key"
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2>🔧 Admin Source Validation</h2>
+        <button
+          onClick={adminLogout}
           style={{
-            width: '100%',
-            padding: '10px',
-            border: '1px solid #ddd',
+            padding: '8px 16px',
+            backgroundColor: '#dc2626',
+            color: 'white',
+            border: 'none',
             borderRadius: '4px',
+            cursor: 'pointer',
             fontSize: '14px'
           }}
-        />
+        >
+          🚪 Logout
+        </button>
+      </div>
+      
+      <div style={{ 
+        padding: '10px', 
+        backgroundColor: '#e8f5e8', 
+        border: '1px solid #4ade80', 
+        borderRadius: '4px', 
+        marginBottom: '20px',
+        fontSize: '14px'
+      }}>
+        ✅ Admin authenticated - Ready to validate sources
       </div>
 
       {/* Action Buttons */}
@@ -207,10 +214,10 @@ const AdminValidation: React.FC = () => {
       }}>
         <h4>📋 How to Use:</h4>
         <ol>
-          <li><strong>Enter Admin API Key:</strong> Get this from your Vercel environment variables</li>
           <li><strong>Quick Test:</strong> Tests a few random sources quickly</li>
           <li><strong>Validate All Priority:</strong> Tests all priority 1 sources (recommended)</li>
           <li><strong>Content Type Validation:</strong> Test specific types (newsletters, blogs, etc.)</li>
+          <li><strong>View Results:</strong> Check validation results and health scores below</li>
         </ol>
         
         <h4>🔗 Alternative:</h4>
