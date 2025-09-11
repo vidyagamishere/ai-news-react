@@ -26,6 +26,19 @@ const Header: React.FC<HeaderProps> = () => {
   const isEffectivelyAuthenticated = isAuthenticated || isAdminAuthenticated;
   const effectiveLogout = isAdminAuthenticated ? adminLogout : logout;
 
+  // Debug logging for authentication issues
+  useEffect(() => {
+    console.log('Header Auth Debug:', {
+      isAuthenticated,
+      isAdminAuthenticated,
+      isEffectivelyAuthenticated,
+      user: user ? { name: user.name, email: user.email, subscriptionTier: user.subscriptionTier } : null,
+      effectiveUser: effectiveUser ? { name: effectiveUser.name, email: effectiveUser.email, subscriptionTier: effectiveUser.subscriptionTier } : null,
+      authToken: localStorage.getItem('authToken') ? 'exists' : 'missing',
+      adminAuth: localStorage.getItem('adminAuth') ? 'exists' : 'missing'
+    });
+  }, [isAuthenticated, isAdminAuthenticated, user, effectiveUser]);
+
   // Close user menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,7 +73,7 @@ const Header: React.FC<HeaderProps> = () => {
               <div className="desktop-title-section">
                 <h1 className="title ai-title">
                   <Brain className="title-icon" />
-                  Vidyagam Learning
+                  Vidyagam
                 </h1>
               </div>
               <div className="desktop-user-section">
@@ -80,7 +93,7 @@ const Header: React.FC<HeaderProps> = () => {
             
             {/* Middle Row: Subtitle */}
             <div className="desktop-subtitle-row">
-              <p className="subtitle">Intelligence at the Speed of Innovation</p>
+              <p className="subtitle">Intelligence at Light Speed</p>
             </div>
             
             {/* Bottom Row: Social Media and Actions */}
@@ -179,14 +192,14 @@ const Header: React.FC<HeaderProps> = () => {
             <div className="mobile-title-row">
               <h1 className="title ai-title mobile-title">
                 <Brain className="title-icon mobile-title-icon" />
-                Vidyagam Learning
+                Vidyagam
               </h1>
             </div>
             
             {/* Middle Row: Subtitle and User Greeting */}
             <div className="mobile-middle-row">
               <div className="mobile-subtitle-container">
-                <p className="subtitle mobile-subtitle">Intelligence at the Speed of Innovation</p>
+                <p className="subtitle mobile-subtitle">Intelligence at Light Speed</p>
               </div>
               <div className="mobile-user-section">
                 {isAuthenticated && user && (

@@ -2,15 +2,36 @@
 import axios from 'axios';
 
 // Backend API URL - Stable domain that won't change between deployments
-const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-lmwjwl5ud.vercel.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30 seconds timeout
+  timeout: 8000, // Reduced to 8 seconds timeout for faster loading
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Simple in-memory cache with TTL
+const cache = new Map<string, { data: any; expiry: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+const getCacheKey = (endpoint: string, params?: any) => {
+  return `${endpoint}${params ? '?' + new URLSearchParams(params).toString() : ''}`;
+};
+
+const getCachedData = (key: string) => {
+  const cached = cache.get(key);
+  if (cached && cached.expiry > Date.now()) {
+    return cached.data;
+  }
+  cache.delete(key);
+  return null;
+};
+
+const setCachedData = (key: string, data: any) => {
+  cache.set(key, { data, expiry: Date.now() + CACHE_TTL });
+};
 
 // Types for API responses
 export interface Article {
@@ -112,7 +133,20 @@ export const apiService = {
   // Get current digest
   getDigest: async (refresh?: boolean): Promise<DigestResponse> => {
     const params = refresh ? { refresh: 1 } : {};
+    const cacheKey = getCacheKey('/api/digest', params);
+    
+    // Skip cache if refresh is explicitly requested
+    if (!refresh) {
+      const cached = getCachedData(cacheKey);
+      if (cached) {
+        console.log('🚀 Using cached digest data');
+        return cached;
+      }
+    }
+    
+    console.log('📡 Fetching fresh digest data...');
     const response = await api.get('/api/digest', { params });
+    setCachedData(cacheKey, response.data);
     return response.data;
   },
 
@@ -164,9 +198,20 @@ export const apiService = {
     return response.data;
   },
 
-  // Generic GET method for new endpoints
+  // Generic GET method for new endpoints with caching
   get: async (endpoint: string, params?: any): Promise<any> => {
+    const cacheKey = getCacheKey(endpoint, params);
+    
+    // Check cache first for GET requests
+    const cached = getCachedData(cacheKey);
+    if (cached) {
+      console.log(`🚀 Using cached data for ${endpoint}`);
+      return cached;
+    }
+    
+    console.log(`📡 Fetching fresh data for ${endpoint}...`);
     const response = await api.get(endpoint, { params });
+    setCachedData(cacheKey, response.data);
     return response.data;
   },
 

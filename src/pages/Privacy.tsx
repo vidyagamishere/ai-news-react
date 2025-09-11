@@ -7,8 +7,8 @@ const Privacy: React.FC = () => {
   return (
     <div className="legal-page">
       <SEO 
-        title="Privacy Policy - AI News Digest"
-        description="Privacy policy for AI News Digest detailing data collection, usage, and protection practices for our AI news service."
+        title="Privacy Policy | Vidyagam"
+        description="Privacy policy for Vidyagam detailing data collection, usage, and protection practices for our AI news service."
         url="/privacy"
       />
       <div className="legal-container">

@@ -8,8 +8,8 @@ const About: React.FC = () => {
   return (
     <div className="about-page">
       <SEO 
-        title="About Vidyagam Learning - Your AI News Source"
-        description="Learn how Vidyagam Learning aggregates AI news from 500+ sources to provide personalized insights for professionals and enthusiasts."
+        title="About Vidyagam | Intelligence at Light Speed"
+        description="Learn how Vidyagam aggregates AI news from 500+ sources to provide personalized insights for professionals and enthusiasts."
         url="/about"
       />
       <div className="about-container">
@@ -19,7 +19,7 @@ const About: React.FC = () => {
             Back to Home
           </Link>
           <div className="about-hero">
-            <h1>About Vidyagam Learning</h1>
+            <h1>About Vidyagam</h1>
             <p className="hero-subtitle">Your single source of truth for everything happening in the AI universe</p>
           </div>
         </div>

@@ -38,6 +38,7 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
+  const [contentTypesLoaded, setContentTypesLoaded] = useState(false);
 
   const getTopicSummary = (contentType: string, contentInfo: ContentType): string => {
     const summaries: Record<string, string> = {
@@ -93,9 +94,13 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
     return userTier === 'premium';
   };
 
-  // Load available content types on mount
+  // Load available content types on mount with delay for better initial performance
   useEffect(() => {
-    loadContentTypes();
+    const timer = setTimeout(() => {
+      loadContentTypes();
+    }, 100); // Small delay to prioritize main content loading
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Load content for active tab (skip API calls in archive mode)
@@ -112,18 +117,21 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
         featured_sources: []
       };
       setContent(prev => ({ ...prev, [activeTab]: archiveResponse }));
-    } else if (!isArchive && activeTab && !content[activeTab] && !loading[activeTab]) {
+    } else if (!isArchive && activeTab && !content[activeTab] && !loading[activeTab] && contentTypesLoaded) {
+      // Only load content after content types are loaded and when tab is actively selected
       loadContent(activeTab);
     }
-  }, [activeTab, isArchive, archiveContent, contentTypes]);
+  }, [activeTab, isArchive, archiveContent, contentTypes, contentTypesLoaded]);
 
   const loadContentTypes = async () => {
     try {
       const response: ContentTypesResponse = await apiService.get('/api/content-types');
       setContentTypes(response.content_types);
+      setContentTypesLoaded(true);
     } catch (err) {
       console.error('Failed to load content types:', err);
       setError('Failed to load content types');
+      setContentTypesLoaded(true); // Still mark as loaded to prevent retries
     }
   };
 

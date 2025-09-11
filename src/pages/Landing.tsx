@@ -8,7 +8,7 @@ const Landing: React.FC = () => {
   return (
     <div className="app landing-app">
       <SEO 
-        title="AI News Through AI | Personalized AI Industry Updates & Learning Hub"
+        title="Vidyagam AI News | Intelligence at Light Speed"
         description="Get personalized AI news, events, and learning resources curated by AI. Daily digest of artificial intelligence breakthroughs, conferences, courses, and industry insights."
         keywords="AI news, artificial intelligence, machine learning, AI events, AI courses, AI conferences, AI learning, tech news, AI industry updates, personalized news"
         url="/"

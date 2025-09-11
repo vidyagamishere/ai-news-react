@@ -52,7 +52,7 @@ const EmailVerification: React.FC = () => {
               <div className="brand-content">
                 <div className="brand-logo">
                   <div className="neural-icon">🧠</div>
-                  <h1>Vidyagam Learning</h1>
+                  <h1>Vidyagam</h1>
                 </div>
                 <h2>Email Verified!</h2>
                 <p>Welcome to the neural network of AI intelligence.</p>
@@ -84,10 +84,10 @@ const EmailVerification: React.FC = () => {
             <div className="brand-content">
               <div className="brand-logo">
                 <div className="neural-icon">🧠</div>
-                <h1>Vidyagam Learning</h1>
+                <h1>Vidyagam</h1>
               </div>
               <h2>Check Your Email</h2>
-              <p>We've sent a verification link to activate your Vidyagam Learning account.</p>
+              <p>We've sent a verification link to activate your Vidyagam account.</p>
             </div>
           </div>
         </div>

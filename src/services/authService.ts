@@ -1,6 +1,6 @@
 import type { User, LoginCredentials, SignupCredentials, AITopic } from '../types/auth';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-lmwjwl5ud.vercel.app';
 
 interface AuthResponse {
   user: User;

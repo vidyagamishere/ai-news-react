@@ -136,9 +136,9 @@ const Auth: React.FC = () => {
             <div className="brand-content">
               <div className="brand-logo">
                 <div className="neural-icon">🧠</div>
-                <h1>Vidyagam Learning</h1>
+                <h1>Vidyagam</h1>
               </div>
-              <h2>Where AI Minds Connect</h2>
+              <h2>Intelligence at Light Speed</h2>
               <p>Join 50,000+ AI researchers, engineers, and visionaries accessing breakthrough intelligence curated by advanced neural networks.</p>
               
               <div className="brand-features">

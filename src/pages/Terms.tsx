@@ -7,8 +7,8 @@ const Terms: React.FC = () => {
   return (
     <div className="legal-page">
       <SEO 
-        title="Terms of Service - AI News Digest"
-        description="Terms and conditions for using AI News Digest, including copyright compliance and user agreements for AI news aggregation service."
+        title="Terms of Service | Vidyagam"
+        description="Terms and conditions for using Vidyagam, including copyright compliance and user agreements for AI news aggregation service."
         url="/terms"
       />
       <div className="legal-container">

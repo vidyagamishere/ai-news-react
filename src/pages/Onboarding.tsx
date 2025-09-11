@@ -203,7 +203,7 @@ const Onboarding: React.FC = () => {
           <div className="welcome-message">
             <div className="onboarding-logo">
               <div className="neural-icon">🧠</div>
-              <h1>Welcome to Vidyagam Learning</h1>
+              <h1>Welcome to Vidyagam</h1>
             </div>
             <p>Let's personalize your AI intelligence experience</p>
           </div>

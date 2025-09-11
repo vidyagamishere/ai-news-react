@@ -73,7 +73,7 @@ const OTPVerification: React.FC = () => {
               <div className="brand-content">
                 <div className="brand-logo">
                   <div className="neural-icon">🧠</div>
-                  <h1>Vidyagam Learning</h1>
+                  <h1>Vidyagam</h1>
                 </div>
                 <h2>Email Verified!</h2>
                 <p>Welcome to the neural network of AI intelligence.</p>
@@ -105,10 +105,10 @@ const OTPVerification: React.FC = () => {
             <div className="brand-content">
               <div className="brand-logo">
                 <div className="neural-icon">🧠</div>
-                <h1>Vidyagam Learning</h1>
+                <h1>Vidyagam</h1>
               </div>
               <h2>Verify Your Email</h2>
-              <p>Enter the 6-digit code sent to your email to activate your Vidyagam Learning account.</p>
+              <p>Enter the 6-digit code sent to your email to activate your Vidyagam account.</p>
             </div>
           </div>
         </div>
