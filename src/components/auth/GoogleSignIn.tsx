@@ -22,9 +22,9 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
   }
 
   useEffect(() => {
-    // Load Google Identity Services script with FedCM compliance
-    // FedCM (Federated Credential Management) is now mandatory as of Oct 2024
+    // Load Google Identity Services script
     if (!window.google && googleClientId) {
+      console.log('Loading Google Sign-In script...');
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
@@ -32,32 +32,92 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
       document.head.appendChild(script);
 
       script.onload = () => {
-        if (window.google) {
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            callback: handleGoogleResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true,
-            use_fedcm_for_prompt: false, // Disable FedCM to avoid CORS issues
-            // Traditional popup settings
-            context: 'signin',
-            ux_mode: 'popup',
-            itp_support: false
-          });
+        console.log('Google Sign-In script loaded');
+        if (window.google?.accounts?.id) {
+          try {
+            window.google.accounts.id.initialize({
+              client_id: googleClientId,
+              callback: handleGoogleResponse,
+              auto_select: false,
+              cancel_on_tap_outside: true,
+              use_fedcm_for_prompt: false, // Disable FedCM to avoid CORS issues
+              context: 'signin',
+              ux_mode: 'popup',
+              itp_support: false,
+              // Add COOP-compliant settings
+              state_cookie_domain: window.location.hostname,
+              cookie_policy: 'single_host_origin'
+            });
+            console.log('Google Sign-In initialized successfully');
+          } catch (error) {
+            console.error('Google Sign-In initialization error:', error);
+          }
+        } else {
+          console.error('Google Sign-In API not available after script load');
         }
       };
+
+      script.onerror = () => {
+        console.error('Failed to load Google Sign-In script');
+      };
+    } else if (window.google?.accounts?.id && googleClientId) {
+      console.log('Google Sign-In already loaded, initializing...');
+      try {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: handleGoogleResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          use_fedcm_for_prompt: false,
+          context: 'signin',
+          ux_mode: 'popup',
+          itp_support: false,
+          // Add COOP-compliant settings
+          state_cookie_domain: window.location.hostname,
+          cookie_policy: 'single_host_origin'
+        });
+        console.log('Google Sign-In initialized successfully (existing script)');
+      } catch (error) {
+        console.error('Google Sign-In initialization error (existing script):', error);
+      }
     }
   }, [googleClientId]);
 
   const handleGoogleResponse = async (response: any) => {
     try {
+      console.log('Google response received:', { 
+        hasCredential: !!response.credential,
+        credentialLength: response.credential?.length 
+      });
+      
       if (response.credential) {
+        console.log('Attempting to authenticate with Google credential...');
         await googleLogin(response.credential);
+        console.log('Google authentication successful');
         onSuccess();
+      } else {
+        console.error('No credential in Google response');
+        alert('Google Sign In failed - no credentials received');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Google Sign In error:', error);
+      
+      // Show user-friendly error messages
+      if (error.message?.includes('not configured')) {
+        alert('Google Sign In is not configured on this server. Please use email/password authentication.');
+      } else if (error.message?.includes('Invalid Google client')) {
+        alert('Google Sign In configuration error. Please contact support.');
+      } else if (error.message?.includes('Email not verified')) {
+        alert('Please verify your email with Google first, then try again.');
+      } else {
+        alert(`Google Sign In failed: ${error.message || 'Unknown error'}`);
+      }
     }
+  };
+
+  const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           window.innerWidth <= 768;
   };
 
   const handleGoogleSignIn = async () => {
@@ -67,24 +127,172 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
     }
 
     try {
-      if (window.google && window.google.accounts) {
+      console.log('Google sign-in button clicked');
+      console.log('Device type:', isMobile() ? 'Mobile' : 'Desktop');
+      console.log('Google API status:', {
+        googleExists: !!window.google,
+        accountsExists: !!window.google?.accounts,
+        idExists: !!window.google?.accounts?.id
+      });
+
+      if (window.google?.accounts?.id) {
         console.log('Attempting Google Sign In...');
-        window.google.accounts.id.prompt((notification: any) => {
-          console.log('Google prompt notification:', notification);
-          if (notification.isNotDisplayed()) {
-            console.log('Google prompt not displayed - domain may not be authorized');
-            alert('Google Sign In is not available on this domain. Please use email/password instead.');
-          } else if (notification.isSkippedMoment()) {
-            console.log('Google prompt skipped by user');
+        
+        // Use One Tap with COOP-compliant settings
+        console.log('Using Google One Tap with COOP compliance...');
+        
+        if (isMobile()) {
+          // Mobile-first approach: Use popup/redirect method
+          console.log('Using mobile-optimized Google Sign-In...');
+          
+          try {
+            // Create temporary container for Google button
+            const buttonContainer = document.createElement('div');
+            buttonContainer.id = 'temp-google-signin';
+            buttonContainer.style.position = 'fixed';
+            buttonContainer.style.top = '-9999px';
+            buttonContainer.style.left = '-9999px';
+            buttonContainer.style.zIndex = '9999';
+            document.body.appendChild(buttonContainer);
+
+            // Render Google Sign-In button
+            window.google.accounts.id.renderButton(buttonContainer, {
+              theme: 'filled_blue',
+              size: 'large',
+              type: 'standard',
+              text: 'signin_with',
+              shape: 'rectangular',
+              width: 250
+            });
+
+            // Wait for button to render, then trigger click
+            setTimeout(() => {
+              const iframe = buttonContainer.querySelector('iframe');
+              if (iframe) {
+                // Move container to visible area temporarily
+                buttonContainer.style.position = 'fixed';
+                buttonContainer.style.top = '50%';
+                buttonContainer.style.left = '50%';
+                buttonContainer.style.transform = 'translate(-50%, -50%)';
+                buttonContainer.style.zIndex = '10000';
+                buttonContainer.style.backgroundColor = 'white';
+                buttonContainer.style.padding = '20px';
+                buttonContainer.style.borderRadius = '8px';
+                buttonContainer.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                
+                // Add close button
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '×';
+                closeBtn.style.position = 'absolute';
+                closeBtn.style.top = '5px';
+                closeBtn.style.right = '10px';
+                closeBtn.style.background = 'none';
+                closeBtn.style.border = 'none';
+                closeBtn.style.fontSize = '20px';
+                closeBtn.style.cursor = 'pointer';
+                closeBtn.onclick = () => {
+                  document.body.removeChild(buttonContainer);
+                };
+                buttonContainer.appendChild(closeBtn);
+                
+                // Auto-remove after 10 seconds
+                setTimeout(() => {
+                  if (document.body.contains(buttonContainer)) {
+                    document.body.removeChild(buttonContainer);
+                  }
+                }, 10000);
+              } else {
+                console.error('Google Sign-In button failed to render');
+                document.body.removeChild(buttonContainer);
+                alert('Google Sign In is not available on this device. Please use email/password authentication.');
+              }
+            }, 500);
+
+          } catch (mobileError) {
+            console.error('Mobile Google Sign-In failed:', mobileError);
+            // Fallback to One Tap for mobile
+            window.google.accounts.id.prompt();
           }
-        });
+          
+        } else {
+          // Desktop: Try One Tap first, then fallback to button
+          window.google.accounts.id.prompt((notification: any) => {
+            console.log('Google prompt notification:', notification);
+            
+            if (notification.isNotDisplayed()) {
+              console.log('Google One Tap not displayed, reason:', notification.getNotDisplayedReason());
+              
+              // Desktop fallback: show rendered button
+              const buttonContainer = document.createElement('div');
+              buttonContainer.style.position = 'fixed';
+              buttonContainer.style.top = '50%';
+              buttonContainer.style.left = '50%';
+              buttonContainer.style.transform = 'translate(-50%, -50%)';
+              buttonContainer.style.zIndex = '10000';
+              buttonContainer.style.backgroundColor = 'white';
+              buttonContainer.style.padding = '30px';
+              buttonContainer.style.borderRadius = '12px';
+              buttonContainer.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+              document.body.appendChild(buttonContainer);
+
+              // Add title
+              const title = document.createElement('div');
+              title.textContent = 'Sign in with Google';
+              title.style.marginBottom = '15px';
+              title.style.fontSize = '16px';
+              title.style.fontWeight = 'bold';
+              title.style.textAlign = 'center';
+              buttonContainer.appendChild(title);
+
+              // Render Google button
+              const googleButtonDiv = document.createElement('div');
+              buttonContainer.appendChild(googleButtonDiv);
+
+              window.google.accounts.id.renderButton(googleButtonDiv, {
+                theme: 'outline',
+                size: 'large',
+                type: 'standard',
+                text: 'signin_with',
+                shape: 'rectangular',
+                width: 250
+              });
+
+              // Add close button
+              const closeBtn = document.createElement('button');
+              closeBtn.innerHTML = '×';
+              closeBtn.style.position = 'absolute';
+              closeBtn.style.top = '10px';
+              closeBtn.style.right = '15px';
+              closeBtn.style.background = 'none';
+              closeBtn.style.border = 'none';
+              closeBtn.style.fontSize = '24px';
+              closeBtn.style.cursor = 'pointer';
+              closeBtn.onclick = () => {
+                document.body.removeChild(buttonContainer);
+              };
+              buttonContainer.appendChild(closeBtn);
+
+              // Auto-remove after 15 seconds
+              setTimeout(() => {
+                if (document.body.contains(buttonContainer)) {
+                  document.body.removeChild(buttonContainer);
+                }
+              }, 15000);
+            }
+          });
+        }
+        
       } else {
-        console.log('Google API not loaded');
-        alert('Google Sign In loading... Please try again in a moment or use email/password.');
+        console.error('Google Sign-In API not available');
+        if (!window.google) {
+          alert('Google Sign In is still loading. Please wait a moment and try again, or use email/password authentication.');
+        } else {
+          alert('Google Sign In is not properly configured. Please use email/password authentication.');
+        }
       }
     } catch (error) {
       console.error('Google Sign In error:', error);
-      alert('Google Sign In temporarily unavailable. Please use email/password.');
+      alert('Google Sign In temporarily unavailable. Please use email/password authentication.');
     }
   };
 

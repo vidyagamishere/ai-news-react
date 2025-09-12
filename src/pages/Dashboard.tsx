@@ -71,42 +71,40 @@ const Dashboard: React.FC = () => {
         const fallbackData: DigestResponse = {
           topStories: [
             {
-              id: 'fallback-1',
               title: 'Welcome to Vidyagam AI News',
               summary: 'Your personalized AI news dashboard is loading. We are fetching the latest AI developments from 45+ sources to bring you the most relevant content.',
               url: '#',
               source: 'Vidyagam',
-              timestamp: new Date().toISOString(),
-              significanceScore: 8.5,
-              category: 'general'
+              significanceScore: 8.5
             },
             {
-              id: 'fallback-2',
               title: 'Loading Latest AI Intelligence',
               summary: 'Our AI systems are curating breaking news from top research labs, startups, and industry leaders. This usually takes just a few seconds.',
               url: '#',
               source: 'AI News Network',
-              timestamp: new Date().toISOString(),
-              significanceScore: 7.8,
-              category: 'technology'
+              significanceScore: 7.8
             }
           ],
           summary: {
+            keyPoints: ['Loading AI news from 45+ sources...'],
             metrics: {
               totalUpdates: 0,
               highImpact: 0,
-              research: 0,
+              newResearch: 0,
               industryMoves: 0
-            },
-            lastUpdated: new Date().toISOString()
+            }
           },
-          content: [],
+          content: {
+            blog: [],
+            audio: [],
+            video: []
+          },
           timestamp: new Date().toISOString(),
           badge: 'Loading'
         };
         
         setDigest(fallbackData);
-        setError('Loading cached content while fetching latest updates...');
+        // Don't show error message for cached content
         
         // Continue trying to load real data in background
         dataPromise.then(realData => {
@@ -117,6 +115,7 @@ const Dashboard: React.FC = () => {
         }).catch(() => {
           // Keep fallback data if real data fails
           console.log('Continuing with fallback data');
+          setError(null); // Clear any error when using fallback
         });
       }
     } catch (err) {

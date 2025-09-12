@@ -152,9 +152,27 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
       }
       
       setContent(prev => ({ ...prev, [contentType]: response }));
-    } catch (err) {
+    } catch (err: any) {
       console.error(`Failed to load ${contentType} content:`, err);
-      setError(`Failed to load ${contentType} content`);
+      
+      // Provide specific error messages based on error type
+      let errorMessage = `Failed to load ${contentType} content`;
+      
+      if (err.message?.includes('timeout')) {
+        if (contentType === 'all_sources') {
+          errorMessage = 'Loading all sources is taking longer than usual. The server is processing content from 45+ sources. Please wait a moment and try again.';
+        } else {
+          errorMessage = `Loading ${contentType} content timed out. Please try again.`;
+        }
+      } else if (err.message?.includes('Network Error')) {
+        errorMessage = 'Network connection issue. Please check your internet connection and try again.';
+      } else if (err.response?.status === 500) {
+        errorMessage = 'Server error. The content service may be temporarily unavailable.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(prev => ({ ...prev, [contentType]: false }));
     }
@@ -210,7 +228,11 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
         )}
 
         {isLoading ? (
-          <Loading message={`Loading ${contentTypes[activeTab]?.name || activeTab}...`} />
+          <Loading message={
+            activeTab === 'all_sources' 
+              ? 'Loading all sources... This may take up to 20 seconds as we scrape 45+ AI news sources.' 
+              : `Loading ${contentTypes[activeTab]?.name || activeTab}...`
+          } />
         ) : currentContent ? (
           <>
             {/* Content Header */}

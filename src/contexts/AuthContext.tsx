@@ -35,12 +35,71 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializeAuth();
   }, []);
 
+  // Debug auth state changes
+  useEffect(() => {
+    console.log('🔄 Auth state changed:', {
+      isAuthenticated: authState.isAuthenticated,
+      hasUser: !!authState.user,
+      userName: authState.user?.name,
+      userEmail: authState.user?.email,
+      loading: authState.loading
+    });
+  }, [authState]);
+
   const initializeAuth = async () => {
     setAuthState(prev => ({ ...prev, loading: true }));
     try {
       const token = localStorage.getItem('authToken');
+      const cachedUser = localStorage.getItem('cachedUser');
+      console.log('🔑 Auth initialization - Token found:', !!token, 'Cached user found:', !!cachedUser);
+      
       if (token) {
+        // If we have cached user data, use it immediately while validating in background
+        if (cachedUser) {
+          try {
+            const parsedUser = JSON.parse(cachedUser);
+            console.log('📦 Using cached user data while validating...');
+            setAuthState({
+              isAuthenticated: true,
+              user: parsedUser,
+              loading: false,
+              error: null
+            });
+            
+            // Validate token in background and update if needed
+            authService.validateToken(token).then(validatedUser => {
+              console.log('✅ Background token validation successful');
+              localStorage.setItem('cachedUser', JSON.stringify(validatedUser));
+              setAuthState(prev => ({ ...prev, user: validatedUser }));
+            }).catch(error => {
+              console.warn('⚠️ Background token validation failed, keeping cached user:', error);
+              // Only remove session if it's a 401 (unauthorized), keep for other errors
+              if (error.message?.includes('401') || error.message?.includes('unauthorized')) {
+                console.log('🔄 Token expired, clearing session');
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('cachedUser');
+                setAuthState({
+                  isAuthenticated: false,
+                  user: null,
+                  loading: false,
+                  error: null
+                });
+              }
+            });
+            return;
+          } catch (parseError) {
+            console.warn('⚠️ Failed to parse cached user, validating token normally');
+          }
+        }
+        
+        // No cached user or parsing failed, validate token normally
+        console.log('🚀 Validating token...');
         const user = await authService.validateToken(token);
+        console.log('✅ Token valid - User authenticated:', { name: user.name, email: user.email });
+        
+        // Cache the user data
+        localStorage.setItem('cachedUser', JSON.stringify(user));
+        
         setAuthState({
           isAuthenticated: true,
           user,
@@ -48,10 +107,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           error: null
         });
       } else {
+        console.log('❌ No token found in localStorage');
+        localStorage.removeItem('cachedUser');
         setAuthState(prev => ({ ...prev, loading: false }));
       }
     } catch (error) {
+      console.error('❌ Token validation failed:', error);
       localStorage.removeItem('authToken');
+      localStorage.removeItem('cachedUser');
       setAuthState({
         isAuthenticated: false,
         user: null,
@@ -66,6 +129,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { user, token } = await authService.login(credentials);
       localStorage.setItem('authToken', token);
+      localStorage.setItem('cachedUser', JSON.stringify(user));
       
       setAuthState({
         isAuthenticated: true,
@@ -99,6 +163,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if ('user' in response && 'token' in response) {
         const { user, token } = response;
         localStorage.setItem('authToken', token);
+        localStorage.setItem('cachedUser', JSON.stringify(user));
         setAuthState({
           isAuthenticated: true,
           user,
@@ -119,14 +184,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const googleLogin = async (idToken: string) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }));
     try {
-      const { user, token } = await authService.googleLogin(idToken);
+      const response = await authService.googleLogin(idToken);
+      console.log('✅ Google login API response:', JSON.stringify(response, null, 2));
+      
+      if (!response || typeof response !== 'object') {
+        throw new Error('Invalid response format from Google login API');
+      }
+      
+      if (!response.user) {
+        console.error('❌ Response structure:', response);
+        throw new Error('No user data returned from Google login API');
+      }
+      
+      if (!response.token) {
+        console.error('❌ No token in response:', response);
+        throw new Error('No token returned from Google login API');
+      }
+      
+      const { user, token } = response;
+      
+      // Validate user object structure
+      if (!user.name || !user.email) {
+        console.error('❌ Invalid user data structure:', user);
+        throw new Error(`Invalid user data: missing ${!user.name ? 'name' : 'email'}`);
+      }
+      
+      console.log('✅ Google login successful - User data:', { name: user.name, email: user.email, id: user.id });
       localStorage.setItem('authToken', token);
-      setAuthState({
+      localStorage.setItem('cachedUser', JSON.stringify(user));
+      const newState = {
         isAuthenticated: true,
         user,
         loading: false,
         error: null
-      });
+      };
+      console.log('🔄 Setting auth state after Google login:', newState);
+      setAuthState(newState);
     } catch (error) {
       setAuthState(prev => ({
         ...prev,
@@ -139,6 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('cachedUser');
     setAuthState({
       isAuthenticated: false,
       user: null,
@@ -167,6 +261,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       setAuthState(prev => ({ ...prev, user: preservedUser }));
+      
+      // Update cached user data
+      localStorage.setItem('cachedUser', JSON.stringify(preservedUser));
     } catch (error) {
       throw error;
     }
@@ -195,6 +292,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { user, token: authToken } = await authService.verifyOTP(email, otp, userData);
       localStorage.setItem('authToken', authToken);
+      localStorage.setItem('cachedUser', JSON.stringify(user));
       setAuthState({
         isAuthenticated: true,
         user,

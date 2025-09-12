@@ -266,6 +266,16 @@ const Header: React.FC<HeaderProps> = () => {
                     )}
                     <div className="mobile-action-item">
                       <button 
+                        onClick={() => navigate('/archive')}
+                        className="mobile-action-icon archive-action"
+                        title="Archive"
+                      >
+                        <Archive size={12} />
+                      </button>
+                      <span className="mobile-action-label">Archive</span>
+                    </div>
+                    <div className="mobile-action-item">
+                      <button 
                         onClick={() => navigate('/preferences')}
                         className="mobile-action-icon settings-action"
                         title="Settings"

@@ -1,0 +1,188 @@
+{
+  "testSuite": "AI News Digest - Authentication Flow Tests",
+  "timestamp": "2025-09-11T11:59:35.670Z",
+  "summary": {
+    "total": 21,
+    "passed": 0,
+    "failed": 21,
+    "successRate": "0.0%"
+  },
+  "configuration": {
+    "backendUrl": "http://localhost:8003",
+    "frontendUrl": "http://localhost:5173"
+  },
+  "results": [
+    {
+      "name": "Backend Health Check",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.659Z"
+    },
+    {
+      "name": "Content Types API",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.660Z"
+    },
+    {
+      "name": "Digest API",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.661Z"
+    },
+    {
+      "name": "Topics API",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.661Z"
+    },
+    {
+      "name": "Sign Up - Positive Flow",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.662Z"
+    },
+    {
+      "name": "Sign Up - Missing Name",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.663Z"
+    },
+    {
+      "name": "Sign Up - Invalid Email",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.663Z"
+    },
+    {
+      "name": "Sign Up - Short Password",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.664Z"
+    },
+    {
+      "name": "Sign Up - Empty Fields",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.665Z"
+    },
+    {
+      "name": "Sign In - Positive Flow",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.665Z"
+    },
+    {
+      "name": "Sign In - Invalid Email",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.666Z"
+    },
+    {
+      "name": "Sign In - Wrong Password",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.666Z"
+    },
+    {
+      "name": "Sign In - Missing Credentials",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.667Z"
+    },
+    {
+      "name": "Sign In - Invalid Email Format",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.667Z"
+    },
+    {
+      "name": "Google Auth Flow",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.668Z"
+    },
+    {
+      "name": "Authenticated Endpoints",
+      "passed": false,
+      "details": {
+        "error": "No test token available"
+      },
+      "timestamp": "2025-09-11T11:59:35.668Z"
+    },
+    {
+      "name": "Content Filtering - blogs",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.668Z"
+    },
+    {
+      "name": "Content Filtering - podcasts",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.669Z"
+    },
+    {
+      "name": "Content Filtering - videos",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.669Z"
+    },
+    {
+      "name": "Content Filtering - events",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.669Z"
+    },
+    {
+      "name": "Content Filtering - learn",
+      "passed": false,
+      "details": {
+        "error": ""
+      },
+      "timestamp": "2025-09-11T11:59:35.670Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix underlying issues",
+    "Critical authentication issues detected - fix before deployment"
+  ]
+}

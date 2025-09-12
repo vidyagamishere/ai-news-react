@@ -4,31 +4,35 @@ import { useAuth } from '../contexts/AuthContext';
 import { apiService } from '../services/api';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
-import TopStories from '../components/TopStories';
+// import TopStories from '../components/TopStories'; // Not used in archive page
 import ContentTabs from '../components/content/ContentTabs';
 import SEO from '../components/SEO';
 
-interface ArchivedDigest {
+interface ArchivedContent {
   id: string;
-  archive_date: string;
-  digest_data: any;
-  top_stories_count: number;
+  date: string;
+  timestamp: number;
   total_articles: number;
-  sources_processed: number;
-  created_at: string;
+  content_types: string[];
+  content_types_count: number;
 }
 
 interface ArchiveStats {
-  total_digests: number;
-  total_articles: number;
-  total_top_stories: number;
-  date_range: {
-    earliest: string | null;
-    latest: string | null;
-  };
-  content_types: Record<string, number>;
-  retention_days: number;
-  scraping_days: number;
+  archives: ArchivedContent[];
+  total_archives: number;
+  max_retention_days: number;
+  refresh_interval_hours: number;
+}
+
+interface DetailedArchive {
+  archive_id: string;
+  date: string;
+  timestamp: number;
+  content: Record<string, {
+    data: any;
+    cached_time: number;
+    articles_count: number;
+  }>;
 }
 
 interface SearchResult {
@@ -44,8 +48,8 @@ interface SearchResult {
 }
 
 const Archive: React.FC = () => {
-  const [archives, setArchives] = useState<ArchivedDigest[]>([]);
-  const [selectedDigest, setSelectedDigest] = useState<any>(null);
+  const [archives, setArchives] = useState<ArchivedContent[]>([]);
+  const [selectedArchive, setSelectedArchive] = useState<DetailedArchive | null>(null);
   const [stats, setStats] = useState<ArchiveStats | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +57,7 @@ const Archive: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [view, setView] = useState<'calendar' | 'search' | 'digest'>('calendar');
+  const [view, setView] = useState<'calendar' | 'search' | 'archive'>('calendar');
 
   const { user } = useAuth();
 
@@ -66,14 +70,11 @@ const Archive: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Load recent archives and stats
-      const [archivesResponse, statsResponse] = await Promise.all([
-        apiService.get('/api/archive/digests?days=30'),
-        apiService.get('/api/archive/stats')
-      ]);
+      // Load recent archives (last 60 archives, covering 30 days with 12-hour refresh)
+      const archiveResponse = await apiService.get('/api/archive?limit=60');
 
-      setArchives(archivesResponse.archives || []);
-      setStats(statsResponse);
+      setArchives(archiveResponse.archives || []);
+      setStats(archiveResponse);
     } catch (err) {
       console.error('Failed to load archive data:', err);
       setError('Failed to load archive data. Please try again.');
@@ -82,16 +83,16 @@ const Archive: React.FC = () => {
     }
   };
 
-  const loadDigestByDate = async (date: string) => {
+  const loadArchiveById = async (archiveId: string, date: string) => {
     try {
       setLoading(true);
-      const digest = await apiService.get(`/api/archive/digest/${date}`);
-      setSelectedDigest(digest);
+      const archive = await apiService.get(`/api/archive/${archiveId}`);
+      setSelectedArchive(archive);
       setSelectedDate(date);
-      setView('digest');
+      setView('archive');
     } catch (err) {
-      console.error(`Failed to load digest for ${date}:`, err);
-      setError(`No digest found for ${date}`);
+      console.error(`Failed to load archive ${archiveId}:`, err);
+      setError(`No archive found for ${date}`);
     } finally {
       setLoading(false);
     }
@@ -102,7 +103,7 @@ const Archive: React.FC = () => {
 
     try {
       setSearchLoading(true);
-      const results = await apiService.get(`/api/archive/search?q=${encodeURIComponent(searchQuery)}&days=30`);
+      const results = await apiService.get(`/api/archive/search?q=${encodeURIComponent(searchQuery)}&limit=50`);
       setSearchResults(results.results || []);
       setView('search');
     } catch (err) {
@@ -122,11 +123,11 @@ const Archive: React.FC = () => {
     });
   };
 
-  if (loading && !selectedDigest) {
+  if (loading && !selectedArchive) {
     return <Loading message="Loading archive..." />;
   }
 
-  if (error && !selectedDigest && !archives.length) {
+  if (error && !selectedArchive && !archives.length) {
     return (
       <div className="app">
         <Header onRefresh={() => {}} onManualScrape={() => {}} isLoading={false} />
@@ -175,22 +176,22 @@ const Archive: React.FC = () => {
                 <div className="stat-card">
                   <Calendar size={20} />
                   <div>
-                    <div className="stat-value">{stats.total_digests}</div>
-                    <div className="stat-label">Days Archived</div>
+                    <div className="stat-value">{stats.total_archives}</div>
+                    <div className="stat-label">Archives Available</div>
                   </div>
                 </div>
                 <div className="stat-card">
                   <TrendingUp size={20} />
                   <div>
-                    <div className="stat-value">{stats.total_articles}</div>
+                    <div className="stat-value">{archives.reduce((sum, a) => sum + a.total_articles, 0)}</div>
                     <div className="stat-label">Total Articles</div>
                   </div>
                 </div>
                 <div className="stat-card">
                   <Clock size={20} />
                   <div>
-                    <div className="stat-value">{stats.retention_days}</div>
-                    <div className="stat-label">Retention Days</div>
+                    <div className="stat-value">{stats.max_retention_days}</div>
+                    <div className="stat-label">Max Retention Days</div>
                   </div>
                 </div>
               </div>
@@ -212,10 +213,10 @@ const Archive: React.FC = () => {
               <Search size={16} />
               Search Archive
             </button>
-            {selectedDigest && (
+            {selectedArchive && (
               <button 
-                className={`nav-btn ${view === 'digest' ? 'active' : ''}`}
-                onClick={() => setView('digest')}
+                className={`nav-btn ${view === 'archive' ? 'active' : ''}`}
+                onClick={() => setView('archive')}
               >
                 <ArchiveIcon size={16} />
                 {formatDate(selectedDate)}
@@ -225,21 +226,27 @@ const Archive: React.FC = () => {
 
           {view === 'calendar' && (
             <div className="archive-calendar">
-              <h2>Recent Digests</h2>
+              <h2>Recent Archives</h2>
               <div className="digests-grid">
                 {archives.map((archive) => (
                   <div 
                     key={archive.id} 
                     className="digest-card"
-                    onClick={() => loadDigestByDate(archive.archive_date)}
+                    onClick={() => loadArchiveById(archive.id, archive.date)}
                   >
                     <div className="digest-date">
-                      {formatDate(archive.archive_date)}
+                      {formatDate(archive.date)}
                     </div>
                     <div className="digest-stats">
-                      <span>{archive.top_stories_count} top stories</span>
                       <span>{archive.total_articles} articles</span>
-                      <span>{archive.sources_processed} sources</span>
+                      <span>{archive.content_types.join(', ')}</span>
+                      <span>{archive.content_types_count} types</span>
+                    </div>
+                    <div className="archive-timestamp">
+                      {new Date(archive.timestamp * 1000).toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
                     </div>
                   </div>
                 ))}
@@ -249,7 +256,7 @@ const Archive: React.FC = () => {
                 <div className="no-archives">
                   <ArchiveIcon size={48} />
                   <h3>No Archives Yet</h3>
-                  <p>Archives will appear here as daily digests are generated.</p>
+                  <p>Archives will appear here as content is refreshed every 12 hours.</p>
                 </div>
               )}
             </div>
@@ -305,7 +312,7 @@ const Archive: React.FC = () => {
             </div>
           )}
 
-          {view === 'digest' && selectedDigest && (
+          {view === 'archive' && selectedArchive && (
             <div className="archived-digest">
               <div className="digest-header">
                 <button 
@@ -316,16 +323,37 @@ const Archive: React.FC = () => {
                   Back to Calendar
                 </button>
                 <h2>{formatDate(selectedDate)}</h2>
+                <div className="archive-metadata">
+                  <span>Archived: {new Date(selectedArchive.timestamp * 1000).toLocaleString()}</span>
+                </div>
               </div>
 
-              {/* Display the archived digest using existing components */}
-              <TopStories stories={selectedDigest.topStories || []} />
-              <ContentTabs 
-                userTier={user?.subscriptionTier || 'free'} 
-                topStories={selectedDigest.topStories || []}
-                isArchive={true}
-                archiveContent={selectedDigest.content}
-              />
+              {/* Display the archived content using existing components */}
+              {selectedArchive.content && Object.keys(selectedArchive.content).length > 0 ? (
+                <ContentTabs 
+                  userTier={user?.subscriptionTier || 'free'} 
+                  topStories={[]}
+                  isArchive={true}
+                  archiveContent={(() => {
+                    // Transform archive content structure for ContentTabs compatibility
+                    const transformedContent: Record<string, any[]> = {};
+                    Object.entries(selectedArchive.content).forEach(([contentType, contentData]: [string, any]) => {
+                      if (contentData && contentData.data && Array.isArray(contentData.data)) {
+                        transformedContent[contentType] = contentData.data;
+                      } else if (Array.isArray(contentData)) {
+                        transformedContent[contentType] = contentData;
+                      }
+                    });
+                    return transformedContent;
+                  })()}
+                />
+              ) : (
+                <div className="no-archived-content">
+                  <ArchiveIcon size={48} />
+                  <h3>No Content Available</h3>
+                  <p>This archive does not contain any content data.</p>
+                </div>
+              )}
             </div>
           )}
         </div>

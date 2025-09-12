@@ -27,7 +27,9 @@ const Auth: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      // Don't redirect here - let the form submission handle it
+      // Redirect authenticated users to dashboard
+      console.log('User authenticated, redirecting to dashboard...');
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 

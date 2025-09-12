@@ -13,8 +13,9 @@ export interface User {
 
 export interface UserPreferences {
   topics: AITopic[];
-  newsletterFrequency: 'daily' | 'weekly';
+  newsletterFrequency: '12_hours' | 'daily' | 'weekly';
   emailNotifications: boolean;
+  newsletter_subscribed?: boolean;
   contentTypes: ContentType[];
   onboardingCompleted?: boolean;
 }

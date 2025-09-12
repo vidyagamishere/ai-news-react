@@ -1,6 +1,6 @@
 import type { User, LoginCredentials, SignupCredentials, AITopic } from '../types/auth';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-lmwjwl5ud.vercel.app';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
 
 interface AuthResponse {
   user: User;
@@ -56,7 +56,17 @@ class AuthService {
   }
 
   async validateToken(_token: string): Promise<User> {
-    return this.request('/api/auth/profile');
+    try {
+      console.log('🔍 Validating token with API...');
+      const user = await this.request('/api/auth/profile');
+      console.log('✅ Token validation successful');
+      return user;
+    } catch (error) {
+      console.error('❌ Token validation failed:', error);
+      // Clean up invalid token
+      localStorage.removeItem('authToken');
+      throw error;
+    }
   }
 
   async updateUserPreferences(preferences: Partial<User['preferences']>): Promise<User> {
@@ -77,10 +87,13 @@ class AuthService {
   }
 
   async googleLogin(idToken: string): Promise<AuthResponse> {
-    return this.request('/api/auth/google', {
+    console.log('Sending Google login request with token length:', idToken.length);
+    const response = await this.request('/api/auth/google', {
       method: 'POST',
-      body: JSON.stringify({ idToken }),
+      body: JSON.stringify({ id_token: idToken }),
     });
+    console.log('🔍 Google login API response:', response);
+    return response;
   }
 
   async sendOTP(email: string, name?: string): Promise<void> {
