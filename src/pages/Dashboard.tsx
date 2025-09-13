@@ -11,7 +11,7 @@ import SEO from '../components/SEO';
 // Lazy load heavy components
 const MetricsDashboard = lazy(() => import('../components/MetricsDashboard'));
 const ContentTabs = lazy(() => import('../components/content/ContentTabs'));
-const TopicSelector = lazy(() => import('../components/onboarding/TopicSelector'));
+const ComprehensiveOnboarding = lazy(() => import('../components/onboarding/ComprehensiveOnboarding'));
 const AdUnit = lazy(() => import('../components/ads/AdUnit'));
 
 const Dashboard: React.FC = () => {
@@ -29,8 +29,8 @@ const Dashboard: React.FC = () => {
   // Redirect to auth if not authenticated
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      console.log('User not authenticated, redirecting to auth');
-      navigate('/auth');
+      console.log('User not authenticated, redirecting to home');
+      navigate('/');
       return;
     }
   }, [isAuthenticated, authLoading, navigate]);
@@ -207,16 +207,16 @@ const Dashboard: React.FC = () => {
     return <Loading message="Checking authentication..." />;
   }
 
-  // If not authenticated, the useEffect will redirect to /auth
+  // If not authenticated, the useEffect will redirect to home
   if (!isAuthenticated) {
-    return <Loading message="Redirecting to sign in..." />;
+    return <Loading message="Loading..." />;
   }
 
   if (showOnboarding) {
     return (
       <div className="app onboarding-app">
         <Suspense fallback={<Loading message="Loading onboarding..." />}>
-          <TopicSelector 
+          <ComprehensiveOnboarding 
             onComplete={() => {
               setShowOnboarding(false);
               setShowWelcome(false);
@@ -337,6 +337,10 @@ const Dashboard: React.FC = () => {
           
           <div className="dashboard-layout">
             <div className="dashboard-main">
+              <div className="section-header">
+                <h2 id="dashboard-top-stories">🔥 Top Stories</h2>
+                <p>Latest AI breakthroughs and developments from leading sources</p>
+              </div>
               <TopStories stories={digest.topStories} />
               
               {import.meta.env.VITE_ENABLE_ADS === 'true' && digest.topStories && digest.topStories.length > 0 && (

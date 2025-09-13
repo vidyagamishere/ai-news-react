@@ -30,9 +30,11 @@ interface ContentTabsProps {
   topStories?: TopStory[];
   isArchive?: boolean;
   archiveContent?: Record<string, any[]>;
+  previewMode?: boolean;
+  onSignUpPrompt?: () => void;
 }
 
-export default function ContentTabs({ userTier, topStories = [], isArchive = false, archiveContent }: ContentTabsProps) {
+export default function ContentTabs({ userTier, topStories = [], isArchive = false, archiveContent, previewMode = false, onSignUpPrompt }: ContentTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
@@ -83,6 +85,43 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
       if (topStoryTitles.has(article.title?.toLowerCase())) return false;
       return true;
     });
+  };
+
+  const generatePreviewContent = (contentType: string) => {
+    const previewData = {
+      'all_sources': [
+        { title: 'Google DeepMind Announces Breakthrough in AI Reasoning', source: 'Google DeepMind', url: '#', published_date: new Date().toISOString() },
+        { title: 'OpenAI Releases Advanced Language Model Capabilities', source: 'OpenAI', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Microsoft AI Research Lab Unveils New Framework', source: 'Microsoft Research', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+      ],
+      'blogs': [
+        { title: 'The Future of Artificial General Intelligence: Expert Analysis', source: 'AI Research Blog', url: '#', published_date: new Date().toISOString() },
+        { title: 'Building Scalable AI Systems: Lessons from Industry Leaders', source: 'Tech Insights', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Neural Network Architectures: A Deep Dive', source: 'ML Weekly', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+      ],
+      'podcasts': [
+        { title: 'AI Pioneers: Conversations with Leading Researchers', source: 'AI Podcast Network', url: '#', published_date: new Date().toISOString() },
+        { title: 'The Ethics of Artificial Intelligence', source: 'Tech Talk Radio', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Machine Learning in Healthcare', source: 'Health Tech Podcast', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+      ],
+      'videos': [
+        { title: 'Understanding Transformer Architecture: Visual Guide', source: 'AI Education Channel', url: '#', published_date: new Date().toISOString() },
+        { title: 'Live Demo: GPT-4 Advanced Features', source: 'Tech Demos', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Conference Talk: The State of AI in 2025', source: 'AI Conference', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+      ],
+      'events': [
+        { title: 'AI Summit 2025: Global Intelligence Conference', source: 'AI Events Inc', url: '#', published_date: new Date(Date.now() + 2592000000).toISOString() },
+        { title: 'Machine Learning Workshop: Hands-on Training', source: 'Tech Academy', url: '#', published_date: new Date(Date.now() + 1728000000).toISOString() },
+        { title: 'Neural Networks Meetup: Local Chapter', source: 'AI Meetups', url: '#', published_date: new Date(Date.now() + 864000000).toISOString() }
+      ],
+      'learn': [
+        { title: 'Complete Guide to Neural Networks: Beginner to Expert', source: 'AI Learning Hub', url: '#', published_date: new Date().toISOString() },
+        { title: 'Advanced Machine Learning Certification Program', source: 'Tech University', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Python for AI: Comprehensive Tutorial Series', source: 'Code Academy', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+      ]
+    };
+    
+    return previewData[contentType as keyof typeof previewData] || previewData.all_sources;
   };
 
   // Define tab order and tier access
@@ -136,6 +175,21 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
   };
 
   const loadContent = async (contentType: string) => {
+    // In preview mode, show limited mock content
+    if (previewMode) {
+      const mockResponse: ContentResponse = {
+        content_type: contentType,
+        content_info: contentTypes[contentType] || { name: contentType.replace('_', ' ').toUpperCase(), description: '', icon: '📄' },
+        articles: generatePreviewContent(contentType),
+        total: 12, // Mock total showing more content available
+        sources_available: 5,
+        user_tier: 'preview',
+        featured_sources: [{ name: 'OpenAI', website: 'openai.com' }, { name: 'DeepMind', website: 'deepmind.com' }]
+      };
+      setContent(prev => ({ ...prev, [contentType]: mockResponse }));
+      return;
+    }
+
     try {
       setLoading(prev => ({ ...prev, [contentType]: true }));
       setError(null);
@@ -289,8 +343,22 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
 
             {/* Articles with SEO optimization */}
             {currentContent.articles && currentContent.articles.length > 0 ? (
-              <div className="articles-list">
-                <h3>Latest Content</h3>
+              <div className={`articles-list ${previewMode ? 'preview-mode' : ''}`}>
+                <div className="content-header-row">
+                  <h3>Latest Content</h3>
+                  {previewMode && (
+                    <div className="preview-badge">
+                      <span>Preview Mode</span>
+                      <button 
+                        onClick={() => onSignUpPrompt?.()}
+                        className="signup-prompt-btn"
+                      >
+                        Sign Up for Full Access
+                      </button>
+                    </div>
+                  )}
+                </div>
+                
                 {(activeTab === 'all_sources' ? filterOutTopStories(currentContent.articles) : currentContent.articles).map((article, index) => (
                   <article 
                     key={index} 

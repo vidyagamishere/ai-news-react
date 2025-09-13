@@ -45,13 +45,12 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
     console.log('📊 isSubscribed state changed to:', isSubscribed);
   }, [isSubscribed]);
 
-  const [frequency, setFrequency] = useState(user?.preferences?.newsletter_frequency || '12_hours');
+  const [frequency, setFrequency] = useState(user?.preferences?.newsletter_frequency || 'weekly');
 
   const frequencyOptions = [
-    { value: '12_hours', label: 'Twice Daily (6 AM & 6 PM IST)', description: 'Get the latest updates every 12 hours' },
-    { value: 'daily', label: 'Daily (6 AM IST)', description: 'Single daily digest every morning' },
-    { value: 'weekly', label: 'Weekly (Monday 6 AM IST)', description: 'Weekly summary of the week\'s top stories' },
-    { value: 'monthly', label: 'Monthly (1st of month)', description: 'Monthly comprehensive digest' }
+    { value: 'daily', label: 'Daily', description: 'Get daily AI news digest every morning', icon: '📰' },
+    { value: 'weekly', label: 'Weekly', description: 'Weekly summary of top AI developments', icon: '📊' },
+    { value: 'monthly', label: 'Monthly', description: 'Monthly comprehensive AI trends report', icon: '📈' }
   ];
 
   const handleSubscriptionToggle = async () => {
@@ -114,7 +113,7 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
     }
   };
 
-  const handleFrequencyChange = async (newFrequency: '12_hours' | 'daily' | 'weekly' | 'monthly') => {
+  const handleFrequencyChange = async (newFrequency: 'daily' | 'weekly' | 'monthly') => {
     if (!user) return;
 
     setFrequency(newFrequency);
@@ -171,7 +170,7 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
         </div>
         <div className="newsletter-info">
           <h3>AI News Newsletter</h3>
-          <p>Get beautiful PDF newsletters with curated AI content every 12 hours</p>
+          <p>Get curated AI news delivered to your inbox with customizable frequency</p>
         </div>
       </div>
 
@@ -205,7 +204,7 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
             </strong>
             <p>
               {isSubscribed 
-                ? `You'll receive newsletters ${frequency === '12_hours' ? 'every 12 hours' : frequency === 'daily' ? 'daily' : frequency === 'weekly' ? 'weekly' : 'monthly'}`
+                ? `You'll receive newsletters ${frequency === 'daily' ? 'daily' : frequency === 'weekly' ? 'weekly' : 'monthly'}`
                 : 'Subscribe to get AI news delivered to your inbox'
               }
             </p>
@@ -224,10 +223,13 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
                     name="newsletter-frequency"
                     value={option.value}
                     checked={frequency === option.value}
-                    onChange={(e) => handleFrequencyChange(e.target.value as '12_hours' | 'daily' | 'weekly' | 'monthly')}
+                    onChange={(e) => handleFrequencyChange(e.target.value as 'daily' | 'weekly' | 'monthly')}
                   />
                   <div className="option-content">
-                    <strong>{option.label}</strong>
+                    <div className="option-header">
+                      <span className="option-icon">{option.icon}</span>
+                      <strong>{option.label}</strong>
+                    </div>
                     <span className="option-description">{option.description}</span>
                   </div>
                 </label>

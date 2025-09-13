@@ -40,7 +40,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
               callback: handleGoogleResponse,
               auto_select: false,
               cancel_on_tap_outside: true,
-              use_fedcm_for_prompt: false, // Disable FedCM to avoid CORS issues
+              use_fedcm_for_prompt: true, // Disable FedCM to avoid CORS issues
               context: 'signin',
               ux_mode: 'popup',
               itp_support: false,

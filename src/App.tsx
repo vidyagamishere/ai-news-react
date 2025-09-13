@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AdminAuthProvider } from './contexts/AdminAuthContext';
+import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import Onboarding from './pages/Onboarding';
@@ -40,21 +41,34 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-// Public Route Component (redirects authenticated users to dashboard, except for onboarding)
-const PublicRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+// Auto-redirect authenticated users from auth pages to dashboard
+const AuthRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   
   if (loading) {
     return <Loading message="Loading..." />;
   }
   
-  // Allow onboarding for authenticated users
-  const currentPath = window.location.pathname;
-  if (isAuthenticated && currentPath !== '/onboarding') {
+  if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
   
   return <>{children}</>;
+};
+
+// Home Route Component - shows Home for non-authenticated, Dashboard for authenticated
+const HomeRoute: React.FC = () => {
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return <Loading message="Loading..." />;
+  }
+  
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  return <Home />;
 };
 
 function AppContent() {
@@ -62,27 +76,19 @@ function AppContent() {
     <Routes>
       <Route 
         path="/" 
-        element={
-          <PublicRoute>
-            <Auth />
-          </PublicRoute>
-        } 
+        element={<HomeRoute />} 
       />
       <Route 
         path="/auth" 
         element={
-          <PublicRoute>
+          <AuthRoute>
             <Auth />
-          </PublicRoute>
+          </AuthRoute>
         } 
       />
       <Route 
         path="/landing" 
-        element={
-          <PublicRoute>
-            <Landing />
-          </PublicRoute>
-        } 
+        element={<Landing />} 
       />
       <Route 
         path="/signin" 

@@ -10,9 +10,12 @@ interface HeaderProps {
   onManualScrape: () => void;
   isLoading: boolean;
   lastUpdated?: string;
+  showAuthButtons?: boolean;
+  onSignInClick?: () => void;
+  onSignUpClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = () => {
+const Header: React.FC<HeaderProps> = ({ showAuthButtons = false, onSignInClick, onSignUpClick }) => {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -60,6 +63,7 @@ const Header: React.FC<HeaderProps> = () => {
   const handleLogout = () => {
     effectiveLogout();
     setShowUserMenu(false);
+    navigate('/'); // Redirect to home page after logout
   };
 
   return (
@@ -83,9 +87,20 @@ const Header: React.FC<HeaderProps> = () => {
                   </div>
                 ) : (
                   <div className="auth-buttons">
-                    <button onClick={handleSignIn} className="btn btn-primary">
-                      Sign In
-                    </button>
+                    {showAuthButtons ? (
+                      <>
+                        <button onClick={onSignInClick || handleSignIn} className="btn btn-ghost">
+                          Sign In
+                        </button>
+                        <button onClick={onSignUpClick} className="btn btn-primary">
+                          Sign Up Free
+                        </button>
+                      </>
+                    ) : (
+                      <button onClick={handleSignIn} className="btn btn-primary">
+                        Sign In
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -296,9 +311,22 @@ const Header: React.FC<HeaderProps> = () => {
                     </div>
                   </div>
                 ) : (
-                  <button onClick={handleSignIn} className="btn btn-primary mobile-signin-btn">
-                    Sign In
-                  </button>
+                  <div className="mobile-auth-buttons">
+                    {showAuthButtons ? (
+                      <>
+                        <button onClick={onSignInClick || handleSignIn} className="btn btn-ghost mobile-auth-btn">
+                          Sign In
+                        </button>
+                        <button onClick={onSignUpClick} className="btn btn-primary mobile-auth-btn">
+                          Sign Up
+                        </button>
+                      </>
+                    ) : (
+                      <button onClick={handleSignIn} className="btn btn-primary mobile-signin-btn">
+                        Sign In
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

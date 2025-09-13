@@ -1,5 +1,83 @@
 /* ContentTabs.css - Professional Elite Design */
 
+/* Preview Mode Styles */
+.content-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.preview-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 20px;
+  color: white;
+  font-size: 0.875rem;
+}
+
+.preview-badge span {
+  font-weight: 500;
+}
+
+.signup-prompt-btn {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.signup-prompt-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.articles-list.preview-mode {
+  position: relative;
+}
+
+.articles-list.preview-mode::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.95));
+  pointer-events: none;
+}
+
+/* Mobile responsive preview styles */
+@media (max-width: 768px) {
+  .content-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .preview-badge {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .signup-prompt-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    width: 100%;
+  }
+}
+
 .content-tabs {
   width: 100%;
   background: #ffffff;
@@ -586,8 +664,8 @@
   }
 }
 
-/* Tablet Portrait (481px - 767px) - iPad, Android tablets */
-@media (min-width: 481px) and (max-width: 767px) {
+/* Tablet Portrait (481px - 768px) - iPad, Android tablets */
+@media (min-width: 481px) and (max-width: 768px) {
   .content-tabs {
     margin: 16px 8px;
     border-radius: 12px;

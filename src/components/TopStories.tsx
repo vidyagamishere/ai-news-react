@@ -24,7 +24,6 @@ const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
 
   return (
     <div className="top-stories">
-      <h2 className="section-title">🔥 Top Stories</h2>
       <div className="stories-list">
         {stories.slice(0, 5).map((story, index) => {
           // Always show full summary - no truncation or read more

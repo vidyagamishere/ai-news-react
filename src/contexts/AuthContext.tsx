@@ -239,7 +239,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loading: false,
       error: null
     });
-    window.location.href = '/auth';
+    window.location.href = '/'; // Redirect to home page to see public content
   };
 
   const updatePreferences = async (preferences: Partial<User['preferences']>) => {
