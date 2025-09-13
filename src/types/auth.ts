@@ -13,10 +13,10 @@ export interface User {
 
 export interface UserPreferences {
   topics: AITopic[];
-  newsletterFrequency: '12_hours' | 'daily' | 'weekly';
-  emailNotifications: boolean;
+  newsletter_frequency: '12_hours' | 'daily' | 'weekly' | 'monthly';
+  email_notifications: boolean;
   newsletter_subscribed?: boolean;
-  contentTypes: ContentType[];
+  content_types: ContentType[];
   onboardingCompleted?: boolean;
 }
 

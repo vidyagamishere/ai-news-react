@@ -1,0 +1,911 @@
+{
+  "testSuite": "AI News Digest - Authentication Flow Tests",
+  "timestamp": "2025-09-13T02:43:10.851Z",
+  "summary": {
+    "total": 22,
+    "passed": 3,
+    "failed": 19,
+    "successRate": "13.6%"
+  },
+  "configuration": {
+    "backendUrl": "https://ai-news-scraper-njgs1b3je.vercel.app",
+    "frontendUrl": "https://ai-news-react.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Backend Health Check",
+      "passed": true,
+      "details": {
+        "response": {
+          "status": "healthy",
+          "timestamp": "2025-09-13T02:42:56.753190",
+          "components": {
+            "api": true,
+            "database": true,
+            "scraper": true,
+            "validation": false,
+            "enhanced_scraping": true,
+            "authentication": true,
+            "newsletter": true,
+            "scheduler": true,
+            "archive": true
+          },
+          "auth_debug": {
+            "available": true,
+            "error": null,
+            "jwt_secret_set": true,
+            "google_client_id_set": true
+          },
+          "sources_info": {
+            "total_sources": 45,
+            "enabled_sources": 45,
+            "free_sources": 39,
+            "content_types": [
+              "all_sources",
+              "blogs",
+              "podcasts",
+              "videos",
+              "events",
+              "learn",
+              "newsletters"
+            ]
+          },
+          "admin_features": {
+            "validation": false,
+            "sources_updated": true
+          }
+        }
+      },
+      "timestamp": "2025-09-13T02:42:56.760Z"
+    },
+    {
+      "name": "Content Types API",
+      "details": {
+        "response": {
+          "content_types": {
+            "all_sources": {
+              "name": "All Sources",
+              "description": "Comprehensive AI content from all our curated sources",
+              "icon": "🌐"
+            },
+            "blogs": {
+              "name": "Blogs",
+              "description": "Expert insights, analysis, and thought leadership articles",
+              "icon": "✍️"
+            },
+            "podcasts": {
+              "name": "Podcasts",
+              "description": "Audio content, interviews, and discussions from AI leaders",
+              "icon": "🎧"
+            },
+            "videos": {
+              "name": "Videos",
+              "description": "Visual content, presentations, and educational videos",
+              "icon": "📹"
+            },
+            "events": {
+              "name": "Events",
+              "description": "AI conferences, webinars, workshops, and networking events",
+              "icon": "📅"
+            },
+            "learn": {
+              "name": "Learn",
+              "description": "Courses, tutorials, educational content, and skill development",
+              "icon": "🎓"
+            },
+            "newsletters": {
+              "name": "Newsletters",
+              "description": "Daily and weekly AI newsletters and digests",
+              "icon": "📬"
+            }
+          },
+          "available_types": [
+            "all_sources",
+            "blogs",
+            "podcasts",
+            "videos",
+            "events",
+            "learn",
+            "newsletters"
+          ],
+          "sources_by_type": {
+            "all_sources": 0,
+            "blogs": 16,
+            "podcasts": 5,
+            "videos": 9,
+            "events": 4,
+            "learn": 5,
+            "newsletters": 6
+          }
+        }
+      },
+      "timestamp": "2025-09-13T02:42:56.857Z"
+    },
+    {
+      "name": "Digest API",
+      "passed": {
+        "blog": [
+          {
+            "title": "Shipping smarter agents with every new model",
+            "description": "Discover how SafetyKit leverages OpenAI GPT-5 to enhance content moderation, enforce compliance, and outpace legacy safety systems with greater accuracy .",
+            "source": "OpenAI Blog",
+            "url": "https://openai.com/index/safetykit",
+            "time": "Recently",
+            "significanceScore": 7.5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:43:00.395414"
+          },
+          {
+            "title": "A joint statement from OpenAI and Microsoft",
+            "description": "OpenAI and Microsoft sign a new MOU, reinforcing their partnership and shared commitment to AI safety and innovation.",
+            "source": "OpenAI Blog",
+            "url": "https://openai.com/index/joint-statement-from-openai-and-microsoft",
+            "time": "Recently",
+            "significanceScore": 7,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:43:00.395364"
+          },
+          {
+            "title": "Working with US CAISI and UK AISI to build more secure AI systems",
+            "description": "OpenAI shares progress on the partnership with the US CAISI and UK AISI to strengthen AI safety and security. The collaboration is setting new standards for responsible frontier AI deployment through ",
+            "source": "OpenAI Blog",
+            "url": "https://openai.com/index/us-caisi-uk-aisi-ai-update",
+            "time": "Recently",
+            "significanceScore": 6.5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:43:00.395311"
+          },
+          {
+            "title": "Understanding Convolutions on Graphs",
+            "description": "Understanding the building blocks and design choices of graph neural networks.",
+            "source": "Distill.pub",
+            "url": "https://distill.pub/2021/understanding-gnns",
+            "time": "Recently",
+            "significanceScore": 6,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:42:59.860841"
+          },
+          {
+            "title": "A Gentle Introduction to Graph Neural Networks",
+            "description": "What components are needed for building learning algorithms that leverage the structure and properties of graphs?",
+            "source": "Distill.pub",
+            "url": "https://distill.pub/2021/gnn-intro",
+            "time": "Recently",
+            "significanceScore": 6,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:42:59.860869"
+          },
+          {
+            "title": "Announcing OpenAI Grove",
+            "description": "Applications are now open for OpenAI Grove, a 5-week founder program designed for individuals at any stage, from pre-idea to product. Participants receive $50K in API credits, early access to AI tools",
+            "source": "OpenAI Blog",
+            "url": "https://openai.com/index/openai-grove",
+            "time": "Recently",
+            "significanceScore": 5.5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:43:00.395345"
+          },
+          {
+            "title": "Statement on OpenAI’s Nonprofit and PBC",
+            "description": "OpenAI reaffirms its nonprofit leadership with a new structure granting equity in its PBC, enabling over $100B in resources to advance safe, beneficial AI for humanity.",
+            "source": "OpenAI Blog",
+            "url": "https://openai.com/index/statement-on-openai-nonprofit-and-pbc",
+            "time": "Recently",
+            "significanceScore": 5.5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:43:00.395395"
+          },
+          {
+            "title": "Docling: The Document Alchemist",
+            "description": "Why do we still wrestle with documents in&#160;2025? Spend some time in any data-driven organisation, and you’ll encounter a host of PDFs, Word files, PowerPoints, half-scanned images, handwritten not",
+            "source": "Towards Data Science",
+            "url": "https://towardsdatascience.com/docling-the-document-alchemist/",
+            "time": "10h ago",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-12T16:30:00+00:00"
+          },
+          {
+            "title": "If we use AI to do our work – what is our job, then?",
+            "description": "Images. Text. Audio. There&#8217;s no modality that is not handled by AI. And AI systems reach even further, planning advertisement and marketing campaigns, automating social media postings, … Most of",
+            "source": "Towards Data Science",
+            "url": "https://towardsdatascience.com/if-we-use-ai-to-do-our-work/",
+            "time": "11h ago",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-12T15:31:31+00:00"
+          },
+          {
+            "title": "Generalists Can Also Dig Deep",
+            "description": "Ida Silfverskiöld on AI agents, RAG, evals, and what design choice ended up mattering more than expected \nThe post Generalists Can Also Dig Deep appeared first on Towards Data Science.",
+            "source": "Towards Data Science",
+            "url": "https://towardsdatascience.com/generalists-can-also-dig-deep/",
+            "time": "13h ago",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-12T13:32:31+00:00"
+          },
+          {
+            "title": "A Focused Approach to Learning SQL",
+            "description": "Data is everywhere, but how do you draw insights from it? Often, structured data is stored in relational databases, meaning collections of related tables of data. For instance, a company might store c",
+            "source": "Towards Data Science",
+            "url": "https://towardsdatascience.com/a-focused-approach-to-learning-sql/",
+            "time": "13h ago",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-12T13:30:00+00:00"
+          },
+          {
+            "title": "Why Context Is the New Currency in AI: From RAG to Context Engineering",
+            "description": "Context, not computation, is the real currency of intelligent systems\nThe post Why Context Is the New Currency in AI: From RAG to Context Engineering appeared first on Towards Data Science.",
+            "source": "Towards Data Science",
+            "url": "https://towardsdatascience.com/why-context-is-the-new-currency-in-ai-from-rag-to-context-engineering/",
+            "time": "Recently",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:42:59.706030"
+          },
+          {
+            "title": "Adversarial Reprogramming of Neural Cellular Automata",
+            "description": "Reprogramming Neural CA to exhibit novel behaviour, using adversarial attacks.",
+            "source": "Distill.pub",
+            "url": "https://distill.pub/selforg/2021/adversarial",
+            "time": "Recently",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:42:59.860924"
+          },
+          {
+            "title": "Weight Banding",
+            "description": "Weights in the final layer of common visual models appear as horizontal bands. We investigate how and why.",
+            "source": "Distill.pub",
+            "url": "https://distill.pub/2020/circuits/weight-banding",
+            "time": "Recently",
+            "significanceScore": 5,
+            "type": "blogs",
+            "priority": 1,
+            "category": "blogs",
+            "published_date": "2025-09-13T02:42:59.860941"
+          }
+        ],
+        "audio": [
+          {
+            "title": "#480 – Dave Hone: T-Rex, Dinosaurs, Extinction, Evolution, and Jurassic Park",
+            "description": "Dave Hone is a paleontologist, expert on dinosaurs, co-host of the Terrible Lizards podcast, and author of numerous scientific papers and books on the behavior and ecology of dinosaurs. He lectures at",
+            "source": "Lex Fridman Podcast",
+            "url": "https://lexfridman.com/dave-hone/?utm_source=rss&utm_medium=rss&utm_campaign=dave-hone",
+            "time": "Recently",
+            "significanceScore": 6,
+            "type": "podcasts",
+            "priority": 1,
+            "category": "podcasts",
+            "published_date": "2025-09-13T02:43:05.109556"
+          }
+        ],
+        "video": [
+          {
+            "title": "Intel Just Changed Computer Graphics Forever!",
+            "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ol",
+            "source": "Two Minute Papers",
+            "url": "https://www.youtube.com/watch?v=_WjU5d26Cc4",
+            "time": "1d ago",
+            "significanceScore": 6,
+            "type": "videos",
+            "priority": 1,
+            "category": "videos",
+            "published_date": "2025-09-11T16:15:12+00:00"
+          }
+        ]
+      },
+      "details": {
+        "response": {
+          "summary": {
+            "keyPoints": [
+              "• Latest updates from 20 free AI sources",
+              "• 21 articles processed and ranked",
+              "• Basic scraping active",
+              "• 39 high-priority free sources configured"
+            ],
+            "metrics": {
+              "totalUpdates": 21,
+              "highImpact": 3,
+              "newResearch": 14,
+              "industryMoves": 5,
+              "sourcesScraped": 20,
+              "validationEnabled": false,
+              "sourcesUpdated": true,
+              "archiveEnabled": true,
+              "scrapingDays": 2
+            }
+          },
+          "content": {
+            "blog": [
+              {
+                "title": "Shipping smarter agents with every new model",
+                "description": "Discover how SafetyKit leverages OpenAI GPT-5 to enhance content moderation, enforce compliance, and outpace legacy safety systems with greater accuracy .",
+                "source": "OpenAI Blog",
+                "url": "https://openai.com/index/safetykit",
+                "time": "Recently",
+                "significanceScore": 7.5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:43:00.395414"
+              },
+              {
+                "title": "A joint statement from OpenAI and Microsoft",
+                "description": "OpenAI and Microsoft sign a new MOU, reinforcing their partnership and shared commitment to AI safety and innovation.",
+                "source": "OpenAI Blog",
+                "url": "https://openai.com/index/joint-statement-from-openai-and-microsoft",
+                "time": "Recently",
+                "significanceScore": 7,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:43:00.395364"
+              },
+              {
+                "title": "Working with US CAISI and UK AISI to build more secure AI systems",
+                "description": "OpenAI shares progress on the partnership with the US CAISI and UK AISI to strengthen AI safety and security. The collaboration is setting new standards for responsible frontier AI deployment through ",
+                "source": "OpenAI Blog",
+                "url": "https://openai.com/index/us-caisi-uk-aisi-ai-update",
+                "time": "Recently",
+                "significanceScore": 6.5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:43:00.395311"
+              },
+              {
+                "title": "Understanding Convolutions on Graphs",
+                "description": "Understanding the building blocks and design choices of graph neural networks.",
+                "source": "Distill.pub",
+                "url": "https://distill.pub/2021/understanding-gnns",
+                "time": "Recently",
+                "significanceScore": 6,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:42:59.860841"
+              },
+              {
+                "title": "A Gentle Introduction to Graph Neural Networks",
+                "description": "What components are needed for building learning algorithms that leverage the structure and properties of graphs?",
+                "source": "Distill.pub",
+                "url": "https://distill.pub/2021/gnn-intro",
+                "time": "Recently",
+                "significanceScore": 6,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:42:59.860869"
+              },
+              {
+                "title": "Announcing OpenAI Grove",
+                "description": "Applications are now open for OpenAI Grove, a 5-week founder program designed for individuals at any stage, from pre-idea to product. Participants receive $50K in API credits, early access to AI tools",
+                "source": "OpenAI Blog",
+                "url": "https://openai.com/index/openai-grove",
+                "time": "Recently",
+                "significanceScore": 5.5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:43:00.395345"
+              },
+              {
+                "title": "Statement on OpenAI’s Nonprofit and PBC",
+                "description": "OpenAI reaffirms its nonprofit leadership with a new structure granting equity in its PBC, enabling over $100B in resources to advance safe, beneficial AI for humanity.",
+                "source": "OpenAI Blog",
+                "url": "https://openai.com/index/statement-on-openai-nonprofit-and-pbc",
+                "time": "Recently",
+                "significanceScore": 5.5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:43:00.395395"
+              },
+              {
+                "title": "Docling: The Document Alchemist",
+                "description": "Why do we still wrestle with documents in&#160;2025? Spend some time in any data-driven organisation, and you’ll encounter a host of PDFs, Word files, PowerPoints, half-scanned images, handwritten not",
+                "source": "Towards Data Science",
+                "url": "https://towardsdatascience.com/docling-the-document-alchemist/",
+                "time": "10h ago",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-12T16:30:00+00:00"
+              },
+              {
+                "title": "If we use AI to do our work – what is our job, then?",
+                "description": "Images. Text. Audio. There&#8217;s no modality that is not handled by AI. And AI systems reach even further, planning advertisement and marketing campaigns, automating social media postings, … Most of",
+                "source": "Towards Data Science",
+                "url": "https://towardsdatascience.com/if-we-use-ai-to-do-our-work/",
+                "time": "11h ago",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-12T15:31:31+00:00"
+              },
+              {
+                "title": "Generalists Can Also Dig Deep",
+                "description": "Ida Silfverskiöld on AI agents, RAG, evals, and what design choice ended up mattering more than expected \nThe post Generalists Can Also Dig Deep appeared first on Towards Data Science.",
+                "source": "Towards Data Science",
+                "url": "https://towardsdatascience.com/generalists-can-also-dig-deep/",
+                "time": "13h ago",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-12T13:32:31+00:00"
+              },
+              {
+                "title": "A Focused Approach to Learning SQL",
+                "description": "Data is everywhere, but how do you draw insights from it? Often, structured data is stored in relational databases, meaning collections of related tables of data. For instance, a company might store c",
+                "source": "Towards Data Science",
+                "url": "https://towardsdatascience.com/a-focused-approach-to-learning-sql/",
+                "time": "13h ago",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-12T13:30:00+00:00"
+              },
+              {
+                "title": "Why Context Is the New Currency in AI: From RAG to Context Engineering",
+                "description": "Context, not computation, is the real currency of intelligent systems\nThe post Why Context Is the New Currency in AI: From RAG to Context Engineering appeared first on Towards Data Science.",
+                "source": "Towards Data Science",
+                "url": "https://towardsdatascience.com/why-context-is-the-new-currency-in-ai-from-rag-to-context-engineering/",
+                "time": "Recently",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:42:59.706030"
+              },
+              {
+                "title": "Adversarial Reprogramming of Neural Cellular Automata",
+                "description": "Reprogramming Neural CA to exhibit novel behaviour, using adversarial attacks.",
+                "source": "Distill.pub",
+                "url": "https://distill.pub/selforg/2021/adversarial",
+                "time": "Recently",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:42:59.860924"
+              },
+              {
+                "title": "Weight Banding",
+                "description": "Weights in the final layer of common visual models appear as horizontal bands. We investigate how and why.",
+                "source": "Distill.pub",
+                "url": "https://distill.pub/2020/circuits/weight-banding",
+                "time": "Recently",
+                "significanceScore": 5,
+                "type": "blogs",
+                "priority": 1,
+                "category": "blogs",
+                "published_date": "2025-09-13T02:42:59.860941"
+              }
+            ],
+            "audio": [
+              {
+                "title": "#480 – Dave Hone: T-Rex, Dinosaurs, Extinction, Evolution, and Jurassic Park",
+                "description": "Dave Hone is a paleontologist, expert on dinosaurs, co-host of the Terrible Lizards podcast, and author of numerous scientific papers and books on the behavior and ecology of dinosaurs. He lectures at",
+                "source": "Lex Fridman Podcast",
+                "url": "https://lexfridman.com/dave-hone/?utm_source=rss&utm_medium=rss&utm_campaign=dave-hone",
+                "time": "Recently",
+                "significanceScore": 6,
+                "type": "podcasts",
+                "priority": 1,
+                "category": "podcasts",
+                "published_date": "2025-09-13T02:43:05.109556"
+              }
+            ],
+            "video": [
+              {
+                "title": "Intel Just Changed Computer Graphics Forever!",
+                "description": "❤️ Check out Lambda here and sign up for their GPU Cloud: https://lambda.ai/papers\n\nGuide:\nRent one of their GPU's with over 16GB of VRAM\nOpen a terminal\nJust get Ollama with this command - https://ol",
+                "source": "Two Minute Papers",
+                "url": "https://www.youtube.com/watch?v=_WjU5d26Cc4",
+                "time": "1d ago",
+                "significanceScore": 6,
+                "type": "videos",
+                "priority": 1,
+                "category": "videos",
+                "published_date": "2025-09-11T16:15:12+00:00"
+              }
+            ]
+          },
+          "topStories": [
+            {
+              "title": "Shipping smarter agents with every new model",
+              "source": "OpenAI Blog",
+              "significanceScore": 7.5,
+              "url": "https://openai.com/index/safetykit",
+              "summary": "This breakthrough article from OpenAI Blog explores 'Shipping smarter agents with every new model' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications.",
+              "content_summary": "This breakthrough article from OpenAI Blog explores 'Shipping smarter agents with every new model' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications."
+            },
+            {
+              "title": "A pragmatic guide to enterprise search that works",
+              "source": "Gradient Flow",
+              "significanceScore": 7,
+              "url": "https://gradientflow.com/a-pragmatic-guide-to-enterprise-search-that-works/",
+              "summary": "This breakthrough article from Gradient Flow explores 'A pragmatic guide to enterprise search that works' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications.",
+              "content_summary": "This breakthrough article from Gradient Flow explores 'A pragmatic guide to enterprise search that works' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications."
+            },
+            {
+              "title": "A joint statement from OpenAI and Microsoft",
+              "source": "OpenAI Blog",
+              "significanceScore": 7,
+              "url": "https://openai.com/index/joint-statement-from-openai-and-microsoft",
+              "summary": "This breakthrough article from OpenAI Blog explores 'A joint statement from OpenAI and Microsoft' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications.",
+              "content_summary": "This breakthrough article from OpenAI Blog explores 'A joint statement from OpenAI and Microsoft' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications."
+            },
+            {
+              "title": "Working with US CAISI and UK AISI to build more secure AI systems",
+              "source": "OpenAI Blog",
+              "significanceScore": 6.5,
+              "url": "https://openai.com/index/us-caisi-uk-aisi-ai-update",
+              "summary": "This breakthrough article from OpenAI Blog explores 'Working with US CAISI and UK AISI to build more secure AI systems' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications.",
+              "content_summary": "This breakthrough article from OpenAI Blog explores 'Working with US CAISI and UK AISI to build more secure AI systems' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications."
+            },
+            {
+              "title": "How I Built an Agentic AI Research Assistant in 30 Minutes",
+              "source": "Towards AI Newsletter",
+              "significanceScore": 6,
+              "url": "https://towardsai.net/p/machine-learning/how-i-built-an-agentic-ai-research-assistant-in-30-minutes",
+              "summary": "This breakthrough article from Towards AI Newsletter explores 'How I Built an Agentic AI Research Assistant in 30 Minutes' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications.",
+              "content_summary": "This breakthrough article from Towards AI Newsletter explores 'How I Built an Agentic AI Research Assistant in 30 Minutes' and represents one of the most significant developments in AI technology today. The piece provides comprehensive analysis of cutting-edge innovations that are reshaping the artificial intelligence landscape. Readers will discover detailed insights into emerging trends and their transformative impact across multiple industries. The content offers expert perspectives from leading researchers and practitioners who are driving the future of AI development. Essential reading for understanding the latest advancements that will define the next generation of artificial intelligence applications."
+            }
+          ],
+          "timestamp": "2025-09-13T02:43:09.030761",
+          "badge": "Free Sources: 20 active",
+          "enhanced": true,
+          "admin_features": false,
+          "archive_features": true,
+          "scraping_errors": []
+        }
+      },
+      "timestamp": "2025-09-13T02:43:09.044Z"
+    },
+    {
+      "name": "Topics API",
+      "passed": true,
+      "details": {
+        "response": [
+          {
+            "id": "ai_robotics",
+            "name": "AI & Robotics",
+            "description": "Robotics and automation",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "ai_ethics",
+            "name": "AI Ethics",
+            "description": "Ethical considerations in AI development",
+            "category": "ethics",
+            "selected": false
+          },
+          {
+            "id": "ai_research",
+            "name": "AI Research",
+            "description": "Academic research and papers",
+            "category": "research",
+            "selected": false
+          },
+          {
+            "id": "ai_tools",
+            "name": "AI Tools",
+            "description": "New AI tools and platforms",
+            "category": "tools",
+            "selected": false
+          },
+          {
+            "id": "ai_business",
+            "name": "AI in Business",
+            "description": "Enterprise AI applications",
+            "category": "industry",
+            "selected": false
+          },
+          {
+            "id": "ai_healthcare",
+            "name": "AI in Healthcare",
+            "description": "Medical AI applications",
+            "category": "industry",
+            "selected": false
+          },
+          {
+            "id": "autonomous_vehicles",
+            "name": "Autonomous Vehicles",
+            "description": "Self-driving car technology",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "computer_vision",
+            "name": "Computer Vision",
+            "description": "Image and video AI technologies",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "ml_general",
+            "name": "Machine Learning",
+            "description": "Latest developments in machine learning",
+            "category": "technology",
+            "selected": false
+          },
+          {
+            "id": "nlp",
+            "name": "Natural Language Processing",
+            "description": "Language AI and chatbots",
+            "category": "technology",
+            "selected": false
+          }
+        ]
+      },
+      "timestamp": "2025-09-13T02:43:09.171Z"
+    },
+    {
+      "name": "Sign Up - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "error": "Email, password, and name are required"
+        },
+        "testUser": {
+          "name": "Test User",
+          "email": "test.1757731389172@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-09-13T02:43:09.307Z"
+    },
+    {
+      "name": "Sign Up - Missing Name",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Email, password, and name are required"
+      },
+      "timestamp": "2025-09-13T02:43:09.393Z"
+    },
+    {
+      "name": "Sign Up - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Email, password, and name are required"
+      },
+      "timestamp": "2025-09-13T02:43:09.481Z"
+    },
+    {
+      "name": "Sign Up - Short Password",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Email, password, and name are required"
+      },
+      "timestamp": "2025-09-13T02:43:09.563Z"
+    },
+    {
+      "name": "Sign Up - Empty Fields",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Email, password, and name are required"
+      },
+      "timestamp": "2025-09-13T02:43:09.699Z"
+    },
+    {
+      "name": "Sign In - Positive Flow",
+      "details": {
+        "response": {
+          "error": "POST endpoint not found",
+          "message": "This endpoint only supports GET requests"
+        },
+        "testUser": {
+          "name": "Login Test User",
+          "email": "login.test.1757731389699@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-09-13T02:43:09.891Z"
+    },
+    {
+      "name": "Sign In - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 200,
+        "error": "Email and password are required"
+      },
+      "timestamp": "2025-09-13T02:43:09.979Z"
+    },
+    {
+      "name": "Sign In - Wrong Password",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 200,
+        "error": "Email and password are required"
+      },
+      "timestamp": "2025-09-13T02:43:10.070Z"
+    },
+    {
+      "name": "Sign In - Missing Credentials",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Email and password are required"
+      },
+      "timestamp": "2025-09-13T02:43:10.160Z"
+    },
+    {
+      "name": "Sign In - Invalid Email Format",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 200,
+        "error": "Email and password are required"
+      },
+      "timestamp": "2025-09-13T02:43:10.250Z"
+    },
+    {
+      "name": "Google Auth - Positive Flow",
+      "details": {
+        "response": {
+          "error": "Google ID token is required"
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.334Z"
+    },
+    {
+      "name": "Google Auth - Missing Token",
+      "passed": false,
+      "details": {
+        "response": {
+          "error": "POST endpoint not found",
+          "message": "This endpoint only supports GET requests"
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.419Z"
+    },
+    {
+      "name": "Authenticated Endpoints",
+      "passed": false,
+      "details": {
+        "error": "No test token available"
+      },
+      "timestamp": "2025-09-13T02:43:10.419Z"
+    },
+    {
+      "name": "Content Filtering - blogs",
+      "details": {
+        "response": {
+          "error": "Endpoint not found",
+          "available_endpoints": [
+            "/",
+            "/api/health",
+            "/api/sources",
+            "/api/content-types",
+            "/api/digest",
+            "/api/content/<type>",
+            "/admin-validation"
+          ]
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.509Z"
+    },
+    {
+      "name": "Content Filtering - podcasts",
+      "details": {
+        "response": {
+          "error": "Endpoint not found",
+          "available_endpoints": [
+            "/",
+            "/api/health",
+            "/api/sources",
+            "/api/content-types",
+            "/api/digest",
+            "/api/content/<type>",
+            "/admin-validation"
+          ]
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.595Z"
+    },
+    {
+      "name": "Content Filtering - videos",
+      "details": {
+        "response": {
+          "error": "Endpoint not found",
+          "available_endpoints": [
+            "/",
+            "/api/health",
+            "/api/sources",
+            "/api/content-types",
+            "/api/digest",
+            "/api/content/<type>",
+            "/admin-validation"
+          ]
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.684Z"
+    },
+    {
+      "name": "Content Filtering - events",
+      "details": {
+        "response": {
+          "error": "Endpoint not found",
+          "available_endpoints": [
+            "/",
+            "/api/health",
+            "/api/sources",
+            "/api/content-types",
+            "/api/digest",
+            "/api/content/<type>",
+            "/admin-validation"
+          ]
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.769Z"
+    },
+    {
+      "name": "Content Filtering - learn",
+      "details": {
+        "response": {
+          "error": "Endpoint not found",
+          "available_endpoints": [
+            "/",
+            "/api/health",
+            "/api/sources",
+            "/api/content-types",
+            "/api/digest",
+            "/api/content/<type>",
+            "/admin-validation"
+          ]
+        }
+      },
+      "timestamp": "2025-09-13T02:43:10.850Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix underlying issues",
+    "Critical authentication issues detected - fix before deployment"
+  ]
+}

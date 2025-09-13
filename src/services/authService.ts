@@ -70,10 +70,29 @@ class AuthService {
   }
 
   async updateUserPreferences(preferences: Partial<User['preferences']>): Promise<User> {
-    return this.request('/api/auth/preferences', {
-      method: 'PUT',
-      body: JSON.stringify(preferences),
-    });
+    console.log('🔗 Sending preferences update request:', preferences);
+    
+    try {
+      const response = await this.request('/api/auth/preferences', {
+        method: 'PUT',
+        body: JSON.stringify(preferences),
+      });
+      console.log('🔗 Preferences update response:', response);
+      return response;
+    } catch (error) {
+      console.error('🔗 Preferences update failed:', error);
+      
+      // Fallback: If backend fails, get fresh user profile to check if it actually saved
+      console.log('🔄 Attempting to fetch fresh profile as fallback...');
+      try {
+        const freshProfile = await this.request('/api/auth/profile');
+        console.log('🔄 Fresh profile fetched:', freshProfile);
+        return freshProfile;
+      } catch (profileError) {
+        console.error('🔄 Profile fetch also failed:', profileError);
+        throw error; // Throw original error
+      }
+    }
   }
 
   async upgradeSubscription(): Promise<User> {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Search, Clock, TrendingUp, Archive as ArchiveIcon, ChevronLeft } from 'lucide-react';
+import { Calendar, Search, Clock, TrendingUp, Archive as ArchiveIcon, ChevronLeft, Home } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { apiService } from '../services/api';
 import Header from '../components/Header';
@@ -13,8 +13,11 @@ interface ArchivedContent {
   date: string;
   timestamp: number;
   total_articles: number;
-  content_types: string[];
-  content_types_count: number;
+  content_types?: string[];
+  content_types_count?: number;
+  top_stories_count?: number;
+  sources_processed?: number;
+  archive_type?: string;
 }
 
 interface ArchiveStats {
@@ -63,23 +66,56 @@ const Archive: React.FC = () => {
 
   useEffect(() => {
     loadArchiveData();
+    
+    // Set up auto-refresh to check for new archives every 5 minutes
+    const interval = setInterval(() => {
+      loadArchiveData(false); // Don't show loading spinner for background updates
+    }, 5 * 60 * 1000); // 5 minutes
+    
+    return () => clearInterval(interval);
   }, []);
 
-  const loadArchiveData = async () => {
+  const loadArchiveData = async (showLoading: boolean = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       setError(null);
 
       // Load recent archives (last 60 archives, covering 30 days with 12-hour refresh)
       const archiveResponse = await apiService.get('/api/archive?limit=60');
 
-      setArchives(archiveResponse.archives || []);
-      setStats(archiveResponse);
+      // Ensure content_types field exists for all archives
+      const processedArchives = (archiveResponse.archives || []).map((archive: ArchivedContent) => ({
+        ...archive,
+        content_types: archive.content_types || ['blog', 'audio', 'video'],
+        content_types_count: archive.content_types_count || archive.content_types?.length || 3
+      }));
+
+      // Sort archives by date (newest first)
+      const sortedArchives = processedArchives.sort((a: ArchivedContent, b: ArchivedContent) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+
+      // Only update if we have new data or this is the initial load
+      if (showLoading || sortedArchives.length !== archives.length) {
+        setArchives(sortedArchives);
+        setStats(archiveResponse);
+        
+        // Show a subtle notification if new archives were found during auto-refresh
+        if (!showLoading && sortedArchives.length > archives.length) {
+          console.log(`📚 Found ${sortedArchives.length - archives.length} new archives`);
+        }
+      }
     } catch (err) {
       console.error('Failed to load archive data:', err);
-      setError('Failed to load archive data. Please try again.');
+      if (showLoading || archives.length === 0) {
+        setError('Failed to load archive data. Please try again.');
+      }
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 
@@ -135,7 +171,7 @@ const Archive: React.FC = () => {
           <div className="error-message">
             <h2>⚠️ Archive Error</h2>
             <p>{error}</p>
-            <button onClick={() => loadArchiveData()} className="btn btn-primary">
+            <button onClick={() => loadArchiveData(true)} className="btn btn-primary">
               Try Again
             </button>
           </div>
@@ -151,7 +187,7 @@ const Archive: React.FC = () => {
         description="Browse historical AI news digests and search through archived articles."
         url="/archive"
       />
-      <Header onRefresh={loadArchiveData} onManualScrape={() => {}} isLoading={loading} />
+      <Header onRefresh={() => loadArchiveData(true)} onManualScrape={() => {}} isLoading={loading} />
       
       {error && (
         <div className="error-banner">
@@ -169,6 +205,15 @@ const Archive: React.FC = () => {
                 <h1>News Archive</h1>
                 <p>Browse and search through historical AI news digests</p>
               </div>
+            </div>
+            <div className="archive-actions">
+              <button 
+                onClick={() => window.location.href = '/'} 
+                className="dashboard-link-btn"
+              >
+                <Home size={16} />
+                Back to Dashboard
+              </button>
             </div>
 
             {stats && (
@@ -239,8 +284,8 @@ const Archive: React.FC = () => {
                     </div>
                     <div className="digest-stats">
                       <span>{archive.total_articles} articles</span>
-                      <span>{archive.content_types.join(', ')}</span>
-                      <span>{archive.content_types_count} types</span>
+                      <span>{archive.content_types && archive.content_types.length > 0 ? archive.content_types.join(', ') : 'Mixed content'}</span>
+                      <span>{archive.content_types_count || 0} types</span>
                     </div>
                     <div className="archive-timestamp">
                       {new Date(archive.timestamp * 1000).toLocaleTimeString('en-US', { 

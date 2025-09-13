@@ -102,7 +102,7 @@ const Preferences: React.FC = () => {
                     <input 
                       type="checkbox" 
                       id="email-notifications"
-                      checked={user.preferences?.emailNotifications !== false}
+                      checked={user.preferences?.email_notifications !== false}
                       readOnly
                     />
                     <label htmlFor="email-notifications" className="toggle-switch">
@@ -118,7 +118,7 @@ const Preferences: React.FC = () => {
                   </div>
                   <div className="setting-control">
                     <select 
-                      value={user.preferences?.newsletterFrequency || '12_hours'}
+                      value={user.preferences?.newsletter_frequency || '12_hours'}
                       disabled
                     >
                       <option value="12_hours">Every 12 hours</option>

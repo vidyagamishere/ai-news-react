@@ -164,9 +164,9 @@ const Dashboard: React.FC = () => {
                                    user.preferences?.topics?.some(t => t.selected) || false;
       
       // Check if user has any personalization data (indicates they've used the app before)
-      const hasUserData = user.preferences?.newsletterFrequency || 
-                          user.preferences?.contentTypes?.length > 0 ||
-                          user.preferences?.emailNotifications !== undefined;
+      const hasUserData = user.preferences?.newsletter_frequency || 
+                          user.preferences?.content_types?.length > 0 ||
+                          user.preferences?.email_notifications !== undefined;
       
       // Show onboarding for users without any previous data AND created recently (extended for Google users)
       const needsOnboarding = !hasCompletedOnboarding && !hasUserData;

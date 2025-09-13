@@ -13,34 +13,90 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [manuallyUpdated, setManuallyUpdated] = useState(false);
 
   useEffect(() => {
     // Initialize subscription status from user preferences
-    if (user?.preferences) {
-      setIsSubscribed(user.preferences.newsletter_subscribed || false);
+    if (user?.preferences && !manuallyUpdated) {
+      const newSubscriptionStatus = user.preferences.newsletter_subscribed || false;
+      console.log('🔄 useEffect triggered - User preferences changed');
+      console.log('🔄 User preferences:', user.preferences);
+      console.log('🔄 New subscription status from user:', newSubscriptionStatus);
+      console.log('🔄 Current isSubscribed state:', isSubscribed);
+      console.log('🔄 manuallyUpdated flag:', manuallyUpdated);
+      
+      if (newSubscriptionStatus !== isSubscribed) {
+        console.log('⚠️ useEffect is changing subscription status from', isSubscribed, 'to', newSubscriptionStatus);
+      }
+      
+      setIsSubscribed(newSubscriptionStatus);
+    } else if (manuallyUpdated) {
+      console.log('🔒 useEffect blocked by manuallyUpdated flag');
+      // Reset the flag after a short delay to allow future automatic updates
+      setTimeout(() => {
+        console.log('🔓 Resetting manuallyUpdated flag');
+        setManuallyUpdated(false);
+      }, 2000);
     }
-  }, [user]);
+  }, [user, manuallyUpdated]);
+
+  // Add a separate effect to track isSubscribed changes
+  useEffect(() => {
+    console.log('📊 isSubscribed state changed to:', isSubscribed);
+  }, [isSubscribed]);
+
+  const [frequency, setFrequency] = useState(user?.preferences?.newsletter_frequency || '12_hours');
+
+  const frequencyOptions = [
+    { value: '12_hours', label: 'Twice Daily (6 AM & 6 PM IST)', description: 'Get the latest updates every 12 hours' },
+    { value: 'daily', label: 'Daily (6 AM IST)', description: 'Single daily digest every morning' },
+    { value: 'weekly', label: 'Weekly (Monday 6 AM IST)', description: 'Weekly summary of the week\'s top stories' },
+    { value: 'monthly', label: 'Monthly (1st of month)', description: 'Monthly comprehensive digest' }
+  ];
 
   const handleSubscriptionToggle = async () => {
     if (!user) return;
+
+    const targetSubscriptionStatus = !isSubscribed;
+    
+    console.log('🔄 Starting subscription toggle', { 
+      current: isSubscribed, 
+      target: targetSubscriptionStatus 
+    });
 
     setLoading(true);
     setMessage(null);
 
     try {
-      // Update user preferences
+      // Update user preferences with frequency
       const newPreferences = {
         ...user.preferences,
-        newsletter_subscribed: !isSubscribed,
+        newsletter_subscribed: targetSubscriptionStatus,
+        newsletter_frequency: frequency,
         email_notifications: true // Ensure email notifications are enabled
       };
 
+      console.log('🔄 Updating preferences:', newPreferences);
+
       // Call API to update preferences
-      await updatePreferences(newPreferences);
+      const updatedUser = await updatePreferences(newPreferences);
+      console.log('✅ API returned updated user:', updatedUser);
       
-      setIsSubscribed(!isSubscribed);
+      // Verify the subscription status from the returned user
+      const actualSubscriptionStatus = (updatedUser as any)?.preferences?.newsletter_subscribed;
+      console.log('📧 Actual subscription status from API:', actualSubscriptionStatus);
+      
+      // If API returned undefined, use the target status we wanted to set
+      const finalSubscriptionStatus = actualSubscriptionStatus !== undefined ? actualSubscriptionStatus : targetSubscriptionStatus;
+      
+      console.log('📧 Using final subscription status:', finalSubscriptionStatus);
+      
+      // Update local state - use final status
+      setIsSubscribed(finalSubscriptionStatus);
+      setManuallyUpdated(true); // Prevent useEffect from overriding this change
+      
       setMessage(
-        !isSubscribed 
+        finalSubscriptionStatus 
           ? '✅ Subscribed to AI News Newsletter!' 
           : '📧 Unsubscribed from newsletter'
       );
@@ -49,11 +105,35 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
       setTimeout(() => setMessage(null), 3000);
 
     } catch (error) {
-      console.error('Failed to update newsletter preferences:', error);
-      setMessage('❌ Failed to update preferences');
-      setTimeout(() => setMessage(null), 3000);
+      console.error('❌ Failed to update newsletter preferences:', error);
+      setMessage(`❌ Failed to update preferences: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setTimeout(() => setMessage(null), 5000);
     } finally {
       setLoading(false);
+      console.log('🔄 Subscription toggle completed. Final state:', isSubscribed);
+    }
+  };
+
+  const handleFrequencyChange = async (newFrequency: '12_hours' | 'daily' | 'weekly' | 'monthly') => {
+    if (!user) return;
+
+    setFrequency(newFrequency);
+    
+    // Auto-save frequency if user is subscribed
+    if (isSubscribed) {
+      try {
+        const newPreferences = {
+          ...user.preferences,
+          newsletter_frequency: newFrequency
+        };
+        await updatePreferences(newPreferences);
+        setMessage('📅 Newsletter frequency updated!');
+        setTimeout(() => setMessage(null), 2000);
+      } catch (error) {
+        console.error('Failed to update frequency:', error);
+        setMessage('❌ Failed to update frequency');
+        setTimeout(() => setMessage(null), 3000);
+      }
     }
   };
 
@@ -125,12 +205,36 @@ const NewsletterPreferences: React.FC<NewsletterPreferencesProps> = ({ compact =
             </strong>
             <p>
               {isSubscribed 
-                ? 'You\'ll receive newsletters every 12 hours'
+                ? `You'll receive newsletters ${frequency === '12_hours' ? 'every 12 hours' : frequency === 'daily' ? 'daily' : frequency === 'weekly' ? 'weekly' : 'monthly'}`
                 : 'Subscribe to get AI news delivered to your inbox'
               }
             </p>
           </div>
         </div>
+
+        {/* Newsletter Frequency Selection */}
+        {isSubscribed && (
+          <div className="frequency-selection">
+            <h4>📅 Delivery Frequency</h4>
+            <div className="frequency-options">
+              {frequencyOptions.map((option) => (
+                <label key={option.value} className={`frequency-option ${frequency === option.value ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="newsletter-frequency"
+                    value={option.value}
+                    checked={frequency === option.value}
+                    onChange={(e) => handleFrequencyChange(e.target.value as '12_hours' | 'daily' | 'weekly' | 'monthly')}
+                  />
+                  <div className="option-content">
+                    <strong>{option.label}</strong>
+                    <span className="option-description">{option.description}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         <button
           className={`newsletter-action-btn ${isSubscribed ? 'unsubscribe' : 'subscribe'}`}

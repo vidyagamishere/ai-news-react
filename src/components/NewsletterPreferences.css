@@ -272,3 +272,92 @@
     text-align: center;
   }
 }
+
+/* Newsletter Frequency Selection Styles */
+.frequency-selection {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--background-gray);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-light);
+}
+
+.frequency-selection h4 {
+  margin: 0 0 12px 0;
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.frequency-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.frequency-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  background: var(--background-white);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.frequency-option:hover {
+  border-color: var(--primary-blue);
+  background: var(--background-gray);
+}
+
+.frequency-option.selected {
+  border-color: var(--primary-blue);
+  background: var(--background-white);
+  box-shadow: 0 0 0 1px var(--primary-blue);
+}
+
+.frequency-option input[type="radio"] {
+  margin: 0;
+  margin-top: 2px;
+  accent-color: var(--primary-blue);
+}
+
+.option-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.option-content strong {
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.option-description {
+  color: var(--text-gray);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments for frequency selection */
+@media (max-width: 768px) {
+  .frequency-selection {
+    padding: 12px;
+  }
+  
+  .frequency-option {
+    padding: 10px;
+  }
+  
+  .option-content strong {
+    font-size: 0.9rem;
+  }
+  
+  .option-description {
+    font-size: 0.8rem;
+  }
+}

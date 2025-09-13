@@ -2977,3 +2977,54 @@ body.mobile-menu-open {
   opacity: 1;
   transform: scale(1.1);
 }
+
+/* Archive Dashboard Link Styles */
+.archive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dashboard-link-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.dashboard-link-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .archive-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .archive-actions {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .dashboard-link-btn {
+    justify-self: center;
+  }
+}

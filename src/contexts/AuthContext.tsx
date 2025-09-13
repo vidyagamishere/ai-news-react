@@ -7,7 +7,7 @@ interface AuthContextType extends AuthState {
   signup: (credentials: SignupCredentials) => Promise<void>;
   googleLogin: (idToken: string) => Promise<void>;
   logout: () => void;
-  updatePreferences: (preferences: Partial<User['preferences']>) => Promise<void>;
+  updatePreferences: (preferences: Partial<User['preferences']>) => Promise<User>;
   upgradeSubscription: () => Promise<void>;
   sendOTP: (email: string, name?: string) => Promise<void>;
   verifyOTP: (email: string, otp: string, userData: any) => Promise<void>;
@@ -246,25 +246,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!authState.user) throw new Error('User not authenticated');
     
     try {
+      console.log('🔄 AuthContext: Calling authService.updateUserPreferences');
       const updatedUser = await authService.updateUserPreferences(preferences);
+      console.log('🔄 AuthContext: Received updated user:', updatedUser);
+      
+      if (!updatedUser) {
+        console.warn('⚠️ AuthContext: No updated user returned, using current user with updated preferences');
+        // If no user returned, manually update preferences on current user
+        const preservedUser = {
+          ...authState.user,
+          preferences: {
+            ...authState.user.preferences,
+            ...preferences
+          }
+        };
+        setAuthState(prev => ({ ...prev, user: preservedUser }));
+        localStorage.setItem('cachedUser', JSON.stringify(preservedUser));
+        return preservedUser;
+      }
       
       // Preserve existing user data, especially name, if the backend doesn't return it properly
+      console.log('🔍 AuthContext: Current user preferences:', authState.user.preferences);
+      console.log('🔍 AuthContext: Updated user preferences:', updatedUser.preferences);
+      console.log('🔍 AuthContext: Original preferences update:', preferences);
+      
+      const mergedPreferences = {
+        ...authState.user.preferences, // Keep existing preferences
+        ...updatedUser.preferences,    // Override with new preferences
+        ...preferences                  // Force the original update to be included
+      };
+      
+      console.log('🔍 AuthContext: Merged preferences:', mergedPreferences);
+      
       const preservedUser = {
         ...authState.user, // Keep existing user data
         ...updatedUser,     // Override with updated data from backend
         name: updatedUser.name || authState.user.name, // Ensure name is preserved
         email: updatedUser.email || authState.user.email, // Ensure email is preserved
-        preferences: {
-          ...authState.user.preferences, // Keep existing preferences
-          ...updatedUser.preferences,    // Override with new preferences
-        }
+        preferences: mergedPreferences
       };
       
+      console.log('🔄 AuthContext: Setting preserved user:', preservedUser);
+      console.log('🔍 AuthContext: Final newsletter_subscribed:', preservedUser.preferences?.newsletter_subscribed);
       setAuthState(prev => ({ ...prev, user: preservedUser }));
       
       // Update cached user data
       localStorage.setItem('cachedUser', JSON.stringify(preservedUser));
+      return preservedUser;
     } catch (error) {
+      console.error('❌ AuthContext: updatePreferences failed:', error);
       throw error;
     }
   };

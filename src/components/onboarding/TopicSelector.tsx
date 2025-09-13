@@ -98,9 +98,9 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete, onSkip }) => 
 
       await updatePreferences({
         topics: updatedTopics,
-        newsletterFrequency,
-        contentTypes: selectedContentTypes,
-        emailNotifications: true,
+        newsletter_frequency: newsletterFrequency,
+        content_types: selectedContentTypes,
+        email_notifications: true,
         onboardingCompleted: true
       });
       
