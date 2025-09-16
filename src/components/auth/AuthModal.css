@@ -14,6 +14,30 @@
   padding: 0;
 }
 
+/* Ensure Google Sign-in popup appears above everything */
+iframe[src*="accounts.google.com"],
+div[role="dialog"] {
+  z-index: 10200 !important;
+}
+
+/* Google Sign-in container styling */
+.google-signin-container {
+  z-index: 10200;
+  position: relative;
+}
+
+.auth-social-primary {
+  margin-bottom: 1.5rem;
+}
+
+.auth-social-primary .social-benefit {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #22c55e;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+}
+
 .auth-modal {
   background: white;
   width: 100%;

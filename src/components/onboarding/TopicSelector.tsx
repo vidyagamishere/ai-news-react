@@ -6,8 +6,27 @@ import { authService } from '../../services/authService';
 import './onboarding.css';
 
 const CATEGORY_ICONS = {
-  technology: Cpu,
+  // ai_sources_config.py categories
+  company: Factory,
   research: Brain,
+  news: Cpu,
+  platform: Wrench,
+  startup: Factory,
+  international: Shield,
+  robotics: Cpu,
+  automotive: Cpu,
+  creative: Brain,
+  policy: Shield,
+  language: Brain,
+  gaming: Cpu,
+  healthcare: Shield,
+  finance: Factory,
+  hardware: Wrench,
+  cloud: Wrench,
+  events: Brain,
+  learning: Brain,
+  // Legacy fallback categories
+  technology: Cpu,
   industry: Factory,
   ethics: Shield,
   tools: Wrench
@@ -43,24 +62,36 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete, onSkip }) => 
   const loadAvailableTopics = async () => {
     try {
       const topics = await authService.getAvailableTopics();
+      
+      // Ensure topics is an array
+      if (!Array.isArray(topics)) {
+        console.error('Topics API returned non-array:', topics);
+        throw new Error('Invalid topics response');
+      }
+      
       setAvailableTopics(topics);
       
-      // Pre-select some popular topics
+      // Pre-select some popular topics based on new naming
       const defaultTopics = topics.filter(t => 
-        ['Machine Learning', 'AI Tools', 'AI Ethics'].includes(t.name)
+        ['Machine Learning', 'AI Tools & Platforms', 'AI Ethics & Safety'].includes(t.name)
       ).map(t => t.id);
       setSelectedTopics(defaultTopics);
     } catch (error) {
-      // Fallback topics if API fails
+      console.error('Failed to load topics from API:', error);
+      // Fallback topics using ai_sources_config.py categories
       const fallbackTopics: AITopic[] = [
-        { id: '1', name: 'Machine Learning', description: 'Latest ML research and applications', category: 'technology', selected: true },
-        { id: '2', name: 'AI Tools', description: 'New AI tools and platforms', category: 'tools', selected: true },
-        { id: '3', name: 'AI Ethics', description: 'Ethical considerations in AI', category: 'ethics', selected: true },
-        { id: '4', name: 'Computer Vision', description: 'Image and video AI technologies', category: 'technology', selected: false },
-        { id: '5', name: 'Natural Language Processing', description: 'Language AI and chatbots', category: 'technology', selected: false },
-        { id: '6', name: 'AI in Healthcare', description: 'Medical AI applications', category: 'industry', selected: false },
-        { id: '7', name: 'AI Research', description: 'Academic research and papers', category: 'research', selected: false },
-        { id: '8', name: 'Autonomous Vehicles', description: 'Self-driving car technology', category: 'technology', selected: false }
+        { id: '1', name: 'Machine Learning', description: 'Latest ML research and applications', category: 'research', selected: true },
+        { id: '2', name: 'AI Tools & Platforms', description: 'New AI tools and platforms for developers', category: 'platform', selected: true },
+        { id: '3', name: 'AI Ethics & Safety', description: 'Responsible AI and ethical considerations', category: 'policy', selected: true },
+        { id: '4', name: 'Computer Vision', description: 'Image recognition and visual AI', category: 'research', selected: false },
+        { id: '5', name: 'Natural Language Processing', description: 'Language models and conversational AI', category: 'language', selected: false },
+        { id: '6', name: 'AI in Healthcare', description: 'Medical AI applications and healthcare tech', category: 'healthcare', selected: false },
+        { id: '7', name: 'AI Research Papers', description: 'Academic research and scientific breakthroughs', category: 'research', selected: false },
+        { id: '8', name: 'AI in Automotive', description: 'Self-driving cars and automotive AI', category: 'automotive', selected: false },
+        { id: '9', name: 'AI Startups', description: 'New AI companies and startup ecosystem', category: 'startup', selected: false },
+        { id: '10', name: 'AI in Finance', description: 'Financial AI and fintech applications', category: 'finance', selected: false },
+        { id: '11', name: 'Robotics & Automation', description: 'Physical AI and robotics systems', category: 'robotics', selected: false },
+        { id: '12', name: 'AI News & Updates', description: 'Latest AI news and industry updates', category: 'news', selected: false }
       ];
       setAvailableTopics(fallbackTopics);
       setSelectedTopics(['1', '2', '3']);

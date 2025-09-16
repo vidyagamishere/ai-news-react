@@ -32,11 +32,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
     return () => clearTimeout(timer);
   }, []);
 
-  // Close modal when authenticated
+  // Close modal when authenticated and route appropriately
   useEffect(() => {
     if (isAuthenticated) {
       handleClose();
-      navigate('/dashboard');
+      // Check if user has completed onboarding
+      const onboardingComplete = localStorage.getItem('onboardingComplete');
+      if (onboardingComplete === 'true') {
+        navigate('/dashboard');
+      } else {
+        navigate('/onboarding');
+      }
     }
   }, [isAuthenticated, navigate]);
 
@@ -49,30 +55,30 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
     const errors: Record<string, string> = {};
     
     if (mode === 'signup' && !formData.name.trim()) {
-      errors.name = 'Full name is required';
+      errors.name = 'Name is required';
     }
     
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = 'Please enter a valid email';
     }
     
     if (!formData.password) {
       errors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters long';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
     }
     
     if (mode === 'signup') {
       if (!formData.confirmPassword) {
-        errors.confirmPassword = 'Please confirm your password';
+        errors.confirmPassword = 'Confirm password';
       } else if (formData.password !== formData.confirmPassword) {
         errors.confirmPassword = 'Passwords do not match';
       }
       
       if (!formData.acceptTerms) {
-        errors.acceptTerms = 'You must accept the Terms of Service';
+        errors.acceptTerms = 'Please accept the terms';
       }
     }
     
@@ -95,7 +101,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
       } else {
         try {
           await signup(formData);
-          navigate('/onboarding');
+          // Clear onboarding completion to trigger onboarding for new email signups
+          localStorage.removeItem('onboardingComplete');
+          // Don't navigate here - let the useEffect handle it
         } catch (signupError: any) {
           if (signupError.message === 'OTP_VERIFICATION_REQUIRED') {
             await sendOTP(formData.email, formData.name);
@@ -130,6 +138,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
   };
 
   const handleGoogleSuccess = () => {
+    console.log('Google authentication successful');
+    // For Google sign-in, we'll let the auth context handle onboarding routing
+    // New users will be routed to onboarding, returning users to dashboard
     handleClose();
   };
 
@@ -174,13 +185,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
             }
           </p>
 
-          {/* Google Sign In */}
-          <div className="auth-social">
+          {/* Google Sign In - Primary Option */}
+          <div className="auth-social-primary">
             <GoogleSignIn onSuccess={handleGoogleSuccess} />
+            <p className="social-benefit">Instant access • No email verification required</p>
           </div>
 
           <div className="auth-divider">
-            <span>or continue with email</span>
+            <span>or use email</span>
           </div>
 
           {/* Form */}
@@ -228,7 +240,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
                 <input
                   id="modal-password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder={isSignIn ? 'Enter your password' : 'Min 8 characters'}
+                  placeholder={isSignIn ? 'Enter your password' : 'Min 6 characters'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                 />

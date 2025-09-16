@@ -24,7 +24,12 @@ export interface AITopic {
   id: string;
   name: string;
   description: string;
-  category: 'technology' | 'research' | 'industry' | 'ethics' | 'tools';
+  category: 'company' | 'research' | 'news' | 'platform' | 'startup' | 
+           'international' | 'robotics' | 'automotive' | 'creative' | 
+           'policy' | 'language' | 'gaming' | 'healthcare' | 'finance' |
+           'hardware' | 'cloud' | 'events' | 'learning' |
+           // Legacy categories for backward compatibility
+           'technology' | 'industry' | 'ethics' | 'tools';
   selected: boolean;
 }
 

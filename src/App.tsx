@@ -65,7 +65,13 @@ const HomeRoute: React.FC = () => {
   }
   
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    // Check if user has completed onboarding
+    const onboardingComplete = localStorage.getItem('onboardingComplete');
+    if (onboardingComplete === 'true') {
+      return <Navigate to="/dashboard" replace />;
+    } else {
+      return <Navigate to="/onboarding" replace />;
+    }
   }
   
   return <Home />;

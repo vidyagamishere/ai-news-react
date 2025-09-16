@@ -1,12 +1,16 @@
-// API service for connecting to AI News Scraper backend with admin validation
+// UPDATED API service - Complete Router Architecture Integration
+// All API calls now go through single router backend function
 import axios from 'axios';
 
-// Backend API URL - Stable domain that won't change between deployments
-const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
+// Router-based backend URL - Single function handles ALL endpoints
+const API_BASE_URL = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
+
+console.log('🏗️ API Service: Using Router Architecture');
+console.log('🔗 Backend URL:', API_BASE_URL);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000, // Increased to 15 seconds for content scraping
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -15,11 +19,80 @@ const api = axios.create({
 // Create a separate instance for content requests with longer timeout
 const contentApi = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 20000, // 20 seconds for heavy content scraping operations
+  timeout: 30000, // Increased for router processing
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Router request function - ALL API calls go through this
+async function makeRouterRequest(
+  endpoint: string, 
+  method: string = 'GET', 
+  params: any = {}, 
+  headers: any = {},
+  useContentApi: boolean = false
+) {
+  try {
+    const apiInstance = useContentApi ? contentApi : api;
+    
+    console.log(`📡 Router Request: ${method} ${endpoint}`);
+    
+    // For GET requests, use query parameters
+    if (method === 'GET') {
+      const queryParams = new URLSearchParams({
+        endpoint,
+        ...params
+      }).toString();
+      
+      const response = await apiInstance.get(`/api/index?${queryParams}`, { 
+        headers: {
+          ...headers,
+          // Ensure proper CORS headers
+          'Access-Control-Allow-Origin': '*',
+        }
+      });
+      
+      console.log(`✅ Router Response: ${endpoint} - ${response.status}`);
+      return response.data;
+    } 
+    // For POST requests, use JSON body
+    else {
+      const requestBody = {
+        endpoint,
+        method,
+        params,
+        headers
+      };
+      
+      const response = await apiInstance.post('/api/index', requestBody, { 
+        headers: {
+          ...headers,
+          'Access-Control-Allow-Origin': '*',
+        }
+      });
+      
+      console.log(`✅ Router Response: ${endpoint} - ${response.status}`);
+      return response.data;
+    }
+  } catch (error: any) {
+    console.error(`❌ Router request failed for ${endpoint}:`, error);
+    
+    // Handle authentication errors
+    if (error.response?.status === 401) {
+      throw new Error('Authentication required');
+    }
+    
+    // Handle router errors
+    if (error.response?.status === 404) {
+      throw new Error(`Endpoint ${endpoint} not found in router`);
+    }
+    
+    // Return detailed error info
+    const errorMessage = error.response?.data?.message || error.message;
+    throw new Error(`Router request failed: ${errorMessage}`);
+  }
+}
 
 // Simple in-memory cache with TTL
 const cache = new Map<string, { data: any; expiry: number }>();
@@ -61,11 +134,11 @@ const setCachedData = (key: string, data: any) => {
   cache.set(key, { data, expiry: Date.now() + CACHE_TTL });
 };
 
-// Types for API responses
+// Types for API responses (same as before)
 export interface Article {
   title: string;
   description: string;
-  content_summary?: string; // LLM-generated summary
+  content_summary?: string;
   source: string;
   time: string;
   impact: 'high' | 'medium' | 'low';
@@ -95,13 +168,16 @@ export interface TopStory {
   url: string;
   imageUrl?: string;
   summary?: string;
-  content_summary?: string; // LLM-generated summary
+  content_summary?: string;
 }
 
 export interface DigestResponse {
   summary: {
     keyPoints: string[];
     metrics: Metrics;
+    personalized_greeting?: string;
+    user_focus_topics?: string[];
+    personalization_note?: string;
   };
   topStories: TopStory[];
   content: {
@@ -113,6 +189,13 @@ export interface DigestResponse {
   badge: string;
   enhanced?: boolean;
   admin_features?: boolean;
+  personalized?: boolean;
+  personalization_meta?: {
+    user_topics: string[];
+    content_types_requested: string[];
+    filtering_applied: boolean;
+    timestamp: string;
+  };
 }
 
 export interface HealthResponse {
@@ -123,12 +206,19 @@ export interface HealthResponse {
     scraper: boolean;
     processor: boolean;
     ai_sources: number;
+    authentication?: boolean;
   };
   auto_update?: {
     in_progress: boolean;
     last_run: string;
     errors: string[];
     auto_update_enabled: boolean;
+  };
+  router_info?: {
+    architecture: string;
+    scalable: boolean;
+    function_limit_solved: boolean;
+    auth_integrated?: boolean;
   };
 }
 
@@ -146,6 +236,7 @@ export interface SourcesResponse {
   sources: Source[];
   enabled_count: number;
   total_count: number;
+  router_architecture?: string;
 }
 
 export interface ScrapeResponse {
@@ -154,21 +245,48 @@ export interface ScrapeResponse {
   articles_processed: number;
   sources: string[];
   total_sources: number;
+  router_handled?: boolean;
 }
 
-// API functions
+// Authentication Types
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    picture: string;
+    verified_email: boolean;
+  };
+  expires_in: number;
+  router_auth?: boolean;
+}
+
+export interface AuthVerifyResponse {
+  valid: boolean;
+  user?: any;
+  expires?: number;
+  router_verified?: boolean;
+  error?: string;
+}
+
+// Complete API service using router pattern
 export const apiService = {
+  // ===============================
+  // CORE CONTENT ENDPOINTS
+  // ===============================
+
   // Get current digest
   getDigest: async (refresh?: boolean): Promise<DigestResponse> => {
-    // Check if we need to clear daily cache first
     if (shouldClearDailyCache()) {
       clearDailyCache();
     }
     
-    const params = refresh ? { refresh: 1 } : {};
-    const cacheKey = getCacheKey('/api/digest', params);
+    const params = refresh ? { refresh: '1' } : {};
+    const cacheKey = getCacheKey('digest', params);
     
-    // Skip cache if refresh is explicitly requested
     if (!refresh) {
       const cached = getCachedData(cacheKey);
       if (cached) {
@@ -177,132 +295,250 @@ export const apiService = {
       }
     }
     
-    console.log('📡 Fetching fresh digest data...');
-    const response = await api.get('/api/digest', { params });
-    setCachedData(cacheKey, response.data);
-    return response.data;
+    console.log('📡 Fetching digest via router...');
+    const data = await makeRouterRequest('digest', 'GET', params, {}, true);
+    setCachedData(cacheKey, data);
+    return data;
   },
 
   // Get health status
   getHealth: async (): Promise<HealthResponse> => {
-    const response = await api.get('/api/health');
-    return response.data;
+    return await makeRouterRequest('health', 'GET');
   },
 
   // Get sources configuration
   getSources: async (): Promise<SourcesResponse> => {
-    const response = await api.get('/api/sources');
-    return response.data;
+    return await makeRouterRequest('sources', 'GET');
   },
+
+  // Get personalized digest - requires authentication
+  getPersonalizedDigest: async (refresh?: boolean): Promise<DigestResponse> => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Authentication required for personalized content');
+    }
+    
+    if (shouldClearDailyCache()) {
+      clearDailyCache();
+    }
+    
+    const params = refresh ? { refresh: '1' } : {};
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    const cacheKey = getCacheKey('personalized-digest', params);
+    
+    if (!refresh) {
+      const cached = getCachedData(cacheKey);
+      if (cached) {
+        console.log('🚀 Using cached personalized digest data');
+        return cached;
+      }
+    }
+    
+    console.log('📡 Fetching personalized digest via router...');
+    const data = await makeRouterRequest('personalized-digest', 'GET', params, headers, true);
+    setCachedData(cacheKey, data);
+    return data;
+  },
+
+  // ===============================
+  // SCRAPING & AUTO-UPDATE
+  // ===============================
 
   // Trigger manual scraping
   triggerScrape: async (priorityOnly = false): Promise<ScrapeResponse> => {
-    const params = priorityOnly ? { priority_only: true } : {};
-    const response = await api.get('/api/scrape', { params });
-    return response.data;
+    const params = priorityOnly ? { priority_only: 'true' } : {};
+    return await makeRouterRequest('scrape', 'GET', params);
   },
 
   // Trigger auto-update
   triggerAutoUpdate: async (): Promise<{ message: string; status: any }> => {
-    const response = await api.post('/api/auto-update/trigger');
-    return response.data;
+    return await makeRouterRequest('auto-update', 'POST', { action: 'trigger' });
   },
 
   // Get auto-update status
   getAutoUpdateStatus: async (): Promise<any> => {
-    const response = await api.get('/api/auto-update/status');
-    return response.data;
+    return await makeRouterRequest('auto-update', 'GET');
   },
 
-  // Content filtering methods
+  // ===============================
+  // CONTENT FILTERING & TYPES
+  // ===============================
+
+  // Get available content types
   getContentTypes: async (): Promise<any> => {
-    const response = await api.get('/api/content-types');
-    return response.data;
+    return await makeRouterRequest('content-types', 'GET');
   },
 
+  // Get content by type (generic endpoint)
   getContentByType: async (contentType: string, refresh?: boolean): Promise<any> => {
-    const params = refresh ? { refresh: true } : {};
-    const response = await api.get(`/api/content/${contentType}`, { params });
-    return response.data;
+    const params = refresh ? { refresh: 'true', content_type: contentType } : { content_type: contentType };
+    return await makeRouterRequest('digest', 'GET', params, {}, true);
   },
 
+  // Get user preferences - requires authentication
   getUserPreferences: async (): Promise<any> => {
-    const response = await api.get('/api/user-preferences');
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Authentication required for user preferences');
+    }
+    
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return await makeRouterRequest('user-preferences', 'GET', {}, headers);
+  },
+
+  // ===============================
+  // AUTHENTICATION ENDPOINTS
+  // ===============================
+
+  // Google OAuth authentication
+  authenticateWithGoogle: async (tokenData: any): Promise<AuthResponse> => {
+    console.log('🔐 Authenticating with Google via router...');
+    
+    const requestBody = {
+      endpoint: 'auth/google',
+      method: 'POST',
+      params: {},
+      headers: {},
+      token_data: tokenData,
+      email: tokenData.email,
+      name: tokenData.name,
+      picture: tokenData.picture,
+      sub: tokenData.sub
+    };
+    
+    const response = await api.post('/api/index', requestBody);
     return response.data;
   },
 
-  // Generic GET method for new endpoints with caching
-  get: async (endpoint: string, params?: any): Promise<any> => {
-    // Check if we need to clear daily cache for content endpoints
-    if (endpoint.includes('/api/content/') && shouldClearDailyCache()) {
-      clearDailyCache();
+  // Verify authentication token
+  verifyAuth: async (): Promise<AuthVerifyResponse> => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      return { valid: false, error: 'no_token' };
     }
     
-    const cacheKey = getCacheKey(endpoint, params);
-    
-    // Check cache first for GET requests
-    const cached = getCachedData(cacheKey);
-    if (cached) {
-      console.log(`🚀 Using cached data for ${endpoint}`);
-      return cached;
-    }
-    
-    console.log(`📡 Fetching fresh data for ${endpoint}...`);
-    
-    // Use contentApi for content endpoints that require longer timeout
-    const apiInstance = endpoint.includes('/api/content/') ? contentApi : api;
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
     
     try {
-      const response = await apiInstance.get(endpoint, { params });
-      setCachedData(cacheKey, response.data);
-      return response.data;
-    } catch (error: any) {
-      if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
-        console.error(`⏱️ Request timeout for ${endpoint}. This usually happens with all_sources content.`);
-        throw new Error(`Content loading timed out. The server is processing ${endpoint.includes('all_sources') ? 'all sources' : 'content'} which may take longer than usual.`);
-      }
-      throw error;
+      return await makeRouterRequest('auth/verify', 'GET', {}, headers);
+    } catch (error) {
+      console.log('🔐 Auth verification failed:', error);
+      return { valid: false, error: 'invalid_token' };
     }
   },
 
-  // Admin validation endpoints
+  // Logout
+  logout: async (): Promise<{ success: boolean; message: string }> => {
+    const token = localStorage.getItem('authToken');
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+    
+    try {
+      const result = await makeRouterRequest('auth/logout', 'POST', {}, headers);
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      return result;
+    } catch (error) {
+      // Even if logout fails on server, clear local storage
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      return { success: true, message: 'Logged out locally' };
+    }
+  },
+
+  // Get available AI topics for authentication
+  getAuthTopics: async (): Promise<any> => {
+    return await makeRouterRequest('auth/topics', 'GET');
+  },
+
+  // ===============================
+  // ADMIN ENDPOINTS
+  // ===============================
+
+  // Validate sources (admin only)
   validateSources: async (adminKey: string, options?: {
     contentType?: string;
     priority?: number;
     timeout?: number;
     maxConcurrent?: number;
   }): Promise<any> => {
-    const response = await api.post('/api/admin/validate-sources', options || {}, {
-      headers: { 'X-Admin-Key': adminKey }
-    });
-    return response.data;
+    const headers = { 'X-Admin-Key': adminKey };
+    const params = options || {};
+    return await makeRouterRequest('admin/validate-sources', 'POST', params, headers);
   },
 
+  // Validate single source (admin only)
   validateSingleSource: async (adminKey: string, sourceData: {
     name: string;
     rss_url: string;
     website?: string;
     content_type?: string;
   }): Promise<any> => {
-    const response = await api.post('/api/admin/validate-single-source', sourceData, {
-      headers: { 'X-Admin-Key': adminKey }
-    });
-    return response.data;
+    const headers = { 'X-Admin-Key': adminKey };
+    return await makeRouterRequest('admin/validate-single-source', 'POST', sourceData, headers);
   },
 
+  // Admin quick test
   quickTest: async (adminKey: string): Promise<any> => {
-    const response = await api.get('/api/admin/quick-test', {
-      headers: { 'X-Admin-Key': adminKey }
-    });
-    return response.data;
+    const headers = { 'X-Admin-Key': adminKey };
+    return await makeRouterRequest('admin/quick-test', 'GET', {}, headers);
   },
 
+  // Get validation status (admin only)
   getValidationStatus: async (adminKey: string): Promise<any> => {
-    const response = await api.get('/api/admin/validation-status', {
-      headers: { 'X-Admin-Key': adminKey }
-    });
-    return response.data;
+    const headers = { 'X-Admin-Key': adminKey };
+    return await makeRouterRequest('admin/validation-status', 'GET', {}, headers);
   },
+
+  // ===============================
+  // TESTING & DEBUG
+  // ===============================
+
+  // Test Neon database
+  testNeon: async (): Promise<any> => {
+    return await makeRouterRequest('test-neon', 'GET');
+  },
+
+  // Generic router method for future endpoints
+  callEndpoint: async (
+    endpoint: string, 
+    method: string = 'GET', 
+    params: any = {}, 
+    requireAuth: boolean = false,
+    adminKey?: string
+  ) => {
+    let headers: any = {};
+    
+    if (requireAuth) {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error(`Authentication required for ${endpoint}`);
+      }
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    if (adminKey) {
+      headers['X-Admin-Key'] = adminKey;
+    }
+    
+    return await makeRouterRequest(endpoint, method, params, headers);
+  },
+
+  // Generic GET method with router (backward compatibility)
+  get: async (endpoint: string, params?: any): Promise<any> => {
+    // Convert old-style endpoints to router format
+    const routerEndpoint = endpoint.replace('/api/', '');
+    return await makeRouterRequest(routerEndpoint, 'GET', params);
+  }
 };
+
+console.log('✅ API Service initialized with complete router architecture');
+console.log('🔗 All endpoints now route through single backend function');
+console.log('🔐 Authentication, admin, and content endpoints integrated');
 
 export default apiService;

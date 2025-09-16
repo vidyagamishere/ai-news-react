@@ -210,6 +210,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       console.log('✅ Google login successful - User data:', { name: user.name, email: user.email, id: user.id });
+      
+      // Use backend's isUserExist flag to determine onboarding flow
+      const isExistingUser = response.isUserExist === true;
+      const hasTopics = user.preferences?.topics && user.preferences.topics.length > 0;
+      const hasCompletedOnboarding = user.preferences?.onboardingCompleted === true;
+      
+      console.log('🔍 User onboarding check:', {
+        isExistingUser: response.isUserExist,
+        hasTopics,
+        hasCompletedOnboarding,
+        topicsCount: user.preferences?.topics?.length || 0
+      });
+      
+      // Only existing users with topics and completed onboarding skip onboarding
+      const shouldSkipOnboarding = isExistingUser && hasTopics && hasCompletedOnboarding;
+      
+      if (shouldSkipOnboarding) {
+        console.log('✅ Existing user with preferences - skipping onboarding');
+        localStorage.setItem('onboardingComplete', 'true');
+      } else {
+        console.log('🔄 User needs onboarding - clearing completion flag');
+        localStorage.removeItem('onboardingComplete');
+      }
+      
       localStorage.setItem('authToken', token);
       localStorage.setItem('cachedUser', JSON.stringify(user));
       const newState = {

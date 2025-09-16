@@ -92,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = false, onSignInClick,
                         <button onClick={onSignInClick || handleSignIn} className="btn btn-ghost">
                           Sign In
                         </button>
-                        <button onClick={onSignUpClick} className="btn btn-primary">
+                        <button onClick={onSignUpClick} className="btn-header-signup">
                           Sign Up Free
                         </button>
                       </>

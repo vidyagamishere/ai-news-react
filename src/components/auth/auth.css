@@ -120,6 +120,27 @@
   transform: none;
 }
 
+/* Mobile improvements for Google Sign-in */
+@media (max-width: 768px) {
+  .google-signin-btn {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevent zoom on iOS */
+    min-height: 48px; /* Touch-friendly size */
+    border-radius: 12px;
+  }
+  
+  .google-signin-btn:hover {
+    /* Reduce hover effects on mobile */
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .google-signin-btn:active {
+    background: #f0f0f0;
+    border-color: #ccc;
+  }
+}
+
 .auth-divider {
   display: flex;
   align-items: center;

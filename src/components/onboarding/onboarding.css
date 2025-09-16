@@ -1,5 +1,565 @@
 /* Onboarding Styles - Elegant and Modern */
 
+/* SimplifiedOnboarding styles */
+.simplified-onboarding {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.simplified-onboarding .onboarding-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.simplified-onboarding .progress-section {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.simplified-onboarding .progress-bar {
+  position: relative;
+  background: #f0f2f5;
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.simplified-onboarding .progress-steps {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.simplified-onboarding .progress-step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #e1e5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #8b93a1;
+  transition: all 0.3s ease;
+}
+
+.simplified-onboarding .progress-step.active {
+  border-color: #667eea;
+  color: #667eea;
+  background: white;
+}
+
+.simplified-onboarding .progress-step.completed {
+  border-color: #22c55e;
+  background: #22c55e;
+  color: white;
+}
+
+.simplified-onboarding .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #22c55e);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.simplified-onboarding .progress-text {
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.simplified-onboarding .step-content {
+  margin-bottom: 2rem;
+}
+
+.simplified-onboarding .onboarding-step {
+  animation: fadeInSlide 0.4s ease-out;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.simplified-onboarding .step-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.simplified-onboarding .step-icon {
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.simplified-onboarding .step-header h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.simplified-onboarding .step-header p {
+  color: #64748b;
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.simplified-onboarding .form-section {
+  margin-bottom: 2rem;
+}
+
+.simplified-onboarding .form-section h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.simplified-onboarding .options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.simplified-onboarding .options-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.simplified-onboarding .option-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  text-align: left;
+}
+
+.simplified-onboarding .option-card.compact {
+  padding: 1rem;
+  flex-direction: column;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.simplified-onboarding .option-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+}
+
+.simplified-onboarding .option-card.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea10, #764ba210);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.simplified-onboarding .option-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.simplified-onboarding .option-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.simplified-onboarding .option-content p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.simplified-onboarding .option-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.simplified-onboarding .selected-check {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  color: #22c55e;
+}
+
+.simplified-onboarding .topics-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.simplified-onboarding .topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.simplified-onboarding .topic-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.simplified-onboarding .topic-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.simplified-onboarding .topic-card.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea10, #764ba210);
+}
+
+.simplified-onboarding .topic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.simplified-onboarding .topic-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.simplified-onboarding .topic-description {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.simplified-onboarding .topic-check {
+  color: #22c55e;
+}
+
+.simplified-onboarding .selection-info {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.simplified-onboarding .preferences-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.simplified-onboarding .preference-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.simplified-onboarding .preference-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.simplified-onboarding .preference-icon {
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.simplified-onboarding .preference-info h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.simplified-onboarding .preference-info p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.simplified-onboarding .toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.simplified-onboarding .toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.simplified-onboarding .toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.3s;
+  border-radius: 14px;
+}
+
+.simplified-onboarding .toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.simplified-onboarding input:checked + .toggle-slider {
+  background-color: #667eea;
+}
+
+.simplified-onboarding input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.simplified-onboarding .completion-preview {
+  background: linear-gradient(135deg, #667eea10, #22c55e10);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.simplified-onboarding .completion-preview h4 {
+  color: #1e293b;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.simplified-onboarding .completion-preview p {
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.simplified-onboarding .completion-preview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.simplified-onboarding .completion-preview li {
+  color: #374151;
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.simplified-onboarding .completion-preview li::before {
+  content: '✓';
+  color: #22c55e;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.simplified-onboarding .error-section {
+  margin: 1rem 0;
+}
+
+.simplified-onboarding .error-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.simplified-onboarding .error-icon {
+  flex-shrink: 0;
+}
+
+.simplified-onboarding .retry-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.simplified-onboarding .retry-btn:hover {
+  background: #b91c1c;
+}
+
+.simplified-onboarding .onboarding-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.simplified-onboarding .actions-left,
+.simplified-onboarding .actions-right {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.simplified-onboarding .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.simplified-onboarding .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.simplified-onboarding .btn-ghost {
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #e5e7eb;
+}
+
+.simplified-onboarding .btn-ghost:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #374151;
+}
+
+.simplified-onboarding .btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+}
+
+.simplified-onboarding .btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
+}
+
+.simplified-onboarding .loading-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.simplified-onboarding .loading-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .simplified-onboarding {
+    padding: 1rem;
+  }
+
+  .simplified-onboarding .onboarding-container {
+    padding: 1.5rem;
+  }
+
+  .simplified-onboarding .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .simplified-onboarding .topics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .simplified-onboarding .onboarding-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .simplified-onboarding .actions-left,
+  .simplified-onboarding .actions-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .simplified-onboarding .step-header h2 {
+    font-size: 1.5rem;
+  }
+}
+
 /* Comprehensive Onboarding Styles */
 .comprehensive-onboarding {
   min-height: 100vh;

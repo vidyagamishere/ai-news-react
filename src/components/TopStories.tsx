@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Link2 } from 'lucide-react';
 import type { TopStory } from '../services/api';
 import SmartImage from './SmartImage';
@@ -8,9 +9,24 @@ interface TopStoriesProps {
 }
 
 const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
+  const navigate = useNavigate();
 
   if (!stories || stories.length === 0) {
-    return null;
+    return (
+      <div className="top-stories-empty">
+        <div className="empty-state">
+          <div className="empty-icon">📰</div>
+          <h3>Personalize Your Feed</h3>
+          <p>Select your AI interests to see personalized top stories here.</p>
+          <button 
+            onClick={() => navigate('/preferences')}
+            className="setup-btn"
+          >
+            Choose Topics
+          </button>
+        </div>
+      </div>
+    );
   }
 
 

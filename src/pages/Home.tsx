@@ -30,23 +30,24 @@ const Home: React.FC = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  const fetchDigest = async () => {
+  const fetchDigest = async (retryCount = 0) => {
     try {
       setLoading(true);
       setError(null);
       
-      // Add timeout with fallback data
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 8000)
-      );
+      console.log(`📡 Fetching digest (attempt ${retryCount + 1}/3)...`);
       
-      const dataPromise = apiService.getDigest(false);
+      const data = await apiService.getDigest(false);
+      setDigest(data);
+      console.log('✅ Fresh data loaded successfully');
       
-      try {
-        const data = await Promise.race([dataPromise, timeoutPromise]) as DigestResponse;
-        setDigest(data);
-      } catch (timeoutErr) {
-        // Provide fallback data for fast loading
+    } catch (err: any) {
+      console.error('Failed to fetch digest:', err);
+      
+      // If this is the first failure and we have no existing data, provide fallback
+      if (retryCount === 0 && !digest) {
+        console.log('🔄 First attempt failed, showing fallback data and retrying in background...');
+        
         const fallbackData: DigestResponse = {
           topStories: [
             {
@@ -94,18 +95,18 @@ const Home: React.FC = () => {
         
         setDigest(fallbackData);
         
-        // Continue trying to load real data in background
-        dataPromise.then(realData => {
-          setDigest(realData);
-          setError(null);
-        }).catch(() => {
-          // Keep fallback data if real data fails
-          console.log('Using preview data');
-        });
+        // Retry in background with exponential backoff
+        setTimeout(() => {
+          fetchDigest(1);
+        }, 3000);
+      } else if (retryCount < 2) {
+        // Retry with backoff
+        setTimeout(() => {
+          fetchDigest(retryCount + 1);
+        }, Math.pow(2, retryCount) * 2000);
+      } else {
+        setError('Unable to load fresh content. Displaying cached data.');
       }
-    } catch (err) {
-      console.error('Failed to fetch digest:', err);
-      setError('Unable to load content. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -118,6 +119,14 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchDigest();
+    
+    // Set up periodic refresh every 10 minutes for fresh content
+    const refreshInterval = setInterval(() => {
+      console.log('🔄 Auto-refreshing content...');
+      fetchDigest();
+    }, 10 * 60 * 1000); // 10 minutes
+    
+    return () => clearInterval(refreshInterval);
   }, []);
 
   if (loading && !digest) {
@@ -129,11 +138,30 @@ const Home: React.FC = () => {
       <div className="home-page">
         <div className="error-container">
           <div className="error-message">
-            <h2>⚠️ Error</h2>
+            <h2>⚠️ Connection Issue</h2>
             <p>{error}</p>
-            <button onClick={fetchDigest} className="btn btn-primary">
-              Try Again
-            </button>
+            <div className="error-actions">
+              <button 
+                onClick={() => fetchDigest(0)} 
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Retrying...
+                  </>
+                ) : (
+                  'Try Again'
+                )}
+              </button>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="btn btn-ghost"
+              >
+                Refresh Page
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -166,8 +194,19 @@ const Home: React.FC = () => {
           <h1 id="hero-heading">Intelligence at Light Speed</h1>
           <p>
             Stay ahead of the AI revolution with curated news, insights, and breakthroughs 
-            from 50+ top sources. No signup required to explore.
+            from 50+ top sources. <strong>No signup required to explore.</strong>
           </p>
+          
+          <div className="hero-cta">
+            <button 
+              onClick={() => openAuthModal('signup')}
+              className="cta-primary"
+              aria-describedby="hero-heading"
+            >
+              🚀 Start Your AI Journey
+            </button>
+            <p className="cta-subtitle">Free access • No credit card • Instant setup</p>
+          </div>
           
           <div className="hero-stats" role="list" aria-label="Key statistics">
             <div className="stat" role="listitem">
@@ -228,21 +267,21 @@ const Home: React.FC = () => {
             <section className="cta-section" aria-labelledby="cta-heading">
               <div className="cta-content">
                 <h2 id="cta-heading">Want Full Access?</h2>
-                <p>
+                <p className="cta-text">
                   Sign up for free to get personalized AI news, daily digests, 
                   and exclusive insights delivered to your inbox.
                 </p>
                 <div className="cta-buttons" role="group" aria-labelledby="cta-heading">
                   <button 
                     onClick={() => openAuthModal('signup')}
-                    className="btn btn-primary btn-large"
+                    className="btn-cta-primary btn-large"
                     aria-describedby="cta-heading"
                   >
                     Get Started Free
                   </button>
                   <button 
                     onClick={() => openAuthModal('signin')}
-                    className="btn btn-ghost btn-large"
+                    className="btn-cta-secondary btn-large"
                     aria-describedby="cta-heading"
                   >
                     Sign In

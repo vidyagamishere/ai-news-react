@@ -49,7 +49,11 @@ const Dashboard: React.FC = () => {
         setTimeout(() => reject(new Error('Request timeout after 10 seconds')), 10000)
       );
       
-      const dataPromise = apiService.getDigest(refresh);
+      // Use personalized digest for authenticated users with preferences
+      const hasPreferences = user?.preferences?.topics?.some(topic => topic.selected);
+      const dataPromise = (user && hasPreferences) 
+        ? apiService.getPersonalizedDigest(refresh)
+        : apiService.getDigest(refresh);
       
       try {
         const data = await Promise.race([dataPromise, timeoutPromise]) as DigestResponse;
@@ -67,19 +71,24 @@ const Dashboard: React.FC = () => {
         }
       } catch (timeoutErr) {
         console.log('API timeout, loading fallback data...');
-        // Provide fallback data for fast loading
+        // Provide personalized fallback data
+        const userName = user?.name?.split(' ')[0] || 'there';
         const fallbackData: DigestResponse = {
           topStories: [
             {
-              title: 'Welcome to Vidyagam AI News',
-              summary: 'Your personalized AI news dashboard is loading. We are fetching the latest AI developments from 45+ sources to bring you the most relevant content.',
+              title: hasPreferences ? `Hi ${userName}! Your Personalized AI News is Loading` : 'Welcome to Vidyagam AI News',
+              summary: hasPreferences 
+                ? `We're curating AI news based on your interests in ${user?.preferences?.topics?.filter(t => t.selected).slice(0, 3).map(t => t.name).join(', ')}. This personalized approach ensures you get the most relevant content.`
+                : 'Your personalized AI news dashboard is loading. We are fetching the latest AI developments from 45+ sources to bring you the most relevant content.',
               url: '#',
               source: 'Vidyagam',
               significanceScore: 8.5
             },
             {
-              title: 'Loading Latest AI Intelligence',
-              summary: 'Our AI systems are curating breaking news from top research labs, startups, and industry leaders. This usually takes just a few seconds.',
+              title: hasPreferences ? 'Filtering Content Based on Your Preferences' : 'Loading Latest AI Intelligence',
+              summary: hasPreferences 
+                ? `Our AI is filtering through hundreds of articles to find content matching your ${user?.preferences?.content_types?.join(', ')} preferences. Quality over quantity!`
+                : 'Our AI systems are curating breaking news from top research labs, startups, and industry leaders. This usually takes just a few seconds.',
               url: '#',
               source: 'AI News Network',
               significanceScore: 7.8
@@ -338,8 +347,25 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-layout">
             <div className="dashboard-main">
               <div className="section-header">
-                <h2 id="dashboard-top-stories">🔥 Top Stories</h2>
-                <p>Latest AI breakthroughs and developments from leading sources</p>
+                <div className="section-header-main">
+                  <h2 id="dashboard-top-stories">🔥 Top Stories</h2>
+                  {digest?.personalized && (
+                    <span className="personalized-badge" title="Content personalized based on your preferences">
+                      ✨ Personalized
+                    </span>
+                  )}
+                </div>
+                <p>
+                  {digest?.personalized && digest?.summary?.personalization_note
+                    ? digest.summary.personalization_note
+                    : "Latest AI breakthroughs and developments from leading sources"
+                  }
+                </p>
+                {digest?.summary?.personalized_greeting && (
+                  <div className="personalized-greeting">
+                    {digest.summary.personalized_greeting}
+                  </div>
+                )}
               </div>
               <TopStories stories={digest.topStories} />
               
@@ -363,7 +389,12 @@ const Dashboard: React.FC = () => {
               <div className="metrics-section">
                 <Suspense fallback={<div style={{height: '200px', background: '#f5f5f5', borderRadius: '8px'}} />}>
                   <MetricsDashboard 
-                    metrics={digest.summary.metrics}
+                    metrics={digest.summary?.metrics || {
+                      totalUpdates: digest.topStories?.length || 0,
+                      highImpact: Math.floor((digest.topStories?.length || 0) * 0.3),
+                      newResearch: Math.floor((digest.topStories?.length || 0) * 0.4),
+                      industryMoves: Math.floor((digest.topStories?.length || 0) * 0.3)
+                    }}
                   />
                 </Suspense>
               </div>

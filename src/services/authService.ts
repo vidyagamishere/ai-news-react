@@ -1,10 +1,11 @@
 import type { User, LoginCredentials, SignupCredentials, AITopic } from '../types/auth';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper.vercel.app';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-hk02qo1jh.vercel.app';
 
 interface AuthResponse {
   user: User;
   token: string;
+  isUserExist?: boolean;
 }
 
 interface OTPResponse {
@@ -102,14 +103,18 @@ class AuthService {
   }
 
   async getAvailableTopics(): Promise<AITopic[]> {
-    return this.request('/api/topics');
+    return this.request('/api/auth/topics');
   }
 
   async googleLogin(idToken: string): Promise<AuthResponse> {
     console.log('Sending Google login request with token length:', idToken.length);
-    const response = await this.request('/api/auth/google', {
+    const response = await this.request('/api/index', {
       method: 'POST',
-      body: JSON.stringify({ id_token: idToken }),
+      body: JSON.stringify({ 
+        endpoint: 'auth/google',
+        method: 'POST',
+        id_token: idToken 
+      }),
     });
     console.log('🔍 Google login API response:', response);
     return response;
