@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { User, AuthState, LoginCredentials, SignupCredentials } from '../types/auth';
 import { authService } from '../services/authService';
+import apiService from '../services/api';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -184,7 +185,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const googleLogin = async (idToken: string) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }));
     try {
-      const response = await authService.googleLogin(idToken);
+      // Decode the Google ID token to extract user data
+      const tokenPayload = JSON.parse(atob(idToken.split('.')[1]));
+      const tokenData = {
+        email: tokenPayload.email,
+        name: tokenPayload.name,
+        picture: tokenPayload.picture,
+        sub: tokenPayload.sub
+      };
+      
+      console.log('🔐 Decoded Google token data:', tokenData);
+      
+      // Use the router-compatible API method
+      const response = await apiService.authenticateWithGoogle(tokenData);
       console.log('✅ Google login API response:', JSON.stringify(response, null, 2));
       
       if (!response || typeof response !== 'object') {
