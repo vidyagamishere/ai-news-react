@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiService, type TopStory } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import Loading from '../Loading';
 import SmartImage from '../SmartImage';
 import './ContentTabs.css';
@@ -35,6 +36,7 @@ interface ContentTabsProps {
 }
 
 export default function ContentTabs({ userTier, topStories = [], isArchive = false, archiveContent, previewMode = false, onSignUpPrompt }: ContentTabsProps) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
@@ -124,14 +126,53 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
     return previewData[contentType as keyof typeof previewData] || previewData.all_sources;
   };
 
-  // Define tab order and tier access
-  const tabOrder = ['all_sources', 'blogs', 'podcasts', 'videos', 'events', 'learn'];
+  // Define tab order based on user preferences
+  const getFilteredTabOrder = (): string[] => {
+    const defaultTabOrder = ['all_sources', 'blogs', 'podcasts', 'videos', 'events', 'learn'];
+    
+    // Always show all_sources first
+    const baseOrder = ['all_sources'];
+    
+    // Get user's content type preferences
+    const userContentTypes = user?.preferences?.content_types || ['blogs', 'podcasts', 'videos'];
+    
+    // Add user's preferred content types in order
+    const orderedPreferences = defaultTabOrder.filter(tab => 
+      tab !== 'all_sources' && userContentTypes.includes(tab)
+    );
+    
+    // Add any missing defaults (blogs, podcasts, videos are mandatory)
+    const mandatoryTypes = ['blogs', 'podcasts', 'videos'];
+    const missingMandatory = mandatoryTypes.filter(type => 
+      !orderedPreferences.includes(type)
+    );
+    
+    console.log('🎯 Dashboard Content Filtering:', {
+      userContentTypes,
+      orderedPreferences,
+      missingMandatory,
+      finalOrder: [...baseOrder, ...orderedPreferences, ...missingMandatory]
+    });
+    
+    return [...baseOrder, ...orderedPreferences, ...missingMandatory];
+  };
+  
+  const tabOrder = getFilteredTabOrder();
   const premiumTabs: string[] = []; // All tabs are now available to all users
   
   const isTabAccessible = (tabKey: string): boolean => {
     if (!premiumTabs.includes(tabKey)) return true;
     return userTier === 'premium';
   };
+
+  // Update active tab when user preferences change
+  useEffect(() => {
+    const currentTabOrder = getFilteredTabOrder();
+    // If current active tab is not in user's preferences, switch to first available
+    if (!currentTabOrder.includes(activeTab) && currentTabOrder.length > 0) {
+      setActiveTab(currentTabOrder[0]);
+    }
+  }, [user?.preferences?.content_types]);
 
   // Load available content types on mount with delay for better initial performance
   useEffect(() => {
