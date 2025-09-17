@@ -197,7 +197,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('🔐 Decoded Google token data:', tokenData);
       
       // Use the router-compatible API method
-      const response = await apiService.authenticateWithGoogle(tokenData);
+      const response = await apiService.authenticateWithGoogle(tokenData) as any;
       console.log('✅ Google login API response:', JSON.stringify(response, null, 2));
       
       if (!response || typeof response !== 'object') {
@@ -215,6 +215,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       const { user, token } = response;
+      const userWithPreferences = user as any;
       
       // Validate user object structure
       if (!user.name || !user.email) {
@@ -225,15 +226,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('✅ Google login successful - User data:', { name: user.name, email: user.email, id: user.id });
       
       // Use backend's isUserExist flag to determine onboarding flow
-      const isExistingUser = response.isUserExist === true;
-      const hasTopics = user.preferences?.topics && user.preferences.topics.length > 0;
-      const hasCompletedOnboarding = user.preferences?.onboardingCompleted === true;
+      const isExistingUser = (response as any).isUserExist === true;
+      const hasTopics = userWithPreferences.preferences?.topics && userWithPreferences.preferences.topics.length > 0;
+      const hasCompletedOnboarding = userWithPreferences.preferences?.onboardingCompleted === true;
       
       console.log('🔍 User onboarding check:', {
-        isExistingUser: response.isUserExist,
+        isExistingUser: (response as any).isUserExist,
         hasTopics,
         hasCompletedOnboarding,
-        topicsCount: user.preferences?.topics?.length || 0
+        topicsCount: userWithPreferences.preferences?.topics?.length || 0
       });
       
       // Only existing users with topics and completed onboarding skip onboarding
@@ -251,10 +252,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('cachedUser', JSON.stringify(user));
       const newState = {
         isAuthenticated: true,
-        user,
+        user: userWithPreferences,
         loading: false,
         error: null
-      };
+      } as any;
       console.log('🔄 Setting auth state after Google login:', newState);
       setAuthState(newState);
     } catch (error) {
