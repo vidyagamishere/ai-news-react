@@ -74,9 +74,13 @@ class AuthService {
     console.log('🔗 Sending preferences update request:', preferences);
     
     try {
-      const response = await this.request('/api/auth/preferences', {
-        method: 'PUT',
-        body: JSON.stringify(preferences),
+      const response = await this.request('/api/index', {
+        method: 'POST',
+        body: JSON.stringify({
+          endpoint: 'auth/preferences',
+          method: 'PUT',
+          ...preferences
+        }),
       });
       console.log('🔗 Preferences update response:', response);
       return response;
@@ -86,7 +90,7 @@ class AuthService {
       // Fallback: If backend fails, get fresh user profile to check if it actually saved
       console.log('🔄 Attempting to fetch fresh profile as fallback...');
       try {
-        const freshProfile = await this.request('/api/auth/profile');
+        const freshProfile = await this.request('/api/index?endpoint=auth/profile');
         console.log('🔄 Fresh profile fetched:', freshProfile);
         return freshProfile;
       } catch (profileError) {
@@ -103,7 +107,7 @@ class AuthService {
   }
 
   async getAvailableTopics(): Promise<AITopic[]> {
-    return this.request('/api/auth/topics');
+    return this.request('/api/index?endpoint=auth/topics');
   }
 
   async googleLogin(idToken: string): Promise<AuthResponse> {
