@@ -138,7 +138,7 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
     
     // Add user's preferred content types in order
     const orderedPreferences = defaultTabOrder.filter(tab => 
-      tab !== 'all_sources' && userContentTypes.includes(tab)
+      tab !== 'all_sources' && userContentTypes.includes(tab as any)
     );
     
     // Add any missing defaults (blogs, podcasts, videos are mandatory)

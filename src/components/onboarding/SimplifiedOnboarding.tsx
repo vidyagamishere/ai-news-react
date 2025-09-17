@@ -3,7 +3,7 @@ import {
   ArrowRight, ArrowLeft, Check, Brain, User, Sparkles, 
   Mail, Bell
 } from 'lucide-react';
-import type { AITopic, ContentType } from '../../types/auth';
+import type { AITopic } from '../../types/auth';
 import { useAuth } from '../../contexts/AuthContext';
 import { authService } from '../../services/authService';
 import './onboarding.css';
@@ -58,7 +58,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
 
   const loadAvailableTopics = async () => {
     try {
-      const response = await authService.getAvailableTopics();
+      const response: any = await authService.getAvailableTopics();
       console.log('📊 Loaded topics and content types:', response);
       
       // Set content types
@@ -97,8 +97,8 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
       // Provide fallback topics
       setAvailableTopics([
         { id: 'ai-research', name: 'AI Research', category: 'research', selected: false, description: 'Latest AI research papers and findings' },
-        { id: 'machine-learning', name: 'Machine Learning', category: 'technical', selected: false, description: 'ML techniques and applications' },
-        { id: 'industry-news', name: 'Industry News', category: 'business', selected: false, description: 'AI industry updates and trends' },
+        { id: 'machine-learning', name: 'Machine Learning', category: 'research', selected: false, description: 'ML techniques and applications' },
+        { id: 'industry-news', name: 'Industry News', category: 'news', selected: false, description: 'AI industry updates and trends' },
         { id: 'tools-frameworks', name: 'AI Tools & Frameworks', category: 'tools', selected: false, description: 'AI development tools and libraries' },
         { id: 'ethics-safety', name: 'AI Ethics & Safety', category: 'ethics', selected: false, description: 'Responsible AI development' }
       ]);
@@ -146,7 +146,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
     setError(null);
     
     try {
-      const preferences = {
+      const preferences: any = {
         topics: selectedTopics,
         content_types: selectedContentTypes,
         newsletter_frequency: 'weekly' as const,
@@ -296,9 +296,9 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
                 )}
               </div>
               <p className="topic-description">{topic.description}</p>
-              {topic.sources && (
+              {(topic as any).sources && (
                 <div className="topic-sources">
-                  <small>Sources: {topic.sources.slice(0, 2).join(', ')}{topic.sources.length > 2 ? '...' : ''}</small>
+                  <small>Sources: {(topic as any).sources.slice(0, 2).join(', ')}{(topic as any).sources.length > 2 ? '...' : ''}</small>
                 </div>
               )}
             </button>
