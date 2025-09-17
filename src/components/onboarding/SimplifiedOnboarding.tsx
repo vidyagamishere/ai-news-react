@@ -39,7 +39,9 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
   const [selectedExperience, setSelectedExperience] = useState<string>('');
   const [selectedRole, setSelectedRole] = useState<string>('');
   
-  // Step 2: AI Topics
+  // Step 2: Content Types & Topics
+  const [availableContentTypes, setAvailableContentTypes] = useState<any[]>([]);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<string[]>(['blogs', 'podcasts', 'videos']);
   const [availableTopics, setAvailableTopics] = useState<AITopic[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
@@ -56,27 +58,64 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
 
   const loadAvailableTopics = async () => {
     try {
-      const topics = await authService.getAvailableTopics();
-      setAvailableTopics(topics);
+      const response = await authService.getAvailableTopics();
+      console.log('📊 Loaded topics and content types:', response);
       
-      // Pre-select some popular topics based on role
-      const defaultTopics = topics.filter(t => 
-        ['Machine Learning', 'AI Tools', 'AI Research'].includes(t.name)
-      ).map(t => t.id);
-      setSelectedTopics(defaultTopics);
+      // Set content types
+      if (response.content_types) {
+        setAvailableContentTypes(response.content_types);
+        // Use default content types from backend
+        if (response.default_selections?.content_types) {
+          setSelectedContentTypes(response.default_selections.content_types);
+        }
+      }
+      
+      // Set topics
+      if (response.topics) {
+        setAvailableTopics(response.topics);
+        // Use default topics from backend
+        if (response.default_selections?.topics) {
+          setSelectedTopics(response.default_selections.topics);
+        } else {
+          // Fallback: pre-select some popular topics
+          const defaultTopics = response.topics.filter((t: any) => 
+            ['AI Research', 'Machine Learning', 'Industry News'].includes(t.name)
+          ).map((t: any) => t.id);
+          setSelectedTopics(defaultTopics);
+        }
+      }
     } catch (error) {
       console.error('Failed to load topics:', error);
+      // Provide fallback content types
+      setAvailableContentTypes([
+        { id: 'blogs', name: 'Blogs', description: 'Expert insights and articles', icon: '✍️', default: true },
+        { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews', icon: '🎧', default: true },
+        { id: 'videos', name: 'Videos', description: 'Visual content and presentations', icon: '📹', default: true },
+        { id: 'newsletters', name: 'Newsletters', description: 'Daily and weekly digests', icon: '📬', default: false }
+      ]);
+      
       // Provide fallback topics
       setAvailableTopics([
-        { id: '1', name: 'Machine Learning', category: 'technology', selected: false, description: 'Latest ML developments' },
-        { id: '2', name: 'AI Tools', category: 'tools', selected: false, description: 'New AI applications and tools' },
-        { id: '3', name: 'AI Research', category: 'research', selected: false, description: 'Academic research and papers' },
-        { id: '4', name: 'Computer Vision', category: 'technology', selected: false, description: 'Image and video AI' },
-        { id: '5', name: 'Natural Language Processing', category: 'technology', selected: false, description: 'Language AI and chatbots' },
-        { id: '6', name: 'AI Ethics', category: 'ethics', selected: false, description: 'Responsible AI development' }
+        { id: 'ai-research', name: 'AI Research', category: 'research', selected: false, description: 'Latest AI research papers and findings' },
+        { id: 'machine-learning', name: 'Machine Learning', category: 'technical', selected: false, description: 'ML techniques and applications' },
+        { id: 'industry-news', name: 'Industry News', category: 'business', selected: false, description: 'AI industry updates and trends' },
+        { id: 'tools-frameworks', name: 'AI Tools & Frameworks', category: 'tools', selected: false, description: 'AI development tools and libraries' },
+        { id: 'ethics-safety', name: 'AI Ethics & Safety', category: 'ethics', selected: false, description: 'Responsible AI development' }
       ]);
-      setSelectedTopics(['1', '2', '3']);
+      setSelectedTopics(['ai-research', 'machine-learning', 'industry-news']);
+      setSelectedContentTypes(['blogs', 'podcasts', 'videos']);
     }
+  };
+
+  const handleContentTypeToggle = (contentTypeId: string) => {
+    setSelectedContentTypes(prev => {
+      const newSelection = prev.includes(contentTypeId) 
+        ? prev.filter(id => id !== contentTypeId)
+        : [...prev, contentTypeId];
+      
+      // Ensure at least one content type is selected
+      return newSelection.length === 0 ? [contentTypeId] : newSelection;
+    });
   };
 
   const handleTopicToggle = (topicId: string) => {
@@ -108,19 +147,14 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
     
     try {
       const preferences = {
-        topics: availableTopics.filter(topic => 
-          selectedTopics.includes(topic.id)
-        ).map(topic => ({
-          ...topic,
-          selected: true
-        })),
-        content_types: ['articles', 'videos', 'events', 'learning'] as ContentType[],
+        topics: selectedTopics,
+        content_types: selectedContentTypes,
         newsletter_frequency: 'weekly' as const,
         email_notifications: emailNotifications,
-        weekly_digest: weeklyDigest,
+        newsletter_subscribed: weeklyDigest,
         experience_level: selectedExperience,
         role_type: selectedRole,
-        onboardingCompleted: true
+        onboarding_completed: true
       };
 
       await updatePreferences(preferences);
@@ -147,7 +181,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
       case 1:
         return selectedExperience && selectedRole;
       case 2:
-        return selectedTopics.length > 0;
+        return selectedContentTypes.length > 0 && selectedTopics.length > 0;
       case 3:
         return true;
       default:
@@ -210,11 +244,44 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
     <div className="onboarding-step">
       <div className="step-header">
         <Brain className="step-icon" size={48} />
-        <h2>Choose Your AI Interests</h2>
-        <p>Select topics you'd like to follow (you can change these anytime)</p>
+        <h2>Customize Your AI Experience</h2>
+        <p>Choose content types and topics that interest you most</p>
       </div>
 
-      <div className="topics-container">
+      {/* Content Types Section */}
+      <div className="form-section">
+        <h3>📚 Content Types (Mandatory: blogs, podcasts, videos)</h3>
+        <p className="section-description">Select the types of AI content you want to see</p>
+        <div className="content-types-grid">
+          {availableContentTypes.map(contentType => (
+            <button
+              key={contentType.id}
+              className={`content-type-card ${selectedContentTypes.includes(contentType.id) ? 'selected' : ''} ${contentType.default ? 'default' : ''}`}
+              onClick={() => handleContentTypeToggle(contentType.id)}
+            >
+              <div className="content-type-header">
+                <span className="content-type-icon">{contentType.icon}</span>
+                <span className="content-type-name">{contentType.name}</span>
+                {selectedContentTypes.includes(contentType.id) && (
+                  <Check className="content-type-check" size={16} />
+                )}
+              </div>
+              <p className="content-type-description">{contentType.description}</p>
+              {contentType.default && (
+                <span className="default-badge">Recommended</span>
+              )}
+            </button>
+          ))}
+        </div>
+        <div className="selection-info">
+          <p>{selectedContentTypes.length} content types selected</p>
+        </div>
+      </div>
+
+      {/* Topics Section */}
+      <div className="form-section">
+        <h3>🎯 AI Interest Areas</h3>
+        <p className="section-description">Select specific AI topics you'd like to follow</p>
         <div className="topics-grid">
           {availableTopics.map(topic => (
             <button
@@ -229,10 +296,14 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
                 )}
               </div>
               <p className="topic-description">{topic.description}</p>
+              {topic.sources && (
+                <div className="topic-sources">
+                  <small>Sources: {topic.sources.slice(0, 2).join(', ')}{topic.sources.length > 2 ? '...' : ''}</small>
+                </div>
+              )}
             </button>
           ))}
         </div>
-        
         <div className="selection-info">
           <p>{selectedTopics.length} topics selected</p>
         </div>
