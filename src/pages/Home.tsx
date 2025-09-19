@@ -235,7 +235,7 @@ const Home: React.FC = () => {
                 <h2 id="top-stories-heading">🔥 Top Stories</h2>
                 <p>Latest AI breakthroughs and developments from leading sources</p>
               </div>
-              <TopStories stories={digest.topStories.slice(0, Math.ceil(digest.topStories.length * 0.5))} />
+              <TopStories stories={digest.topStories?.slice(0, Math.ceil((digest.topStories?.length || 0) * 0.5)) || []} />
               <div className="section-meta" style={{ marginTop: '1rem', textAlign: 'center' }}>
                 <span className="last-updated" aria-live="polite">
                   Updated {new Date(digest.timestamp).toLocaleTimeString()}
@@ -256,7 +256,7 @@ const Home: React.FC = () => {
               <Suspense fallback={<Loading message="Loading content..." />}>
                 <ContentTabs 
                   userTier="preview" 
-                  topStories={digest.topStories.slice(0, Math.ceil(digest.topStories.length * 0.5))}
+                  topStories={digest.topStories?.slice(0, Math.ceil((digest.topStories?.length || 0) * 0.5)) || []}
                   previewMode={true}
                   onSignUpPrompt={() => openAuthModal('signup')}
                 />
