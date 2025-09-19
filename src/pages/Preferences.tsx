@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, User, Mail, Bell, Brain, Settings2, BookOpen, Save } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { ContentType } from '../types/auth';
 import Header from '../components/Header';
 import NewsletterPreferences from '../components/NewsletterPreferences';
 import SEO from '../components/SEO';
@@ -62,9 +63,9 @@ const Preferences: React.FC = () => {
       }));
 
       const newPreferences = {
-        ...user.preferences,
+        ...user!.preferences,
         topics: updatedTopics,
-        content_types: selectedContentTypes,
+        content_types: selectedContentTypes as ContentType[],
         email_notifications: emailNotifications,
         breaking_news_alerts: breakingNewsAlerts
       };

@@ -15,6 +15,7 @@ export interface UserPreferences {
   topics: AITopic[];
   newsletter_frequency: '12_hours' | 'daily' | 'weekly' | 'monthly';
   email_notifications: boolean;
+  breaking_news_alerts?: boolean;
   newsletter_subscribed?: boolean;
   content_types: ContentType[];
   onboardingCompleted?: boolean;

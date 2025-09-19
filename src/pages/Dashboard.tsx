@@ -72,7 +72,6 @@ const Dashboard: React.FC = () => {
       } catch (timeoutErr) {
         console.log('API timeout, loading fallback data...');
         // Provide personalized fallback data
-        const userName = user?.name?.split(' ')[0] || 'there';
         const fallbackData: DigestResponse = {
           topStories: [
             {
