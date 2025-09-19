@@ -46,7 +46,7 @@ const Admin: React.FC = () => {
 
   const handleAdd = async () => {
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-n3wbzjj45.vercel.app';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
       const response = await fetch(`${apiBaseUrl}/api/admin/sources/add`, {
         method: 'POST',
         headers: {
@@ -73,7 +73,7 @@ const Admin: React.FC = () => {
 
   const handleUpdate = async (index: number, updatedSource: AISource) => {
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-n3wbzjj45.vercel.app';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
       const response = await fetch(`${apiBaseUrl}/api/admin/sources/update`, {
         method: 'POST',
         headers: {
@@ -101,7 +101,7 @@ const Admin: React.FC = () => {
     if (!confirm('Are you sure you want to delete this source?')) return;
     
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-n3wbzjj45.vercel.app';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
       const response = await fetch(`${apiBaseUrl}/api/admin/sources/delete`, {
         method: 'POST',
         headers: {
@@ -138,7 +138,7 @@ const Admin: React.FC = () => {
   const validateAllFeeds = async () => {
     try {
       setLoading(true);
-      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-n3wbzjj45.vercel.app';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
       const response = await fetch(`${apiBaseUrl}/api/admin/validate-all-feeds`, {
         method: 'POST',
         headers: {
@@ -173,7 +173,7 @@ const Admin: React.FC = () => {
 
   const validateSingleFeed = async (feedUrl: string, sourceName: string) => {
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-n3wbzjj45.vercel.app';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
       const response = await fetch(`${apiBaseUrl}/api/admin/validate-feed`, {
         method: 'POST',
         headers: {

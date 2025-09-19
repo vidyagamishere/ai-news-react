@@ -250,19 +250,22 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
         <p>Select topics you'd like to follow (you can change these later)</p>
       </div>
 
-      <div className="topics-grid">
+      <div className="content-types-grid">
         {availableTopics.map(topic => {
           const IconComponent = CATEGORY_ICONS[topic.category as keyof typeof CATEGORY_ICONS] || Brain;
           return (
             <button
               key={topic.id}
-              className={`topic-card ${selectedTopics.includes(topic.id) ? 'selected' : ''}`}
+              className={`content-type-card ${selectedTopics.includes(topic.id) ? 'selected' : ''}`}
               onClick={() => handleTopicToggle(topic.id)}
             >
-              <IconComponent className="topic-icon" size={24} />
-              <span className="topic-name">{topic.name}</span>
+              <IconComponent className="content-type-icon" size={24} />
+              <div className="content-type-info">
+                <h4>{topic.name}</h4>
+                <p>{topic.description}</p>
+              </div>
               {selectedTopics.includes(topic.id) && (
-                <Check className="topic-check" size={16} />
+                <Check className="content-type-check" size={16} />
               )}
             </button>
           );

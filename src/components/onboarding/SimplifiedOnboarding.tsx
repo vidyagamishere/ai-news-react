@@ -154,7 +154,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
         newsletter_subscribed: weeklyDigest,
         experience_level: selectedExperience,
         role_type: selectedRole,
-        onboarding_completed: true
+        onboardingCompleted: true
       };
 
       await updatePreferences(preferences);
@@ -252,21 +252,21 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
       <div className="form-section">
         <h3>📚 Content Types (Mandatory: blogs, podcasts, videos)</h3>
         <p className="section-description">Select the types of AI content you want to see</p>
-        <div className="content-types-grid">
+        <div className="options-grid">
           {availableContentTypes.map(contentType => (
             <button
               key={contentType.id}
-              className={`content-type-card ${selectedContentTypes.includes(contentType.id) ? 'selected' : ''} ${contentType.default ? 'default' : ''}`}
+              className={`option-card ${selectedContentTypes.includes(contentType.id) ? 'selected' : ''} ${contentType.default ? 'default' : ''}`}
               onClick={() => handleContentTypeToggle(contentType.id)}
             >
-              <div className="content-type-header">
-                <span className="content-type-icon">{contentType.icon}</span>
-                <span className="content-type-name">{contentType.name}</span>
-                {selectedContentTypes.includes(contentType.id) && (
-                  <Check className="content-type-check" size={16} />
-                )}
+              <span className="option-icon">{contentType.icon}</span>
+              <div className="option-content">
+                <h4>{contentType.name}</h4>
+                <p>{contentType.description}</p>
               </div>
-              <p className="content-type-description">{contentType.description}</p>
+              {selectedContentTypes.includes(contentType.id) && (
+                <Check className="selected-check" size={20} />
+              )}
               {contentType.default && (
                 <span className="default-badge">Recommended</span>
               )}

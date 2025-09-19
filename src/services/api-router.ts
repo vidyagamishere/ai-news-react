@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // New Router-based backend URL
-const ROUTER_API_BASE = import.meta.env.VITE_API_BASE || 'https://api-ibf1hsnr0-vijayan-subramaniyans-projects-0c70c64d.vercel.app';
+const ROUTER_API_BASE = import.meta.env.VITE_API_BASE || 'https://ai-news-scraper-production.up.railway.app';
 
 // Create API instance for router
 const routerApi = axios.create({

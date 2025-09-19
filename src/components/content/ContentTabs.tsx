@@ -92,34 +92,34 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
   const generatePreviewContent = (contentType: string) => {
     const previewData = {
       'all_sources': [
-        { title: 'Google DeepMind Announces Breakthrough in AI Reasoning', source: 'Google DeepMind', url: '#', published_date: new Date().toISOString() },
-        { title: 'OpenAI Releases Advanced Language Model Capabilities', source: 'OpenAI', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
-        { title: 'Microsoft AI Research Lab Unveils New Framework', source: 'Microsoft Research', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+        { title: 'Google DeepMind Announces Breakthrough in AI Reasoning', source: 'Google DeepMind', url: 'https://deepmind.google/discover/blog/', published_date: new Date().toISOString() },
+        { title: 'OpenAI Releases Advanced Language Model Capabilities', source: 'OpenAI', url: 'https://openai.com/index/gpt-4/', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Microsoft AI Research Lab Unveils New Framework', source: 'Microsoft Research', url: 'https://www.microsoft.com/en-us/research/blog/', published_date: new Date(Date.now() - 172800000).toISOString() }
       ],
       'blogs': [
-        { title: 'The Future of Artificial General Intelligence: Expert Analysis', source: 'AI Research Blog', url: '#', published_date: new Date().toISOString() },
-        { title: 'Building Scalable AI Systems: Lessons from Industry Leaders', source: 'Tech Insights', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
-        { title: 'Neural Network Architectures: A Deep Dive', source: 'ML Weekly', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+        { title: 'The Future of Artificial General Intelligence: Expert Analysis', source: 'AI Research Blog', url: 'https://ai.googleblog.com/', published_date: new Date().toISOString() },
+        { title: 'Building Scalable AI Systems: Lessons from Industry Leaders', source: 'Tech Insights', url: 'https://blog.openai.com/', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Neural Network Architectures: A Deep Dive', source: 'ML Weekly', url: 'https://research.google/blog/', published_date: new Date(Date.now() - 172800000).toISOString() }
       ],
       'podcasts': [
-        { title: 'AI Pioneers: Conversations with Leading Researchers', source: 'AI Podcast Network', url: '#', published_date: new Date().toISOString() },
-        { title: 'The Ethics of Artificial Intelligence', source: 'Tech Talk Radio', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
-        { title: 'Machine Learning in Healthcare', source: 'Health Tech Podcast', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+        { title: 'AI Pioneers: Conversations with Leading Researchers', source: 'AI Podcast Network', url: 'https://podcasts.apple.com/us/podcast/ai-podcast/', published_date: new Date().toISOString() },
+        { title: 'The Ethics of Artificial Intelligence', source: 'Tech Talk Radio', url: 'https://open.spotify.com/show/2MAi0BvDc6GTFvKFPXnkCL', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Machine Learning in Healthcare', source: 'Health Tech Podcast', url: 'https://podcasts.google.com/', published_date: new Date(Date.now() - 172800000).toISOString() }
       ],
       'videos': [
-        { title: 'Understanding Transformer Architecture: Visual Guide', source: 'AI Education Channel', url: '#', published_date: new Date().toISOString() },
-        { title: 'Live Demo: GPT-4 Advanced Features', source: 'Tech Demos', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
-        { title: 'Conference Talk: The State of AI in 2025', source: 'AI Conference', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+        { title: 'Understanding Transformer Architecture: Visual Guide', source: 'AI Education Channel', url: 'https://www.youtube.com/watch?v=kCc8FmEb1nY', published_date: new Date().toISOString() },
+        { title: 'Live Demo: GPT-4 Advanced Features', source: 'Tech Demos', url: 'https://www.youtube.com/watch?v=outcGtbnMuQ', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Conference Talk: The State of AI in 2025', source: 'AI Conference', url: 'https://www.youtube.com/watch?v=5p248yoa3oE', published_date: new Date(Date.now() - 172800000).toISOString() }
       ],
       'events': [
-        { title: 'AI Summit 2025: Global Intelligence Conference', source: 'AI Events Inc', url: '#', published_date: new Date(Date.now() + 2592000000).toISOString() },
-        { title: 'Machine Learning Workshop: Hands-on Training', source: 'Tech Academy', url: '#', published_date: new Date(Date.now() + 1728000000).toISOString() },
-        { title: 'Neural Networks Meetup: Local Chapter', source: 'AI Meetups', url: '#', published_date: new Date(Date.now() + 864000000).toISOString() }
+        { title: 'AI Summit 2025: Global Intelligence Conference', source: 'AI Events Inc', url: 'https://www.eventbrite.com/e/artificial-intelligence-conference-tickets', published_date: new Date(Date.now() + 2592000000).toISOString() },
+        { title: 'Machine Learning Workshop: Hands-on Training', source: 'Tech Academy', url: 'https://www.meetup.com/topics/machine-learning/', published_date: new Date(Date.now() + 1728000000).toISOString() },
+        { title: 'Neural Networks Meetup: Local Chapter', source: 'AI Meetups', url: 'https://www.meetup.com/topics/artificial-intelligence/', published_date: new Date(Date.now() + 864000000).toISOString() }
       ],
       'learn': [
-        { title: 'Complete Guide to Neural Networks: Beginner to Expert', source: 'AI Learning Hub', url: '#', published_date: new Date().toISOString() },
-        { title: 'Advanced Machine Learning Certification Program', source: 'Tech University', url: '#', published_date: new Date(Date.now() - 86400000).toISOString() },
-        { title: 'Python for AI: Comprehensive Tutorial Series', source: 'Code Academy', url: '#', published_date: new Date(Date.now() - 172800000).toISOString() }
+        { title: 'Complete Guide to Neural Networks: Beginner to Expert', source: 'AI Learning Hub', url: 'https://www.coursera.org/learn/neural-networks-deep-learning', published_date: new Date().toISOString() },
+        { title: 'Advanced Machine Learning Certification Program', source: 'Tech University', url: 'https://www.edx.org/course/introduction-to-artificial-intelligence-ai', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'Python for AI: Comprehensive Tutorial Series', source: 'Code Academy', url: 'https://www.codecademy.com/learn/machine-learning', published_date: new Date(Date.now() - 172800000).toISOString() }
       ]
     };
     
@@ -406,16 +406,30 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
                     className="article-card clickable-article" 
                     itemScope 
                     itemType="https://schema.org/Article"
-                    onClick={() => article.url && window.open(article.url, '_blank', 'noopener,noreferrer')}
+                    onClick={() => {
+                      if (article.url && article.url !== '#') {
+                        try {
+                          window.open(article.url, '_blank', 'noopener,noreferrer');
+                        } catch (error) {
+                          console.warn('Failed to open article URL:', article.url, error);
+                        }
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        article.url && window.open(article.url, '_blank', 'noopener,noreferrer');
+                        if (article.url && article.url !== '#') {
+                          try {
+                            window.open(article.url, '_blank', 'noopener,noreferrer');
+                          } catch (error) {
+                            console.warn('Failed to open article URL:', article.url, error);
+                          }
+                        }
                       }
                     }}
-                    style={{ cursor: article.url ? 'pointer' : 'default' }}
+                    style={{ cursor: (article.url && article.url !== '#') ? 'pointer' : 'default' }}
                   >
                     <h4 itemProp="headline">{article.title || 'Untitled'}</h4>
                     

@@ -191,7 +191,7 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="hero-section" aria-labelledby="hero-heading">
         <div className="hero-content">
-          <h1 id="hero-heading">Intelligence at Light Speed</h1>
+          <h1 id="hero-heading">Stay Ahead of the AI Revolution</h1>
           <p>
             Stay ahead of the AI revolution with curated news, insights, and breakthroughs 
             from 50+ top sources. <strong>No signup required to explore.</strong>

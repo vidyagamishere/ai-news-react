@@ -1,0 +1,240 @@
+{
+  "testSuite": "AI News Digest - Authentication Flow Tests",
+  "timestamp": "2025-09-19T16:18:48.394Z",
+  "summary": {
+    "total": 22,
+    "passed": 0,
+    "failed": 22,
+    "successRate": "0.0%"
+  },
+  "configuration": {
+    "backendUrl": "https://ai-news-scraper-production.up.railway.app",
+    "frontendUrl": "https://ai-news-react.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Backend Health Check",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:47.327Z"
+    },
+    {
+      "name": "Content Types API",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:47.376Z"
+    },
+    {
+      "name": "Digest API",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:47.428Z"
+    },
+    {
+      "name": "Topics API",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:47.474Z"
+    },
+    {
+      "name": "Sign Up - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        },
+        "testUser": {
+          "name": "Test User",
+          "email": "test.1758298727475@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:47.523Z"
+    },
+    {
+      "name": "Sign Up - Missing Name",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.573Z"
+    },
+    {
+      "name": "Sign Up - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.625Z"
+    },
+    {
+      "name": "Sign Up - Short Password",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.676Z"
+    },
+    {
+      "name": "Sign Up - Empty Fields",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.728Z"
+    },
+    {
+      "name": "Sign In - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        },
+        "testUser": {
+          "name": "Login Test User",
+          "email": "login.test.1758298727728@example.com",
+          "password": "[REDACTED]"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:47.827Z"
+    },
+    {
+      "name": "Sign In - Invalid Email",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.883Z"
+    },
+    {
+      "name": "Sign In - Wrong Password",
+      "passed": false,
+      "details": {
+        "expected": 401,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.933Z"
+    },
+    {
+      "name": "Sign In - Missing Credentials",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:47.983Z"
+    },
+    {
+      "name": "Sign In - Invalid Email Format",
+      "passed": false,
+      "details": {
+        "expected": 400,
+        "actual": 405
+      },
+      "timestamp": "2025-09-19T16:18:48.035Z"
+    },
+    {
+      "name": "Google Auth - Positive Flow",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.089Z"
+    },
+    {
+      "name": "Google Auth - Missing Token",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.138Z"
+    },
+    {
+      "name": "Authenticated Endpoints",
+      "passed": false,
+      "details": {
+        "error": "No test token available"
+      },
+      "timestamp": "2025-09-19T16:18:48.138Z"
+    },
+    {
+      "name": "Content Filtering - blogs",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.189Z"
+    },
+    {
+      "name": "Content Filtering - podcasts",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.240Z"
+    },
+    {
+      "name": "Content Filtering - videos",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.290Z"
+    },
+    {
+      "name": "Content Filtering - events",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.341Z"
+    },
+    {
+      "name": "Content Filtering - learn",
+      "passed": false,
+      "details": {
+        "response": {
+          "detail": "Method Not Allowed"
+        }
+      },
+      "timestamp": "2025-09-19T16:18:48.394Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix underlying issues",
+    "Critical authentication issues detected - fix before deployment"
+  ]
+}
