@@ -154,7 +154,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
         newsletter_subscribed: weeklyDigest,
         experience_level: selectedExperience,
         role_type: selectedRole,
-        onboardingCompleted: true
+        onboarding_completed: true
       };
 
       await updatePreferences(preferences);

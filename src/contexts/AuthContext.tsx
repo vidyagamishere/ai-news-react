@@ -228,7 +228,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Use backend's isUserExist flag to determine onboarding flow
       const isExistingUser = (response as any).isUserExist === true;
       const hasTopics = userWithPreferences.preferences?.topics && userWithPreferences.preferences.topics.length > 0;
-      const hasCompletedOnboarding = userWithPreferences.preferences?.onboardingCompleted === true || userWithPreferences.preferences?.onboarding_completed === true;
+      const hasCompletedOnboarding = userWithPreferences.preferences?.onboarding_completed === true;
       
       console.log('🔍 User onboarding check:', {
         isExistingUser: (response as any).isUserExist,

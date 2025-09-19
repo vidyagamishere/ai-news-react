@@ -168,8 +168,7 @@ const Dashboard: React.FC = () => {
       // }
 
       // For verified users, check onboarding status
-      const hasCompletedOnboarding = user.preferences?.onboardingCompleted || 
-                                   user.preferences?.onboarding_completed ||
+      const hasCompletedOnboarding = user.preferences?.onboarding_completed ||
                                    localStorage.getItem('onboardingComplete') === 'true' ||
                                    user.preferences?.topics?.some(t => t.selected) || false;
       
@@ -202,8 +201,7 @@ const Dashboard: React.FC = () => {
     if (user) {
       // Only show welcome for truly new users who haven't completed onboarding
       const isNewUser = new Date(user.createdAt).getTime() > Date.now() - (24 * 60 * 60 * 1000); // 24 hours
-      const hasCompletedOnboarding = user.preferences?.onboardingCompleted || 
-                                   user.preferences?.onboarding_completed ||
+      const hasCompletedOnboarding = user.preferences?.onboarding_completed ||
                                    localStorage.getItem('onboardingComplete') === 'true' ||
                                    user.preferences?.topics?.some(t => t.selected) || false;
       
