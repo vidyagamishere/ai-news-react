@@ -9,11 +9,24 @@ import { authService } from '../../services/authService';
 import './onboarding.css';
 
 const CATEGORY_ICONS = {
-  technology: Cpu,
   research: Brain,
-  industry: Factory,
-  ethics: Shield,
-  tools: Wrench
+  language: Cpu,
+  platform: Wrench,
+  policy: Shield,
+  robotics: Factory,
+  company: Factory,
+  startup: TrendingUp,
+  hardware: Cpu,
+  automotive: Factory,
+  healthcare: Shield,
+  finance: TrendingUp,
+  gaming: Star,
+  creative: Star,
+  cloud: Cpu,
+  events: BookOpen,
+  learning: BookOpen,
+  news: Bell,
+  international: Factory
 };
 
 const CONTENT_TYPES: { id: ContentType; name: string; description: string; icon: string }[] = [
@@ -64,13 +77,12 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
   // Step 3: Content Preferences
-  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles']);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles', 'podcasts', 'videos', 'events', 'learning']);
   const [newsletterFrequency, setNewsletterFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
   
   // Step 4: Notification Preferences
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [breakingNewsAlerts, setBreakingNewsAlerts] = useState(false);
-  const [weeklyDigest, setWeeklyDigest] = useState(true);
 
   const { updatePreferences } = useAuth();
 
@@ -87,19 +99,25 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
       
       // Pre-select some popular topics based on experience level
       const defaultTopics = topics.filter(t => 
-        ['Machine Learning', 'AI Tools', 'AI Ethics'].includes(t.name)
+        ['Machine Learning', 'Deep Learning', 'Natural Language Processing'].includes(t.name)
       ).map(t => t.id);
       setSelectedTopics(defaultTopics);
     } catch (error) {
       console.error('Failed to load topics:', error);
-      // Provide fallback topics
+      // Provide fallback topics matching backend categories
       setAvailableTopics([
-        { id: '1', name: 'Machine Learning', category: 'technology', selected: true, description: 'Learn about ML algorithms and techniques' },
-        { id: '2', name: 'AI Tools', category: 'tools', selected: true, description: 'Discover AI-powered tools and applications' },
-        { id: '3', name: 'AI Ethics', category: 'ethics', selected: true, description: 'Explore ethical considerations in AI development' },
-        { id: '4', name: 'Computer Vision', category: 'technology', selected: false, description: 'Image and video processing with AI' },
-        { id: '5', name: 'Natural Language Processing', category: 'technology', selected: false, description: 'AI for understanding and generating text' },
-        { id: '6', name: 'AI Research', category: 'research', selected: false, description: 'Latest research papers and breakthroughs' }
+        { id: 'ml_foundations', name: 'Machine Learning', category: 'research', selected: true, description: 'Core ML algorithms, techniques, and foundations' },
+        { id: 'deep_learning', name: 'Deep Learning', category: 'research', selected: true, description: 'Neural networks, deep learning research and applications' },
+        { id: 'nlp_llm', name: 'Natural Language Processing', category: 'language', selected: true, description: 'Language models, NLP, and conversational AI' },
+        { id: 'computer_vision', name: 'Computer Vision', category: 'research', selected: false, description: 'Image recognition, visual AI, and computer vision' },
+        { id: 'ai_tools', name: 'AI Tools & Platforms', category: 'platform', selected: false, description: 'New AI tools and platforms for developers' },
+        { id: 'ai_research', name: 'AI Research Papers', category: 'research', selected: false, description: 'Latest academic research and scientific breakthroughs' },
+        { id: 'ai_ethics', name: 'AI Ethics & Safety', category: 'policy', selected: false, description: 'Responsible AI, safety research, and ethical considerations' },
+        { id: 'robotics', name: 'Robotics & Automation', category: 'robotics', selected: false, description: 'Physical AI, robotics, and automation systems' },
+        { id: 'ai_business', name: 'AI in Business', category: 'company', selected: false, description: 'Enterprise AI and industry applications' },
+        { id: 'ai_startups', name: 'AI Startups & Funding', category: 'startup', selected: false, description: 'New AI companies and startup ecosystem' },
+        { id: 'ai_healthcare', name: 'AI in Healthcare', category: 'healthcare', selected: false, description: 'Medical AI applications and healthcare tech' },
+        { id: 'ai_finance', name: 'AI in Finance', category: 'finance', selected: false, description: 'Financial AI, trading, and fintech applications' }
       ]);
     }
   };
@@ -146,7 +164,6 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
         newsletter_frequency: newsletterFrequency,
         email_notifications: emailNotifications,
         breaking_news_alerts: breakingNewsAlerts,
-        weekly_digest: weeklyDigest,
         experience_level: selectedExperience,
         role_type: selectedRole,
         onboardingCompleted: true
@@ -354,23 +371,6 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
           </label>
         </div>
 
-        <div className="notification-item">
-          <div className="notification-info">
-            <Star className="notification-icon" size={20} />
-            <div>
-              <h4>Weekly Digest</h4>
-              <p>Summary of the week's most important AI developments</p>
-            </div>
-          </div>
-          <label className="toggle-switch">
-            <input
-              type="checkbox"
-              checked={weeklyDigest}
-              onChange={(e) => setWeeklyDigest(e.target.checked)}
-            />
-            <span className="toggle-slider"></span>
-          </label>
-        </div>
       </div>
     </div>
   );

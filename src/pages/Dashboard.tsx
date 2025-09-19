@@ -76,22 +76,25 @@ const Dashboard: React.FC = () => {
         const fallbackData: DigestResponse = {
           topStories: [
             {
-              title: hasPreferences ? `Hi ${userName}! Your Personalized AI News is Loading` : 'Welcome to Vidyagam AI News',
-              summary: hasPreferences 
-                ? `We're curating AI news based on your interests in ${user?.preferences?.topics?.filter(t => t.selected).slice(0, 3).map(t => t.name).join(', ')}. This personalized approach ensures you get the most relevant content.`
-                : 'Your personalized AI news dashboard is loading. We are fetching the latest AI developments from 45+ sources to bring you the most relevant content.',
+              title: 'Latest Advances in Machine Learning Research',
+              summary: 'Breakthrough developments in neural network architectures and deep learning algorithms are reshaping the AI landscape. Researchers have made significant progress in model efficiency, training optimization, and real-world applications across various domains.',
               url: '#',
-              source: 'Vidyagam',
+              source: 'AI Research Labs',
               significanceScore: 8.5
             },
             {
-              title: hasPreferences ? 'Filtering Content Based on Your Preferences' : 'Loading Latest AI Intelligence',
-              summary: hasPreferences 
-                ? `Our AI is filtering through hundreds of articles to find content matching your ${user?.preferences?.content_types?.join(', ')} preferences. Quality over quantity!`
-                : 'Our AI systems are curating breaking news from top research labs, startups, and industry leaders. This usually takes just a few seconds.',
+              title: 'OpenAI Releases New Model Capabilities',
+              summary: 'Revolutionary improvements in language understanding and generation demonstrate unprecedented performance in complex reasoning tasks. The latest model shows enhanced capabilities in code generation, mathematical problem solving, and creative writing.',
               url: '#',
-              source: 'AI News Network',
-              significanceScore: 7.8
+              source: 'OpenAI',
+              significanceScore: 8.2
+            },
+            {
+              title: 'Google DeepMind Breakthrough in Protein Folding',
+              summary: 'Significant advances in protein structure prediction using AI have potential applications in drug discovery and disease treatment. The new model demonstrates improved accuracy and computational efficiency compared to previous approaches.',
+              url: '#',
+              source: 'Google DeepMind',
+              significanceScore: 7.9
             }
           ],
           summary: {

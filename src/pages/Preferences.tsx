@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, User, Mail, Bell } from 'lucide-react';
+import { ChevronLeft, User, Mail, Bell, Brain, Settings2, BookOpen, Save } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/Header';
 import NewsletterPreferences from '../components/NewsletterPreferences';
@@ -8,7 +8,78 @@ import SEO from '../components/SEO';
 import './Preferences.css';
 
 const Preferences: React.FC = () => {
-  const { user } = useAuth();
+  const { user, updatePreferences } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  
+  // Initialize state from user preferences
+  const [selectedTopics, setSelectedTopics] = useState(
+    user?.preferences?.topics?.filter(t => t.selected).map(t => t.id) || []
+  );
+  const [selectedContentTypes, setSelectedContentTypes] = useState(
+    user?.preferences?.content_types || ['articles']
+  );
+  const [emailNotifications, setEmailNotifications] = useState(
+    user?.preferences?.email_notifications !== false
+  );
+  const [breakingNewsAlerts, setBreakingNewsAlerts] = useState(
+    user?.preferences?.breaking_news_alerts || false
+  );
+
+  const availableTopics = user?.preferences?.topics || [];
+  const contentTypes = [
+    { id: 'articles', name: 'Articles', description: 'In-depth analysis and news', icon: '📄' },
+    { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews', icon: '🎙️' },
+    { id: 'videos', name: 'Videos', description: 'Visual content and tutorials', icon: '🎥' },
+    { id: 'events', name: 'Events', description: 'Conferences and webinars', icon: '📅' },
+    { id: 'learning', name: 'Learning', description: 'Courses and educational resources', icon: '🎓' }
+  ];
+
+  const handleTopicToggle = (topicId: string) => {
+    setSelectedTopics(prev => 
+      prev.includes(topicId) 
+        ? prev.filter(id => id !== topicId)
+        : [...prev, topicId]
+    );
+  };
+
+  const handleContentTypeToggle = (contentType: string) => {
+    setSelectedContentTypes(prev => 
+      prev.includes(contentType) 
+        ? prev.filter(type => type !== contentType)
+        : [...prev, contentType]
+    );
+  };
+
+  const handleSavePreferences = async () => {
+    setLoading(true);
+    setMessage(null);
+    
+    try {
+      const updatedTopics = availableTopics.map(topic => ({
+        ...topic,
+        selected: selectedTopics.includes(topic.id)
+      }));
+
+      const newPreferences = {
+        ...user.preferences,
+        topics: updatedTopics,
+        content_types: selectedContentTypes,
+        email_notifications: emailNotifications,
+        breaking_news_alerts: breakingNewsAlerts
+      };
+
+      await updatePreferences(newPreferences);
+      setMessage('✅ Preferences saved successfully!');
+      setTimeout(() => setMessage(null), 3000);
+    } catch (error) {
+      console.error('Failed to save preferences:', error);
+      setMessage('❌ Failed to save preferences. Please try again.');
+      setTimeout(() => setMessage(null), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -86,6 +157,61 @@ const Preferences: React.FC = () => {
               <NewsletterPreferences />
             </div>
 
+            {/* AI Interest Topics Section */}
+            <div className="preferences-section">
+              <div className="section-header">
+                <Brain size={20} />
+                <h2>AI Interest Areas</h2>
+              </div>
+              <p className="section-description">
+                Select topics you're interested in to personalize your AI news feed
+              </p>
+              <div className="topics-grid">
+                {availableTopics.map(topic => (
+                  <button
+                    key={topic.id}
+                    className={`topic-card ${selectedTopics.includes(topic.id) ? 'selected' : ''}`}
+                    onClick={() => handleTopicToggle(topic.id)}
+                  >
+                    <span className="topic-name">{topic.name}</span>
+                    <span className="topic-category">{topic.category}</span>
+                    {selectedTopics.includes(topic.id) && (
+                      <span className="topic-check">✓</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Content Types Section */}
+            <div className="preferences-section">
+              <div className="section-header">
+                <BookOpen size={20} />
+                <h2>Content Types</h2>
+              </div>
+              <p className="section-description">
+                Choose the types of content you want to receive
+              </p>
+              <div className="content-types-grid">
+                {contentTypes.map(contentType => (
+                  <button
+                    key={contentType.id}
+                    className={`content-type-card ${selectedContentTypes.includes(contentType.id) ? 'selected' : ''}`}
+                    onClick={() => handleContentTypeToggle(contentType.id)}
+                  >
+                    <span className="content-type-icon">{contentType.icon}</span>
+                    <div className="content-type-info">
+                      <h4>{contentType.name}</h4>
+                      <p>{contentType.description}</p>
+                    </div>
+                    {selectedContentTypes.includes(contentType.id) && (
+                      <span className="content-type-check">✓</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Notification Preferences Section */}
             <div className="preferences-section">
               <div className="section-header">
@@ -99,13 +225,12 @@ const Preferences: React.FC = () => {
                     <p>Receive important updates and newsletters</p>
                   </div>
                   <div className="setting-control">
-                    <input 
-                      type="checkbox" 
-                      id="email-notifications"
-                      checked={user.preferences?.email_notifications !== false}
-                      readOnly
-                    />
-                    <label htmlFor="email-notifications" className="toggle-switch">
+                    <label className="toggle-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={emailNotifications}
+                        onChange={(e) => setEmailNotifications(e.target.checked)}
+                      />
                       <span className="toggle-slider"></span>
                     </label>
                   </div>
@@ -113,20 +238,55 @@ const Preferences: React.FC = () => {
                 
                 <div className="setting-item">
                   <div className="setting-info">
-                    <strong>Newsletter Frequency</strong>
-                    <p>How often you receive newsletters</p>
+                    <strong>Breaking News Alerts</strong>
+                    <p>Get notified about major AI breakthroughs immediately</p>
                   </div>
                   <div className="setting-control">
-                    <select 
-                      value={user.preferences?.newsletter_frequency || '12_hours'}
-                      disabled
-                    >
-                      <option value="12_hours">Every 12 hours</option>
-                      <option value="daily">Daily</option>
-                      <option value="weekly">Weekly</option>
-                    </select>
+                    <label className="toggle-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={breakingNewsAlerts}
+                        onChange={(e) => setBreakingNewsAlerts(e.target.checked)}
+                      />
+                      <span className="toggle-slider"></span>
+                    </label>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Save Preferences Section */}
+            <div className="preferences-section">
+              <div className="section-header">
+                <Settings2 size={20} />
+                <h2>Save Changes</h2>
+              </div>
+              <div className="save-section">
+                {message && (
+                  <div className={`message ${message.includes('Failed') ? 'error' : 'success'}`}>
+                    {message}
+                  </div>
+                )}
+                <button
+                  className="save-preferences-btn"
+                  onClick={handleSavePreferences}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="spinner" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save size={18} />
+                      <span>Save All Preferences</span>
+                    </>
+                  )}
+                </button>
+                <p className="save-note">
+                  Your preferences are automatically saved to your account and will be applied to personalize your AI news experience.
+                </p>
               </div>
             </div>
 
