@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Star, Link2 } from 'lucide-react';
 import type { TopStory } from '../services/api';
 import SmartImage from './SmartImage';
@@ -9,7 +8,6 @@ interface TopStoriesProps {
 }
 
 const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
-  const navigate = useNavigate();
 
   if (!stories || stories.length === 0) {
     return (
