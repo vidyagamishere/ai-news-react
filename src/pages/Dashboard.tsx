@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
         setDigest(data);
         setLastRefresh(new Date());
         
-        console.log('Digest loaded:', data);
+        console.log('✅ Fresh data loaded successfully');
         
         // Log enhanced backend features
         if ((data as any).admin_features) {

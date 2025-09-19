@@ -10,7 +10,7 @@ console.log('🔗 Backend URL:', API_BASE_URL);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 30000, // Increased timeout for Google auth
   headers: {
     'Content-Type': 'application/json',
   },
@@ -395,7 +395,7 @@ export const apiService = {
   // ===============================
 
   // Google OAuth authentication
-  authenticateWithGoogle: async (tokenData: any): Promise<AuthResponse> => {
+  authenticateWithGoogle: async (idToken: string): Promise<AuthResponse> => {
     console.log('🔐 Authenticating with Google via router...');
     
     const requestBody = {
@@ -403,11 +403,7 @@ export const apiService = {
       method: 'POST',
       params: {},
       headers: {},
-      token_data: tokenData,
-      email: tokenData.email,
-      name: tokenData.name,
-      picture: tokenData.picture,
-      sub: tokenData.sub
+      id_token: idToken
     };
     
     const response = await api.post('/api/index', requestBody);

@@ -8,8 +8,34 @@ interface TopStoriesProps {
 }
 
 const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
+  // Add validation for stories data
+  if (!stories) {
+    console.log('TopStories: No stories data received');
+    return (
+      <div className="top-stories-empty">
+        <div className="empty-state">
+          <div className="empty-icon">📰</div>
+          <h3>Loading AI News...</h3>
+          <p>Fetching the latest AI breakthroughs and developments.</p>
+        </div>
+      </div>
+    );
+  }
 
-  if (!stories || stories.length === 0) {
+  if (!Array.isArray(stories)) {
+    console.log('TopStories: Stories is not an array:', typeof stories, stories);
+    return (
+      <div className="top-stories-empty">
+        <div className="empty-state">
+          <div className="empty-icon">⚠️</div>
+          <h3>Data Format Error</h3>
+          <p>Stories data is not in the expected format.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (stories.length === 0) {
     return (
       <div className="top-stories-empty">
         <div className="empty-state">

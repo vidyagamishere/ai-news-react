@@ -185,7 +185,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const googleLogin = async (idToken: string) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }));
     try {
-      // Decode the Google ID token to extract user data
+      // Decode the Google ID token to extract user data for logging
       const tokenPayload = JSON.parse(atob(idToken.split('.')[1]));
       const tokenData = {
         email: tokenPayload.email,
@@ -196,8 +196,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       console.log('🔐 Decoded Google token data:', tokenData);
       
-      // Use the router-compatible API method
-      const response = await apiService.authenticateWithGoogle(tokenData) as any;
+      // Send the raw ID token to the backend (backend expects id_token)
+      const response = await apiService.authenticateWithGoogle(idToken) as any;
       console.log('✅ Google login API response:', JSON.stringify(response, null, 2));
       
       if (!response || typeof response !== 'object') {
