@@ -38,22 +38,20 @@ class AuthService {
   }
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    return this.request('/api/auth/login', {
+    return this.request('/api/index', {
       method: 'POST',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        endpoint: 'auth/login',
+        method: 'POST',
+        ...credentials
+      }),
     });
   }
 
   async signup(credentials: SignupCredentials): Promise<AuthResponse | OTPResponse> {
-    if (credentials.password !== credentials.confirmPassword) {
-      throw new Error('Passwords do not match');
-    }
-
-    const { confirmPassword, ...signupData } = credentials;
-    return this.request('/api/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(signupData),
-    });
+    // For OTP-based signup, we just need email and name
+    // Password validation is removed as we use OTP verification
+    return this.sendOTP(credentials.email, credentials.name);
   }
 
   async validateToken(_token: string): Promise<User> {
@@ -125,16 +123,27 @@ class AuthService {
   }
 
   async sendOTP(email: string, name?: string): Promise<void> {
-    return this.request('/api/auth/send-otp', {
+    return this.request('/api/index', {
       method: 'POST',
-      body: JSON.stringify({ email, name }),
+      body: JSON.stringify({
+        endpoint: 'auth/send-otp',
+        method: 'POST',
+        email,
+        name
+      }),
     });
   }
 
   async verifyOTP(email: string, otp: string, userData: any): Promise<AuthResponse> {
-    return this.request('/api/auth/verify-otp', {
+    return this.request('/api/index', {
       method: 'POST',
-      body: JSON.stringify({ email, otp, userData }),
+      body: JSON.stringify({
+        endpoint: 'auth/verify-otp',
+        method: 'POST',
+        email,
+        otp,
+        userData
+      }),
     });
   }
 }
