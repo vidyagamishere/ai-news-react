@@ -19,6 +19,7 @@ export interface UserPreferences {
   newsletter_subscribed?: boolean;
   content_types: ContentType[];
   onboardingCompleted?: boolean;
+  onboarding_completed?: boolean;
 }
 
 export interface AITopic {

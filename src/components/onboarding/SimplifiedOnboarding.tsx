@@ -267,9 +267,6 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
               {selectedContentTypes.includes(contentType.id) && (
                 <Check className="selected-check" size={20} />
               )}
-              {contentType.default && (
-                <span className="default-badge">Recommended</span>
-              )}
             </button>
           ))}
         </div>
@@ -296,11 +293,6 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
                 )}
               </div>
               <p className="topic-description">{topic.description}</p>
-              {(topic as any).sources && (
-                <div className="topic-sources">
-                  <small>Sources: {(topic as any).sources.slice(0, 2).join(', ')}{(topic as any).sources.length > 2 ? '...' : ''}</small>
-                </div>
-              )}
             </button>
           ))}
         </div>
