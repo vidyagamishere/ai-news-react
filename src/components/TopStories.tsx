@@ -16,14 +16,8 @@ const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
       <div className="top-stories-empty">
         <div className="empty-state">
           <div className="empty-icon">📰</div>
-          <h3>Personalize Your Feed</h3>
-          <p>Select your AI interests to see personalized top stories here.</p>
-          <button 
-            onClick={() => navigate('/preferences')}
-            className="setup-btn"
-          >
-            Choose Topics
-          </button>
+          <h3>Loading AI News...</h3>
+          <p>Fetching the latest AI breakthroughs and developments.</p>
         </div>
       </div>
     );

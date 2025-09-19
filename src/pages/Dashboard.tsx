@@ -49,11 +49,9 @@ const Dashboard: React.FC = () => {
         setTimeout(() => reject(new Error('Request timeout after 10 seconds')), 10000)
       );
       
-      // Use personalized digest for authenticated users with preferences
-      const hasPreferences = user?.preferences?.topics?.some(topic => topic.selected);
-      const dataPromise = (user && hasPreferences) 
-        ? apiService.getPersonalizedDigest(refresh)
-        : apiService.getDigest(refresh);
+      // Always get general digest to ensure we have top stories
+      // Even for users without preferences, we want to show top stories
+      const dataPromise = apiService.getDigest(refresh);
       
       try {
         const data = await Promise.race([dataPromise, timeoutPromise]) as DigestResponse;
@@ -369,7 +367,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
               </div>
-              <TopStories stories={digest.topStories} />
+              <TopStories stories={digest.topStories?.slice(0, 3) || []} />
               
               {import.meta.env.VITE_ENABLE_ADS === 'true' && digest.topStories && digest.topStories.length > 0 && (
                 <Suspense fallback={<div style={{height: '90px', background: '#f5f5f5', borderRadius: '8px'}} />}>
