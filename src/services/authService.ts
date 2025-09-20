@@ -122,7 +122,7 @@ class AuthService {
     return response;
   }
 
-  async sendOTP(email: string, name?: string): Promise<void> {
+  async sendOTP(email: string, name?: string): Promise<OTPResponse> {
     return this.request('/api/index', {
       method: 'POST',
       body: JSON.stringify({

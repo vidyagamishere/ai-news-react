@@ -1,0 +1,93 @@
+{
+  "testSuite": "AI News Digest - Frontend E2E Tests",
+  "timestamp": "2025-09-19T22:35:15.336Z",
+  "summary": {
+    "total": 9,
+    "passed": 4,
+    "failed": 5,
+    "successRate": "44.4%"
+  },
+  "configuration": {
+    "frontendUrl": "https://ai-news-react.vercel.app"
+  },
+  "results": [
+    {
+      "name": "Landing Page Load",
+      "passed": false,
+      "details": {
+        "title": "Vidyagam AI News | Intelligence at Light Speed",
+        "heading": "Vidyagam",
+        "buttonCount": 0
+      },
+      "timestamp": "2025-09-19T22:34:12.543Z"
+    },
+    {
+      "name": "Navigation to Sign Up",
+      "passed": false,
+      "details": {
+        "error": "Waiting for selector `.cta-buttons .btn-primary` failed"
+      },
+      "timestamp": "2025-09-19T22:34:42.815Z"
+    },
+    {
+      "name": "Navigation to Sign In",
+      "passed": false,
+      "details": {
+        "error": "Waiting for selector `.cta-buttons .btn-ghost` failed"
+      },
+      "timestamp": "2025-09-19T22:35:13.005Z"
+    },
+    {
+      "name": "Sign Up Form Validation",
+      "passed": false,
+      "details": {
+        "error": "Cannot read properties of null (reading 'validationMessage')"
+      },
+      "timestamp": "2025-09-19T22:35:13.719Z"
+    },
+    {
+      "name": "Sign Up Flow - Complete",
+      "passed": false,
+      "details": {
+        "error": "No element found for selector: #name"
+      },
+      "timestamp": "2025-09-19T22:35:13.915Z"
+    },
+    {
+      "name": "Responsive Design - Mobile",
+      "passed": true,
+      "details": {
+        "viewport": "375x667"
+      },
+      "timestamp": "2025-09-19T22:35:14.348Z"
+    },
+    {
+      "name": "Responsive Design - Tablet",
+      "passed": true,
+      "details": {
+        "viewport": "768x1024"
+      },
+      "timestamp": "2025-09-19T22:35:14.822Z"
+    },
+    {
+      "name": "Responsive Design - Desktop",
+      "passed": true,
+      "details": {
+        "viewport": "1280x720"
+      },
+      "timestamp": "2025-09-19T22:35:15.064Z"
+    },
+    {
+      "name": "Responsive Design - 4K",
+      "passed": true,
+      "details": {
+        "viewport": "2560x1440"
+      },
+      "timestamp": "2025-09-19T22:35:15.281Z"
+    }
+  ],
+  "recommendations": [
+    "Review failed test cases and fix UI/UX issues",
+    "Fix navigation and routing issues"
+  ]
+}

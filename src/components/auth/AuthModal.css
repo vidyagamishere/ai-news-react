@@ -332,6 +332,18 @@ div[role="dialog"] {
   transform: none;
 }
 
+.auth-submit-secondary {
+  background: linear-gradient(135deg, #48bb78, #38a169) !important;
+  margin-top: 0.5rem !important;
+  font-size: 0.9rem !important;
+  padding: 0.875rem 1rem !important;
+}
+
+.auth-submit-secondary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
 /* Footer */
 .auth-footer {
   text-align: center;

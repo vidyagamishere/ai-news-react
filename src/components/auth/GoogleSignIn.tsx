@@ -40,7 +40,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
               callback: handleGoogleResponse,
               auto_select: false,
               cancel_on_tap_outside: true,
-              use_fedcm_for_prompt: true,
+              use_fedcm_for_prompt: false,
               context: 'signin'
             });
             console.log('Google Sign-In initialized successfully');
@@ -56,7 +56,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
           callback: handleGoogleResponse,
           auto_select: false,
           cancel_on_tap_outside: true,
-          use_fedcm_for_prompt: true,
+          use_fedcm_for_prompt: false,
           context: 'signin'
         });
         console.log('Google Sign-In re-initialized successfully');
@@ -113,9 +113,32 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess }) => {
       });
 
       if (window.google?.accounts?.id) {
-        console.log('Triggering Google One Tap prompt...');
-        // Simple One Tap prompt - no modal complexity
-        window.google.accounts.id.prompt();
+        console.log('Triggering Google Sign-In popup...');
+        // Use renderButton for more reliable popup authentication
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.display = 'none';
+        document.body.appendChild(buttonContainer);
+        
+        window.google.accounts.id.renderButton(buttonContainer, {
+          theme: 'outline',
+          size: 'large',
+          type: 'standard',
+          text: 'signin_with'
+        });
+        
+        // Programmatically click the hidden button to trigger popup
+        setTimeout(() => {
+          const googleButton = buttonContainer.querySelector('div[role="button"]');
+          if (googleButton) {
+            (googleButton as HTMLElement).click();
+          } else {
+            // Fallback to One Tap prompt
+            console.log('Falling back to One Tap prompt...');
+            window.google.accounts.id.prompt();
+          }
+          // Clean up
+          document.body.removeChild(buttonContainer);
+        }, 100);
       } else {
         console.error('Google Sign-In API not available');
         if (!window.google) {

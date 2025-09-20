@@ -23,7 +23,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isVisible, setIsVisible] = useState(false);
 
-  const { login, signup, loading, error, isAuthenticated, sendOTP } = useAuth();
+  const { login, loading, error, isAuthenticated, sendOTP, user } = useAuth();
   const navigate = useNavigate();
 
   // Animation on mount
@@ -34,17 +34,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
 
   // Close modal when authenticated and route appropriately
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user) {
       handleClose();
-      // Check if user has completed onboarding
-      const onboardingComplete = localStorage.getItem('onboardingComplete');
-      if (onboardingComplete === 'true') {
+      // Check if user has completed onboarding using backend preferences
+      const hasCompletedOnboarding = user.preferences?.onboarding_completed ||
+                                   localStorage.getItem('onboardingComplete') === 'true' ||
+                                   user.preferences?.topics?.some(t => t.selected) || false;
+      
+      if (hasCompletedOnboarding) {
         navigate('/dashboard');
       } else {
         navigate('/onboarding');
       }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -88,6 +91,54 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // For signup, only validate email and name (no password validation for OTP flow)
+    if (mode === 'signup') {
+      const errors: Record<string, string> = {};
+      
+      if (!formData.name.trim()) {
+        errors.name = 'Name is required';
+      }
+      
+      if (!formData.email.trim()) {
+        errors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = 'Please enter a valid email';
+      }
+      
+      if (!formData.acceptTerms) {
+        errors.acceptTerms = 'Please accept the terms';
+      }
+      
+      setFormErrors(errors);
+      
+      if (Object.keys(errors).length > 0) {
+        return;
+      }
+      
+      try {
+        // For signup, send OTP and include optional password for future logins
+        await sendOTP(formData.email, formData.name);
+        // Clear onboarding completion to trigger onboarding for new email signups
+        localStorage.removeItem('onboardingComplete');
+        
+        const userData = {
+          name: formData.name,
+          email: formData.email
+        };
+        
+        // Include password if provided for future password-based logins
+        if (formData.password && formData.password.length >= 6) {
+          userData.password = formData.password;
+        }
+        
+        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(userData)));
+      } catch (err) {
+        console.error('OTP sending error:', err);
+      }
+      return;
+    }
+    
+    // For signin, validate all fields
     const errors = validateForm();
     setFormErrors(errors);
     
@@ -96,24 +147,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
     }
     
     try {
-      if (mode === 'signin') {
-        await login({ email: formData.email, password: formData.password });
-      } else {
-        try {
-          await signup(formData);
-          // Clear onboarding completion to trigger onboarding for new email signups
-          localStorage.removeItem('onboardingComplete');
-          // Don't navigate here - let the useEffect handle it
-        } catch (signupError: any) {
-          if (signupError.message === 'OTP_VERIFICATION_REQUIRED') {
-            await sendOTP(formData.email, formData.name);
-            navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
-          } else {
-            throw signupError;
-          }
-        }
-      }
-    } catch (err) {
+      await login({ email: formData.email, password: formData.password });
+    } catch (err: any) {
       console.error('Authentication error:', err);
     }
   };
@@ -233,46 +268,63 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
               )}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="modal-password">Password</label>
-              <div className="input-wrapper">
-                <Lock className="input-icon" size={18} />
-                <input
-                  id="modal-password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder={isSignIn ? 'Enter your password' : 'Min 6 characters'}
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-              {formErrors.password && (
-                <div className="field-error">{formErrors.password}</div>
-              )}
-            </div>
-
-            {!isSignIn && (
+            {isSignIn && (
               <div className="form-group">
-                <label htmlFor="modal-confirmPassword">Confirm Password</label>
+                <label htmlFor="modal-password">Password</label>
                 <div className="input-wrapper">
                   <Lock className="input-icon" size={18} />
                   <input
-                    id="modal-confirmPassword"
+                    id="modal-password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
                   />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
-                {formErrors.confirmPassword && (
-                  <div className="field-error">{formErrors.confirmPassword}</div>
+                {formErrors.password && (
+                  <div className="field-error">{formErrors.password}</div>
                 )}
+              </div>
+            )}
+
+            {!isSignIn && (
+              <div className="form-group">
+                <label htmlFor="modal-password">Password (Optional)</label>
+                <div className="input-wrapper">
+                  <Lock className="input-icon" size={18} />
+                  <input
+                    id="modal-password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Set password for easy future access"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {formErrors.password && (
+                  <div className="field-error">{formErrors.password}</div>
+                )}
+              </div>
+            )}
+
+            {!isSignIn && (
+              <div className="signup-info">
+                <p className="otp-info">
+                  📧 We'll send a verification code to your email for secure access
+                </p>
               </div>
             )}
 
@@ -312,6 +364,34 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
                 : (isSignIn ? 'Sign In' : 'Create Account')
               }
             </button>
+
+            {isSignIn && (
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!formData.email.trim()) {
+                    setFormErrors({...formErrors, email: 'Email is required for email login'});
+                    return;
+                  }
+                  if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    setFormErrors({...formErrors, email: 'Please enter a valid email'});
+                    return;
+                  }
+                  try {
+                    await sendOTP(formData.email, '');
+                    navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&isLogin=true');
+                  } catch (err: any) {
+                    console.error('Email login error:', err);
+                    // Show error in the form instead of redirecting
+                    setFormErrors({...formErrors, email: err.message || 'Failed to send verification email'});
+                  }
+                }}
+                className="auth-submit auth-submit-secondary"
+                disabled={loading}
+              >
+                📧 Continue with Email (No Password)
+              </button>
+            )}
           </form>
 
           <div className="auth-footer">
