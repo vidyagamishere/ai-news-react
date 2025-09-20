@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Mail, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import GoogleSignIn from '../components/auth/GoogleSignIn';
 import '../components/auth/auth.css';
@@ -12,13 +12,9 @@ const Auth: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get('mode') === 'signup' ? 'signup' : 'signin';
   const [mode, setMode] = useState<AuthMode>(initialMode);
-  const [useOTP, setUseOTP] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: '',
-    confirmPassword: '',
     acceptTerms: false
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -47,24 +43,8 @@ const Auth: React.FC = () => {
       errors.email = 'Please enter a valid email address';
     }
     
-    if ((mode === 'signin' && !useOTP) || mode === 'signup') {
-      if (!formData.password) {
-        errors.password = 'Password is required';
-      } else if (mode === 'signup' && formData.password.length < 8) {
-        errors.password = 'Password must be at least 8 characters long';
-      }
-    }
-    
-    if (mode === 'signup') {
-      if (!formData.confirmPassword) {
-        errors.confirmPassword = 'Please confirm your password';
-      } else if (formData.password !== formData.confirmPassword) {
-        errors.confirmPassword = 'Passwords do not match';
-      }
-      
-      if (!formData.acceptTerms) {
-        errors.acceptTerms = 'You must accept the Terms of Service';
-      }
+    if (mode === 'signup' && !formData.acceptTerms) {
+      errors.acceptTerms = 'You must accept the Terms of Service';
     }
     
     return errors;
@@ -82,30 +62,13 @@ const Auth: React.FC = () => {
     
     try {
       if (mode === 'signin') {
-        if (useOTP) {
-          // Existing user wants OTP verification
-          await sendOTP(formData.email, '', 'signin');
-          navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify({name: '', email: formData.email})));
-        } else {
-          // Existing user with password
-          await login({ email: formData.email, password: formData.password });
-          navigate('/dashboard');
-        }
+        // Existing user - always use OTP verification
+        await sendOTP(formData.email, '', 'signin');
+        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify({name: '', email: formData.email})));
       } else {
-        // New user signup flow
-        try {
-          await signup(formData);
-          // If signup succeeds, user is logged in and goes to onboarding
-          navigate('/onboarding');
-        } catch (signupError: any) {
-          if (signupError.message === 'OTP_VERIFICATION_REQUIRED') {
-            // Backend requires OTP verification for new user
-            await sendOTP(formData.email, formData.name, 'signup');
-            navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
-          } else {
-            throw signupError;
-          }
-        }
+        // New user signup - always use OTP verification
+        await sendOTP(formData.email, formData.name, 'signup');
+        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
       }
     } catch (err: any) {
       // Handle specific authentication errors
@@ -163,12 +126,9 @@ const Auth: React.FC = () => {
 
   const switchMode = (newMode: AuthMode) => {
     setMode(newMode);
-    setUseOTP(false);
     setFormData({
       name: '',
       email: '',
-      password: '',
-      confirmPassword: '',
       acceptTerms: false
     });
     setFormErrors({});
@@ -283,52 +243,6 @@ const Auth: React.FC = () => {
               )}
             </div>
 
-            {((isSignIn && !useOTP) || isSignUp) && (
-              <div className="form-group">
-                <label htmlFor="password">{isSignUp ? 'Password' : 'Password'}</label>
-                <div className="input-wrapper">
-                  <Lock className="input-icon" size={18} />
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder={isSignUp ? 'Create a password (min 8 characters)' : 'Enter your password'}
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    required={(isSignIn && !useOTP) || isSignUp}
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {formErrors.password && (
-                  <div className="field-error">{formErrors.password}</div>
-                )}
-              </div>
-            )}
-
-            {isSignUp && (
-              <div className="form-group">
-                <label htmlFor="confirmPassword">Confirm Password</label>
-                <div className="input-wrapper">
-                  <Lock className="input-icon" size={18} />
-                  <input
-                    id="confirmPassword"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    required={isSignUp}
-                  />
-                </div>
-                {formErrors.confirmPassword && (
-                  <div className="field-error">{formErrors.confirmPassword}</div>
-                )}
-              </div>
-            )}
 
             {isSignUp && (
               <div className="form-group">
@@ -351,21 +265,6 @@ const Auth: React.FC = () => {
               </div>
             )}
 
-            {isSignIn && (
-              <div className="auth-options">
-                <div className="otp-option">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={useOTP}
-                      onChange={(e) => setUseOTP(e.target.checked)}
-                    />
-                    <span className="checkbox-checkmark"></span>
-                    Use OTP instead of password
-                  </label>
-                </div>
-              </div>
-            )}
 
             {error && (
               <div className="auth-error">
@@ -379,14 +278,8 @@ const Auth: React.FC = () => {
               disabled={loading}
             >
               {loading 
-                ? (isSignIn 
-                    ? (useOTP ? 'Sending OTP...' : 'Signing in...') 
-                    : 'Creating account...'
-                  ) 
-                : (isSignIn 
-                    ? (useOTP ? 'Get OTP' : 'Sign In') 
-                    : 'Create Account'
-                  )
+                ? (isSignIn ? 'Sending OTP...' : 'Sending OTP...')
+                : (isSignIn ? 'Get OTP to Sign In' : 'Get OTP to Sign Up')
               }
             </button>
           </form>
@@ -394,12 +287,6 @@ const Auth: React.FC = () => {
           <div className="auth-footer">
             {isSignIn ? (
               <>
-                {!useOTP && (
-                  <div className="auth-links">
-                    <Link to="/forgot-password">Forgot your password?</Link>
-                  </div>
-                )}
-                
                 <div className="auth-divider-footer">
                   <span>or</span>
                 </div>
