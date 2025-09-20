@@ -61,12 +61,16 @@ const Auth: React.FC = () => {
     }
     
     try {
+      console.log('🔍 Auth Debug:', { mode, email: formData.email, name: formData.name });
+      
       if (mode === 'signin') {
         // Existing user - always use OTP verification
+        console.log('📧 Sending OTP for signin mode');
         await sendOTP(formData.email, '', 'signin');
         navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify({name: '', email: formData.email})));
       } else {
         // New user signup - always use OTP verification
+        console.log('📧 Sending OTP for signup mode');
         await sendOTP(formData.email, formData.name, 'signup');
         navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
       }
