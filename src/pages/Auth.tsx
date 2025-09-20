@@ -19,7 +19,7 @@ const Auth: React.FC = () => {
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   
-  const { login, signup, loading, error, isAuthenticated, sendOTP } = useAuth();
+  const { loading, error, isAuthenticated, sendOTP } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
