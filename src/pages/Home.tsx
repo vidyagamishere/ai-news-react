@@ -11,14 +11,11 @@ import './Home.css';
 
 // Lazy load heavy components
 const ContentTabs = lazy(() => import('../components/content/ContentTabs'));
-const AuthModal = lazy(() => import('../components/auth/AuthModal'));
 
 const Home: React.FC = () => {
   const [digest, setDigest] = useState<DigestResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -112,9 +109,8 @@ const Home: React.FC = () => {
     }
   };
 
-  const openAuthModal = (mode: 'signin' | 'signup') => {
-    setAuthMode(mode);
-    setShowAuthModal(true);
+  const navigateToAuth = (mode: 'signin' | 'signup') => {
+    navigate(`/auth?mode=${mode}`);
   };
 
   useEffect(() => {
@@ -184,8 +180,8 @@ const Home: React.FC = () => {
         isLoading={loading}
         lastUpdated={undefined}
         showAuthButtons={true}
-        onSignInClick={() => openAuthModal('signin')}
-        onSignUpClick={() => openAuthModal('signup')}
+        onSignInClick={() => navigateToAuth('signin')}
+        onSignUpClick={() => navigateToAuth('signup')}
       />
 
       {/* Hero Section */}
@@ -199,7 +195,7 @@ const Home: React.FC = () => {
           
           <div className="hero-cta">
             <button 
-              onClick={() => openAuthModal('signup')}
+              onClick={() => navigateToAuth('signup')}
               className="cta-primary"
               aria-describedby="hero-heading"
             >
@@ -258,7 +254,7 @@ const Home: React.FC = () => {
                   userTier="preview" 
                   topStories={digest.topStories?.slice(0, Math.ceil((digest.topStories?.length || 0) * 0.5)) || []}
                   previewMode={true}
-                  onSignUpPrompt={() => openAuthModal('signup')}
+                  onSignUpPrompt={() => navigateToAuth('signup')}
                 />
               </Suspense>
             </section>
@@ -273,14 +269,14 @@ const Home: React.FC = () => {
                 </p>
                 <div className="cta-buttons" role="group" aria-labelledby="cta-heading">
                   <button 
-                    onClick={() => openAuthModal('signup')}
+                    onClick={() => navigateToAuth('signup')}
                     className="btn-cta-primary btn-large"
                     aria-describedby="cta-heading"
                   >
                     Get Started Free
                   </button>
                   <button 
-                    onClick={() => openAuthModal('signin')}
+                    onClick={() => navigateToAuth('signin')}
                     className="btn-cta-secondary btn-large"
                     aria-describedby="cta-heading"
                   >
@@ -307,16 +303,6 @@ const Home: React.FC = () => {
         </div>
       </footer>
 
-      {/* Auth Modal */}
-      {showAuthModal && (
-        <Suspense fallback={<div className="modal-backdrop" />}>
-          <AuthModal
-            mode={authMode}
-            onClose={() => setShowAuthModal(false)}
-            onSwitchMode={(mode) => setAuthMode(mode)}
-          />
-        </Suspense>
-      )}
     </div>
   );
 };

@@ -44,8 +44,16 @@ const OTPVerification: React.FC = () => {
     try {
       await verifyOTP(email, otp, userData);
       setVerificationStatus('success');
-      setMessage('Email verified successfully! Redirecting to onboarding...');
-      setTimeout(() => navigate('/onboarding'), 2000);
+      
+      // Check if user should skip onboarding (handled in AuthContext)
+      const onboardingComplete = localStorage.getItem('onboardingComplete');
+      if (onboardingComplete === 'true') {
+        setMessage('Welcome back! Redirecting to your dashboard...');
+        setTimeout(() => navigate('/dashboard'), 2000);
+      } else {
+        setMessage('Email verified successfully! Redirecting to onboarding...');
+        setTimeout(() => navigate('/onboarding'), 2000);
+      }
     } catch (error) {
       setVerificationStatus('error');
       setMessage('Invalid OTP. Please check and try again.');

@@ -12,6 +12,7 @@ const Auth: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get('mode') === 'signup' ? 'signup' : 'signin';
   const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [useOTP, setUseOTP] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -46,10 +47,12 @@ const Auth: React.FC = () => {
       errors.email = 'Please enter a valid email address';
     }
     
-    if (!formData.password) {
-      errors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters long';
+    if ((mode === 'signin' && !useOTP) || mode === 'signup') {
+      if (!formData.password) {
+        errors.password = 'Password is required';
+      } else if (mode === 'signup' && formData.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters long';
+      }
     }
     
     if (mode === 'signup') {
@@ -79,27 +82,69 @@ const Auth: React.FC = () => {
     
     try {
       if (mode === 'signin') {
-        await login({ email: formData.email, password: formData.password });
-        // Existing users go directly to dashboard
-        navigate('/dashboard');
+        if (useOTP) {
+          // Existing user wants OTP verification
+          await sendOTP(formData.email, '', 'signin');
+          navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify({name: '', email: formData.email})));
+        } else {
+          // Existing user with password
+          await login({ email: formData.email, password: formData.password });
+          navigate('/dashboard');
+        }
       } else {
+        // New user signup flow
         try {
           await signup(formData);
           // If signup succeeds, user is logged in and goes to onboarding
           navigate('/onboarding');
         } catch (signupError: any) {
           if (signupError.message === 'OTP_VERIFICATION_REQUIRED') {
-            // Backend requires OTP verification
-            await sendOTP(formData.email, formData.name);
+            // Backend requires OTP verification for new user
+            await sendOTP(formData.email, formData.name, 'signup');
             navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
           } else {
             throw signupError;
           }
         }
       }
-    } catch (err) {
-      // Error is handled in AuthContext
+    } catch (err: any) {
+      // Handle specific authentication errors
       console.error('Authentication error:', err);
+      
+      // Check for specific error codes from backend
+      if (err.error_code === 'EMAIL_EXISTS' && mode === 'signup') {
+        // User tried to signup with existing email - show detailed message
+        const message = err.message || 'An account with this email already exists. Please sign in instead.';
+        setFormErrors({ 
+          email: message
+        });
+        console.log('📧 Existing user signup blocked:', {
+          email: formData.email,
+          message: message,
+          options: err.detailed_instructions?.existing_user_options
+        });
+        // Switch to signin mode after showing the message
+        setTimeout(() => {
+          setMode('signin');
+          setFormErrors({});
+        }, 5000); // Increased to 5 seconds to read the message
+      } else if (err.error_code === 'EMAIL_NOT_FOUND' && mode === 'signin') {
+        // User tried to signin with non-existent email - show detailed message  
+        const message = err.message || 'No account found with this email. Please sign up first.';
+        setFormErrors({ 
+          email: message
+        });
+        console.log('📧 Non-existent user signin blocked:', {
+          email: formData.email,
+          message: message,
+          options: err.detailed_instructions?.new_user_options
+        });
+        // Switch to signup mode after showing the message
+        setTimeout(() => {
+          setMode('signup');
+          setFormErrors({});
+        }, 5000); // Increased to 5 seconds to read the message
+      }
     }
   };
 
@@ -118,6 +163,7 @@ const Auth: React.FC = () => {
 
   const switchMode = (newMode: AuthMode) => {
     setMode(newMode);
+    setUseOTP(false);
     setFormData({
       name: '',
       email: '',
@@ -129,6 +175,7 @@ const Auth: React.FC = () => {
   };
 
   const isSignIn = mode === 'signin';
+  const isSignUp = mode === 'signup';
 
   return (
     <div className="auth-page">
@@ -179,30 +226,12 @@ const Auth: React.FC = () => {
 
         <div className="auth-right-panel">
           <div className="auth-form-container">
-            {/* Mode Toggle */}
-            <div className="auth-toggle">
-              <button
-                type="button"
-                className={`toggle-btn ${isSignIn ? 'active' : ''}`}
-                onClick={() => switchMode('signin')}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                className={`toggle-btn ${!isSignIn ? 'active' : ''}`}
-                onClick={() => switchMode('signup')}
-              >
-                Sign Up
-              </button>
-            </div>
-
           <div className="auth-card-header">
-            <h2>{isSignIn ? 'Welcome back' : 'Join AI News Digest'}</h2>
+            <h2>{isSignIn ? 'Welcome back' : 'Join Vidyagam'}</h2>
             <p>
               {isSignIn 
-                ? 'Stay updated with the latest in AI' 
-                : 'Get personalized AI news delivered to your inbox'
+                ? 'Sign in to access your personalized AI intelligence dashboard' 
+                : 'Create your account to get started with premium AI intelligence'
               }
             </p>
           </div>
@@ -216,7 +245,7 @@ const Auth: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
-            {!isSignIn && (
+            {isSignUp && (
               <div className="form-group">
                 <label htmlFor="name">Full Name</label>
                 <div className="input-wrapper">
@@ -227,7 +256,7 @@ const Auth: React.FC = () => {
                     placeholder="Enter your full name"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    required={!isSignIn}
+                    required={isSignUp}
                   />
                 </div>
                 {formErrors.name && (
@@ -254,32 +283,34 @@ const Auth: React.FC = () => {
               )}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <div className="input-wrapper">
-                <Lock className="input-icon" size={18} />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder={isSignIn ? 'Enter your password' : 'Enter your password (min 8 characters)'}
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+            {((isSignIn && !useOTP) || isSignUp) && (
+              <div className="form-group">
+                <label htmlFor="password">{isSignUp ? 'Password' : 'Password'}</label>
+                <div className="input-wrapper">
+                  <Lock className="input-icon" size={18} />
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder={isSignUp ? 'Create a password (min 8 characters)' : 'Enter your password'}
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    required={(isSignIn && !useOTP) || isSignUp}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {formErrors.password && (
+                  <div className="field-error">{formErrors.password}</div>
+                )}
               </div>
-              {formErrors.password && (
-                <div className="field-error">{formErrors.password}</div>
-              )}
-            </div>
+            )}
 
-            {!isSignIn && (
+            {isSignUp && (
               <div className="form-group">
                 <label htmlFor="confirmPassword">Confirm Password</label>
                 <div className="input-wrapper">
@@ -290,7 +321,7 @@ const Auth: React.FC = () => {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    required={!isSignIn}
+                    required={isSignUp}
                   />
                 </div>
                 {formErrors.confirmPassword && (
@@ -299,7 +330,7 @@ const Auth: React.FC = () => {
               </div>
             )}
 
-            {!isSignIn && (
+            {isSignUp && (
               <div className="form-group">
                 <div className="terms-checkbox">
                   <label className="checkbox-label">
@@ -307,7 +338,7 @@ const Auth: React.FC = () => {
                       type="checkbox"
                       checked={formData.acceptTerms}
                       onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                      required={!isSignIn}
+                      required={isSignUp}
                     />
                     <span className="checkbox-checkmark"></span>
                     I accept the <Link to="/terms" target="_blank">Terms of Service</Link> and{' '}
@@ -317,6 +348,22 @@ const Auth: React.FC = () => {
                 {formErrors.acceptTerms && (
                   <div className="field-error">{formErrors.acceptTerms}</div>
                 )}
+              </div>
+            )}
+
+            {isSignIn && (
+              <div className="auth-options">
+                <div className="otp-option">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={useOTP}
+                      onChange={(e) => setUseOTP(e.target.checked)}
+                    />
+                    <span className="checkbox-checkmark"></span>
+                    Use OTP instead of password
+                  </label>
+                </div>
               </div>
             )}
 
@@ -332,8 +379,14 @@ const Auth: React.FC = () => {
               disabled={loading}
             >
               {loading 
-                ? (isSignIn ? 'Signing in...' : 'Creating account...') 
-                : (isSignIn ? 'Sign In' : 'Create Account')
+                ? (isSignIn 
+                    ? (useOTP ? 'Sending OTP...' : 'Signing in...') 
+                    : 'Creating account...'
+                  ) 
+                : (isSignIn 
+                    ? (useOTP ? 'Get OTP' : 'Sign In') 
+                    : 'Create Account'
+                  )
               }
             </button>
           </form>
@@ -341,20 +394,23 @@ const Auth: React.FC = () => {
           <div className="auth-footer">
             {isSignIn ? (
               <>
-                <p>
-                  Don't have an account?{' '}
-                  <button 
-                    type="button"
-                    onClick={() => switchMode('signup')} 
-                    className="auth-link-btn"
-                  >
-                    Create one here
-                  </button>
-                </p>
+                {!useOTP && (
+                  <div className="auth-links">
+                    <Link to="/forgot-password">Forgot your password?</Link>
+                  </div>
+                )}
                 
-                <div className="auth-links">
-                  <Link to="/forgot-password">Forgot your password?</Link>
+                <div className="auth-divider-footer">
+                  <span>or</span>
                 </div>
+                
+                <button 
+                  type="button"
+                  onClick={() => switchMode('signup')} 
+                  className="auth-link-btn auth-signup-link"
+                >
+                  New to Vidyagam? Create account →
+                </button>
               </>
             ) : (
               <>

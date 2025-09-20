@@ -121,7 +121,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitchMode }) =>
         // Clear onboarding completion to trigger onboarding for new email signups
         localStorage.removeItem('onboardingComplete');
         
-        const userData = {
+        const userData: any = {
           name: formData.name,
           email: formData.email
         };

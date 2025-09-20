@@ -10,7 +10,7 @@ interface AuthContextType extends AuthState {
   logout: () => void;
   updatePreferences: (preferences: Partial<User['preferences']>) => Promise<User>;
   upgradeSubscription: () => Promise<void>;
-  sendOTP: (email: string, name?: string) => Promise<void>;
+  sendOTP: (email: string, name?: string, authMode?: 'signin' | 'signup') => Promise<void>;
   verifyOTP: (email: string, otp: string, userData: any) => Promise<void>;
 }
 
@@ -348,9 +348,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const sendOTP = async (email: string, name?: string) => {
+  const sendOTP = async (email: string, name?: string, authMode: 'signin' | 'signup' = 'signin') => {
     try {
-      await authService.sendOTP(email, name);
+      await authService.sendOTP(email, name, authMode);
     } catch (error) {
       throw error;
     }
@@ -358,9 +358,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const verifyOTP = async (email: string, otp: string, userData: any) => {
     try {
-      const { user, token: authToken } = await authService.verifyOTP(email, otp, userData);
+      const response = await authService.verifyOTP(email, otp, userData) as any;
+      const { user, token: authToken, isUserExist } = response;
+      
       localStorage.setItem('authToken', authToken);
       localStorage.setItem('cachedUser', JSON.stringify(user));
+      
+      // Set onboarding status based on whether user exists and has completed onboarding
+      const hasCompletedOnboarding = user.preferences?.onboarding_completed === true;
+      const shouldSkipOnboarding = isUserExist && hasCompletedOnboarding;
+      
+      if (shouldSkipOnboarding) {
+        console.log('✅ Existing user with completed onboarding - skipping onboarding');
+        localStorage.setItem('onboardingComplete', 'true');
+      } else {
+        console.log('🔄 User needs onboarding - clearing completion flag');
+        localStorage.removeItem('onboardingComplete');
+      }
+      
       setAuthState({
         isAuthenticated: true,
         user,

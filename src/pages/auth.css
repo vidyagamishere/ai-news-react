@@ -48,6 +48,59 @@
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
+/* Additional auth styles for new flow */
+.auth-divider-footer {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.auth-divider-footer::before,
+.auth-divider-footer::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+  margin: 0 1rem;
+}
+
+.auth-divider-footer span {
+  color: var(--text-gray);
+  font-size: 0.875rem;
+}
+
+.auth-signup-link {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.auth-signup-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.auth-options {
+  margin: 1rem 0;
+}
+
+.otp-option {
+  margin-bottom: 0.5rem;
+}
+
+.otp-option .checkbox-label {
+  font-size: 0.875rem;
+  color: var(--text-gray);
+}
+
 .auth-message.error {
   background: rgba(239, 68, 68, 0.1);
   color: var(--error-red);
