@@ -190,8 +190,8 @@ const Auth: React.FC = () => {
             <h2>{isSignIn ? 'Welcome back' : 'Join Vidyagam'}</h2>
             <p>
               {isSignIn 
-                ? 'Sign in to access your personalized AI intelligence dashboard' 
-                : 'Create your account to get started with premium AI intelligence'
+                ? 'Enter your email to receive an OTP and access your dashboard' 
+                : 'Enter your email and name to get started - we\'ll send you an OTP to verify'
               }
             </p>
           </div>
@@ -201,7 +201,7 @@ const Auth: React.FC = () => {
           </div>
 
           <div className="auth-divider">
-            <span>or continue with email</span>
+            <span>or continue with email OTP</span>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
