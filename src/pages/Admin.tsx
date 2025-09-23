@@ -26,7 +26,7 @@ const Admin: React.FC = () => {
     category: 'other'
   });
 
-  const categories = ['company', 'research', 'news', 'blog', 'podcast', 'video', 'events', 'learn', 'other'];
+  const categories = ['company', 'research', 'news', 'blog', 'podcast', 'video', 'events', 'learning', 'demos', 'other'];
 
   useEffect(() => {
     fetchSources();

@@ -30,21 +30,26 @@ class AuthService {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(error.message || `Request failed: ${response.status}`);
+      const errorData = await response.json().catch(() => ({ message: 'Request failed' }));
+      
+      // Create enhanced error with all backend data preserved
+      const enhancedError = new Error(errorData.message || `Request failed: ${response.status}`);
+      (enhancedError as any).error_code = errorData.error_code;
+      (enhancedError as any).status = errorData.status || response.status;
+      (enhancedError as any).redirect_to_signin = errorData.redirect_to_signin;
+      (enhancedError as any).redirect_to_signup = errorData.redirect_to_signup;
+      (enhancedError as any).detailed_instructions = errorData.detailed_instructions;
+      
+      throw enhancedError;
     }
 
     return response.json();
   }
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    return this.request('/api/index', {
+    return this.request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({
-        endpoint: 'auth/login',
-        method: 'POST',
-        ...credentials
-      }),
+      body: JSON.stringify(credentials),
     });
   }
 
@@ -57,7 +62,7 @@ class AuthService {
   async validateToken(_token: string): Promise<User> {
     try {
       console.log('🔍 Validating token with API...');
-      const user = await this.request('/api/auth/profile');
+      const user = await this.request('/auth/profile');
       console.log('✅ Token validation successful');
       return user;
     } catch (error) {
@@ -72,13 +77,9 @@ class AuthService {
     console.log('🔗 Sending preferences update request:', preferences);
     
     try {
-      const response = await this.request('/api/index', {
-        method: 'POST',
-        body: JSON.stringify({
-          endpoint: 'auth/preferences',
-          method: 'PUT',
-          ...preferences
-        }),
+      const response = await this.request('/auth/preferences', {
+        method: 'PUT',
+        body: JSON.stringify(preferences),
       });
       console.log('🔗 Preferences update response:', response);
       return response;
@@ -88,7 +89,7 @@ class AuthService {
       // Fallback: If backend fails, get fresh user profile to check if it actually saved
       console.log('🔄 Attempting to fetch fresh profile as fallback...');
       try {
-        const freshProfile = await this.request('/api/index?endpoint=auth/profile');
+        const freshProfile = await this.request('/auth/profile');
         console.log('🔄 Fresh profile fetched:', freshProfile);
         return freshProfile;
       } catch (profileError) {
@@ -99,23 +100,43 @@ class AuthService {
   }
 
   async upgradeSubscription(): Promise<User> {
-    return this.request('/api/subscription/upgrade', {
+    return this.request('/subscription/upgrade', {
       method: 'POST',
     });
   }
 
   async getAvailableTopics(): Promise<AITopic[]> {
-    return this.request('/api/index?endpoint=auth/topics');
+    const response = await this.request('/topics');
+    // Handle new API structure with topics, user_roles, and content_types
+    if (response.topics && Array.isArray(response.topics)) {
+      return response.topics.map((topic: any) => ({
+        ...topic,
+        selected: false // Add selected property for compatibility
+      }));
+    }
+    // Fallback for old API structure
+    return Array.isArray(response) ? response : [];
+  }
+
+  async getUserRolesAndTopics(): Promise<{
+    user_roles: any[];
+    topics: AITopic[];
+    content_types: any[];
+  }> {
+    const response = await this.request('/topics');
+    return {
+      user_roles: response.user_roles || [],
+      topics: response.topics || [],
+      content_types: response.content_types || []
+    };
   }
 
   async googleLogin(idToken: string): Promise<AuthResponse> {
     console.log('Sending Google login request with token length:', idToken.length);
-    const response = await this.request('/api/index', {
+    const response = await this.request('/auth/google', {
       method: 'POST',
       body: JSON.stringify({ 
-        endpoint: 'auth/google',
-        method: 'POST',
-        id_token: idToken 
+        credential: idToken  // Backend expects 'credential' field, not 'id_token'
       }),
     });
     console.log('🔍 Google login API response:', response);
@@ -123,11 +144,9 @@ class AuthService {
   }
 
   async sendOTP(email: string, name?: string, authMode: 'signin' | 'signup' = 'signin'): Promise<OTPResponse> {
-    return this.request('/api/index', {
+    return this.request('/auth/send-otp', {
       method: 'POST',
       body: JSON.stringify({
-        endpoint: 'auth/send-otp',
-        method: 'POST',
         email,
         name,
         auth_mode: authMode
@@ -136,11 +155,9 @@ class AuthService {
   }
 
   async verifyOTP(email: string, otp: string, userData: any): Promise<AuthResponse> {
-    return this.request('/api/index', {
+    return this.request('/auth/verify-otp', {
       method: 'POST',
       body: JSON.stringify({
-        endpoint: 'auth/verify-otp',
-        method: 'POST',
         email,
         otp,
         userData

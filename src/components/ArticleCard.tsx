@@ -2,6 +2,7 @@ import React from 'react';
 import { ExternalLink, Clock, Star, Play, Headphones } from 'lucide-react';
 import type { Article } from '../services/api';
 import SmartImage from './SmartImage';
+import TopicLabels from './TopicLabels';
 
 interface ArticleCardProps {
   article: Article;
@@ -103,12 +104,21 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
         </p>
         
         <div className="article-footer">
-          <span className="read-time">{article.readTime}</span>
-          {article.rankingScore && (
-            <span className="ranking-score">
-              Ranking: {article.rankingScore.toFixed(1)}
-            </span>
-          )}
+          <div className="article-footer-meta">
+            <span className="read-time">{article.readTime}</span>
+            {article.rankingScore && (
+              <span className="ranking-score">
+                Ranking: {article.rankingScore.toFixed(1)}
+              </span>
+            )}
+          </div>
+          <TopicLabels 
+            topics={article.topics}
+            topic_names={article.topic_names}
+            topic_categories={article.topic_categories}
+            maxTopics={3}
+            size="small"
+          />
         </div>
       </div>
       

@@ -37,7 +37,8 @@ const CONTENT_TYPES: { id: ContentType; name: string; description: string }[] = 
   { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews' },
   { id: 'videos', name: 'Videos', description: 'Visual content and tutorials' },
   { id: 'events', name: 'Events', description: 'Conferences and webinars' },
-  { id: 'learning', name: 'Learning', description: 'Courses and educational resources' }
+  { id: 'learning', name: 'Learning', description: 'Courses and educational resources' },
+  { id: 'demos', name: 'Demos', description: 'Interactive demonstrations and showcases' }
 ];
 
 interface TopicSelectorProps {

@@ -284,7 +284,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!authState.user) throw new Error('User not authenticated');
     
     try {
-      console.log('🔄 AuthContext: Calling authService.updateUserPreferences');
+      console.log('🔄 AuthContext: Calling authService.updateUserPreferences with:', preferences);
       const updatedUser = await authService.updateUserPreferences(preferences);
       console.log('🔄 AuthContext: Received updated user:', updatedUser);
       

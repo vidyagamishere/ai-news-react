@@ -33,10 +33,11 @@ interface ContentTabsProps {
   archiveContent?: Record<string, any[]>;
   previewMode?: boolean;
   onSignUpPrompt?: () => void;
+  digestContent?: Record<string, any[]>;
 }
 
-export default function ContentTabs({ userTier, topStories = [], isArchive = false, archiveContent, previewMode = false, onSignUpPrompt }: ContentTabsProps) {
-  const { user } = useAuth();
+export default function ContentTabs({ userTier, topStories = [], isArchive = false, archiveContent, previewMode = false, onSignUpPrompt, digestContent }: ContentTabsProps) {
+  const { user, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('all_sources');
   const [contentTypes, setContentTypes] = useState<Record<string, ContentType>>({});
   const [content, setContent] = useState<Record<string, ContentResponse>>({});
@@ -51,7 +52,8 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
       'podcasts': 'Audio conversations with AI pioneers, startup founders, and technology leaders discussing emerging trends, challenges, and opportunities. Perfect for staying informed while commuting or multitasking.',
       'videos': 'Visual learning content including conference talks, technical tutorials, product demos, and expert interviews. Ideal for understanding complex AI concepts through demonstrations and visual explanations.',
       'events': 'Upcoming conferences, workshops, webinars, and networking opportunities in the AI community. Stay connected with the latest gatherings where breakthrough research and industry developments are first announced.',
-      'learn': 'Educational resources including courses, tutorials, research papers, and certification programs. Structured learning paths for advancing your AI knowledge from beginner to expert level.'
+      'learning': 'Educational resources including courses, tutorials, research papers, and certification programs. Structured learning paths for advancing your AI knowledge from beginner to expert level.',
+      'demos': 'Interactive demonstrations, live product showcases, and hands-on examples of AI applications in action. Experience cutting-edge AI tools and platforms through real-world demonstrations and proof-of-concepts.'
     };
     
     return summaries[contentType] || contentInfo.description || 'Discover the latest content in this category.';
@@ -69,7 +71,8 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
       'podcasts': (title, source) => `This engaging audio discussion from ${source} on "${title}" features expert insights on current AI developments and future predictions. Listeners will hear in-depth conversations about industry perspectives and professional experiences in the field. The podcast explores emerging trends and their potential impact on various sectors. Expert guests share valuable knowledge about challenges and opportunities in AI implementation. Ideal for gaining diverse viewpoints on the evolving artificial intelligence landscape.`,
       'videos': (title, source) => `This informative video content from ${source} about "${title}" provides detailed explanations and visual demonstrations of key AI concepts and applications. Viewers will see comprehensive coverage of technological implementations and practical use cases. The content includes expert commentary and real-world examples that illustrate complex topics. Visual learners will appreciate the clear presentations and step-by-step guidance provided. Essential viewing for understanding both theoretical foundations and practical applications.`,
       'events': (title, source) => `This upcoming event "${title}" hosted by ${source} offers valuable opportunities to connect with the AI community and learn from industry leaders at this significant gathering. Attendees will participate in discussions about cutting-edge developments and network with professionals across the field. The event features presentations from experts and researchers sharing their latest findings. Participants will gain insights into emerging trends and future directions in artificial intelligence. An excellent opportunity for professional development and industry networking.`,
-      'learn': (title, source) => `This educational resource from ${source} on "${title}" provides structured learning opportunities designed to advance understanding of AI concepts and practical applications. The content covers essential topics with comprehensive explanations and guided instruction. Learners will develop both theoretical knowledge and practical skills through well-designed curriculum. The resource includes examples and exercises that reinforce key concepts and principles. Perfect for building expertise in artificial intelligence technologies and methodologies.`
+      'learning': (title, source) => `This educational resource from ${source} on "${title}" provides structured learning opportunities designed to advance understanding of AI concepts and practical applications. The content covers essential topics with comprehensive explanations and guided instruction. Learners will develop both theoretical knowledge and practical skills through well-designed curriculum. The resource includes examples and exercises that reinforce key concepts and principles. Perfect for building expertise in artificial intelligence technologies and methodologies.`,
+      'demos': (title, source) => `This interactive demonstration from ${source} titled "${title}" showcases practical AI applications and live product capabilities through hands-on examples and real-world use cases. Viewers will experience cutting-edge AI tools in action and see step-by-step implementations of advanced technologies. The demo provides tangible insights into AI capabilities and their practical applications across various industries. Perfect for understanding how theoretical AI concepts translate into working solutions and marketable products.`
     };
     
     const generator = summaryTemplates[contentType] || summaryTemplates['all_sources'];
@@ -116,10 +119,15 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
         { title: 'Machine Learning Workshop: Hands-on Training', source: 'Tech Academy', url: 'https://www.meetup.com/topics/machine-learning/', published_date: new Date(Date.now() + 1728000000).toISOString() },
         { title: 'Neural Networks Meetup: Local Chapter', source: 'AI Meetups', url: 'https://www.meetup.com/topics/artificial-intelligence/', published_date: new Date(Date.now() + 864000000).toISOString() }
       ],
-      'learn': [
+      'learning': [
         { title: 'Complete Guide to Neural Networks: Beginner to Expert', source: 'AI Learning Hub', url: 'https://www.coursera.org/learn/neural-networks-deep-learning', published_date: new Date().toISOString() },
         { title: 'Advanced Machine Learning Certification Program', source: 'Tech University', url: 'https://www.edx.org/course/introduction-to-artificial-intelligence-ai', published_date: new Date(Date.now() - 86400000).toISOString() },
         { title: 'Python for AI: Comprehensive Tutorial Series', source: 'Code Academy', url: 'https://www.codecademy.com/learn/machine-learning', published_date: new Date(Date.now() - 172800000).toISOString() }
+      ],
+      'demos': [
+        { title: 'GPT-4 Live Demo: Advanced Language Understanding', source: 'OpenAI Showcase', url: 'https://openai.com/index/gpt-4/', published_date: new Date().toISOString() },
+        { title: 'Interactive Computer Vision Demo: Real-time Object Detection', source: 'Google AI', url: 'https://teachablemachine.withgoogle.com/', published_date: new Date(Date.now() - 86400000).toISOString() },
+        { title: 'AI Code Generation Demo: From Natural Language to Code', source: 'GitHub Copilot', url: 'https://github.com/features/copilot', published_date: new Date(Date.now() - 172800000).toISOString() }
       ]
     };
     
@@ -128,7 +136,7 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
 
   // Define tab order based on user preferences
   const getFilteredTabOrder = (): string[] => {
-    const defaultTabOrder = ['all_sources', 'blogs', 'podcasts', 'videos', 'events', 'learn'];
+    const defaultTabOrder = ['all_sources', 'blogs', 'podcasts', 'videos', 'events', 'learning', 'demos'];
     
     // Always show all_sources first
     const baseOrder = ['all_sources'];
@@ -183,7 +191,7 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
     return () => clearTimeout(timer);
   }, []);
 
-  // Load content for active tab (skip API calls in archive mode)
+  // Load content for active tab (prioritize digest content for authenticated users)
   useEffect(() => {
     if (isArchive && archiveContent) {
       // Use archive content directly
@@ -197,15 +205,52 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
         featured_sources: []
       };
       setContent(prev => ({ ...prev, [activeTab]: archiveResponse }));
+    } else if (digestContent && isAuthenticated && activeTab && contentTypesLoaded) {
+      // Use digest content for authenticated users (already filtered by preferences)
+      console.log(`📊 Using digest content for ${activeTab} - Articles available:`, digestContent);
+      
+      let articles: any[] = [];
+      if (activeTab === 'all_sources') {
+        // For all_sources, combine all content types
+        articles = [
+          ...(digestContent.blog || []),
+          ...(digestContent.audio || []),
+          ...(digestContent.video || [])
+        ];
+      } else if (activeTab === 'blogs') {
+        articles = digestContent.blog || [];
+      } else if (activeTab === 'podcasts') {
+        articles = digestContent.audio || [];
+      } else if (activeTab === 'videos') {
+        articles = digestContent.video || [];
+      } else if (activeTab === 'learning') {
+        articles = digestContent.learning || [];
+      } else if (activeTab === 'demos') {
+        articles = digestContent.demos || [];
+      }
+      
+      const digestResponse = {
+        content_type: activeTab,
+        content_info: contentTypes[activeTab] || { name: activeTab.replace('_', ' ').toUpperCase(), description: '', icon: '📄' },
+        articles: articles,
+        total: articles.length,
+        sources_available: articles.length > 0 ? Math.max(1, Math.floor(articles.length / 3)) : 0,
+        user_tier: userTier,
+        featured_sources: []
+      };
+      
+      console.log(`✅ Digest content loaded for ${activeTab}:`, articles.length, 'articles');
+      setContent(prev => ({ ...prev, [activeTab]: digestResponse }));
     } else if (!isArchive && activeTab && !content[activeTab] && !loading[activeTab] && contentTypesLoaded) {
-      // Only load content after content types are loaded and when tab is actively selected
+      // Only load content via API after content types are loaded and when tab is actively selected
+      // This is fallback for non-authenticated users or when digest content is not available
       loadContent(activeTab);
     }
-  }, [activeTab, isArchive, archiveContent, contentTypes, contentTypesLoaded]);
+  }, [activeTab, isArchive, archiveContent, digestContent, isAuthenticated, contentTypes, contentTypesLoaded]);
 
   const loadContentTypes = async () => {
     try {
-      const response: ContentTypesResponse = await apiService.get('/api/content-types');
+      const response: ContentTypesResponse = await apiService.get('content-types');
       setContentTypes(response.content_types);
       setContentTypesLoaded(true);
     } catch (err) {
@@ -235,7 +280,19 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
       setLoading(prev => ({ ...prev, [contentType]: true }));
       setError(null);
 
-      const response: ContentResponse = await apiService.get(`/api/content/${contentType}`);
+      console.log(`📡 Loading ${contentType} content - Authenticated: ${isAuthenticated}`);
+      
+      // Use authenticated endpoint for signed-in users to get personalized content
+      let response: ContentResponse;
+      if (isAuthenticated) {
+        // For authenticated users, use the callEndpoint method with auth
+        response = await apiService.callEndpoint(`content/${contentType}`, 'GET', {}, true);
+        console.log(`✅ Authenticated content loaded for ${contentType}:`, response.articles?.length || 0, 'articles');
+      } else {
+        // For non-authenticated users, use general endpoint
+        response = await apiService.get(`content/${contentType}`);
+        console.log(`📊 General content loaded for ${contentType}:`, response.articles?.length || 0, 'articles');
+      }
       
       // Sort articles by date (latest first)
       if (response.articles && response.articles.length > 0) {

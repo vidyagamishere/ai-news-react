@@ -2060,12 +2060,18 @@ body.mobile-menu-open {
 
 .article-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
   font-size: 0.75rem;
   color: var(--text-light);
   border-top: 1px solid var(--border-light);
   padding-top: 1rem;
+}
+
+.article-footer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .audio-player {

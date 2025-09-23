@@ -25,6 +25,10 @@ const Dashboard: React.FC = () => {
 
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  
+  // Check for force onboarding URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceOnboarding = urlParams.get('force-onboarding') === 'true';
 
   // Redirect to auth if not authenticated
   useEffect(() => {
@@ -49,9 +53,11 @@ const Dashboard: React.FC = () => {
         setTimeout(() => reject(new Error('Request timeout after 10 seconds')), 10000)
       );
       
-      // Always get general digest to ensure we have top stories
-      // Even for users without preferences, we want to show top stories
-      const dataPromise = apiService.getDigest(refresh);
+      // For authenticated users, get personalized digest to include auth token
+      // Fall back to general digest if personalized fails
+      const dataPromise = isAuthenticated 
+        ? apiService.getPersonalizedDigest(refresh)
+        : apiService.getDigest(refresh);
       
       try {
         const data = await Promise.race([dataPromise, timeoutPromise]) as DigestResponse;
@@ -60,6 +66,13 @@ const Dashboard: React.FC = () => {
         
         console.log('✅ Fresh data loaded successfully');
         
+        // Log personalization status
+        if ((data as any).personalized) {
+          console.log('✅ Personalized content loaded for authenticated user');
+        } else if (isAuthenticated) {
+          console.log('⚠️ Authenticated user but received general content');
+        }
+        
         // Log enhanced backend features
         if ((data as any).admin_features) {
           console.log('✅ Enhanced backend with admin validation active');
@@ -67,10 +80,26 @@ const Dashboard: React.FC = () => {
         if ((data as any).enhanced) {
           console.log('✅ Enhanced scraping with free AI sources active');
         }
-      } catch (timeoutErr) {
-        console.log('API timeout, loading fallback data...');
-        // Provide personalized fallback data
-        const fallbackData: DigestResponse = {
+      } catch (dataError: any) {
+        // If personalized digest fails for authenticated users, fall back to general digest
+        if (isAuthenticated && dataError && !dataError.message?.includes('timeout')) {
+          console.warn('⚠️ Personalized digest failed, falling back to general digest:', dataError);
+          try {
+            const fallbackData = await apiService.getDigest(refresh);
+            setDigest(fallbackData);
+            setLastRefresh(new Date());
+            console.log('✅ Fallback to general digest successful');
+            return;
+          } catch (fallbackError) {
+            console.error('❌ Both personalized and general digest failed:', fallbackError);
+          }
+        }
+        
+        // Handle timeout and other errors
+        if (dataError?.message?.includes('timeout')) {
+          console.log('API timeout, loading fallback data...');
+          // Provide personalized fallback data
+          const fallbackData: DigestResponse = {
           topStories: [
             {
               title: 'Latest Advances in Machine Learning Research',
@@ -115,17 +144,25 @@ const Dashboard: React.FC = () => {
         setDigest(fallbackData);
         // Don't show error message for cached content
         
-        // Continue trying to load real data in background
-        dataPromise.then(realData => {
-          setDigest(realData);
-          setError(null);
-          setLastRefresh(new Date());
-          console.log('Real data loaded after fallback:', realData);
-        }).catch(() => {
-          // Keep fallback data if real data fails
-          console.log('Continuing with fallback data');
-          setError(null); // Clear any error when using fallback
-        });
+          // Continue trying to load real data in background
+          const backgroundPromise = isAuthenticated 
+            ? apiService.getPersonalizedDigest(refresh)
+            : apiService.getDigest(refresh);
+            
+          backgroundPromise.then(realData => {
+            setDigest(realData);
+            setError(null);
+            setLastRefresh(new Date());
+            console.log('Real data loaded after fallback:', realData);
+          }).catch(() => {
+            // Keep fallback data if real data fails
+            console.log('Continuing with fallback data');
+            setError(null); // Clear any error when using fallback
+          });
+        } else {
+          // For non-timeout errors, show the error
+          throw dataError;
+        }
       }
     } catch (err) {
       console.error('Failed to fetch digest:', err);
@@ -168,21 +205,38 @@ const Dashboard: React.FC = () => {
       // }
 
       // For verified users, check onboarding status
-      const hasCompletedOnboarding = user.preferences?.onboarding_completed ||
-                                   localStorage.getItem('onboardingComplete') === 'true' ||
-                                   user.preferences?.topics?.some(t => t.selected) || false;
+      // Only check the backend flag - localStorage can be stale
+      const hasCompletedOnboarding = user.preferences?.onboarding_completed === true;
       
-      // Check if user has any personalization data (indicates they've used the app before)
-      const hasUserData = user.preferences?.newsletter_frequency || 
-                          user.preferences?.content_types?.length > 0 ||
-                          user.preferences?.email_notifications !== undefined;
+      // Check if user has meaningful personalization data (actual topic/role selections)
+      // Default settings don't count as "user data" - only custom selections do
+      const hasPersonalizationData = (user.preferences?.topics?.length || 0) > 0 ||
+                                     (user.preferences?.user_roles?.length || 0) > 0;
       
-      // Show onboarding for users without any previous data AND created recently (extended for Google users)
-      const needsOnboarding = !hasCompletedOnboarding && !hasUserData;
+      // Show onboarding for users without personalization data OR if forced via URL parameter
+      const needsOnboarding = forceOnboarding || (!hasCompletedOnboarding && !hasPersonalizationData);
+      
+      // Debug logging for onboarding decision
+      console.log('🧪 Onboarding decision debug:', {
+        forceOnboarding,
+        hasCompletedOnboarding,
+        hasPersonalizationData,
+        needsOnboarding,
+        onboarding_completed: user.preferences?.onboarding_completed,
+        topics_length: user.preferences?.topics?.length,
+        user_roles_length: user.preferences?.user_roles?.length,
+        topics_array: user.preferences?.topics,
+        user_roles_array: user.preferences?.user_roles,
+        showOnboarding_state: showOnboarding
+      });
       
       if (needsOnboarding) {
+        console.log('✅ Setting showOnboarding to true');
         setShowOnboarding(true);
         return;
+      } else {
+        console.log('❌ Skipping onboarding - user has completed or has data');
+        setShowOnboarding(false);
       }
     }
     
@@ -201,9 +255,7 @@ const Dashboard: React.FC = () => {
     if (user) {
       // Only show welcome for truly new users who haven't completed onboarding
       const isNewUser = new Date(user.createdAt).getTime() > Date.now() - (24 * 60 * 60 * 1000); // 24 hours
-      const hasCompletedOnboarding = user.preferences?.onboarding_completed ||
-                                   localStorage.getItem('onboardingComplete') === 'true' ||
-                                   user.preferences?.topics?.some(t => t.selected) || false;
+      const hasCompletedOnboarding = user.preferences?.onboarding_completed === true;
       
       if (isNewUser && !showOnboarding && !hasCompletedOnboarding) {
         setShowWelcome(true);
@@ -229,10 +281,20 @@ const Dashboard: React.FC = () => {
             onComplete={() => {
               setShowOnboarding(false);
               setShowWelcome(false);
+              // Clear force-onboarding parameter from URL
+              if (forceOnboarding) {
+                const newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+              }
             }}
             onSkip={() => {
               setShowOnboarding(false);
               setShowWelcome(false);
+              // Clear force-onboarding parameter from URL
+              if (forceOnboarding) {
+                const newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+              }
             }}
           />
         </Suspense>
@@ -382,7 +444,8 @@ const Dashboard: React.FC = () => {
               <Suspense fallback={<Loading message="Loading content tabs..." />}>
                 <ContentTabs 
                   userTier={user?.subscriptionTier || 'free'} 
-                  topStories={digest.topStories} 
+                  topStories={digest.topStories}
+                  digestContent={digest.content}
                 />
               </Suspense>
               

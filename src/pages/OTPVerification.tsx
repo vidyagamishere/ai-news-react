@@ -13,7 +13,12 @@ const OTPVerification: React.FC = () => {
   
   const email = searchParams.get('email') || '';
   const userDataParam = searchParams.get('userData') || '';
+  const authModeParam = searchParams.get('authMode') || '';
   const userData = userDataParam ? JSON.parse(decodeURIComponent(userDataParam)) : {};
+  
+  // Determine if this is signup or signin flow
+  const isSignupFlow = authModeParam === 'signup' || (userData.name && userData.name.trim() !== '');
+  const isSigninFlow = authModeParam === 'signin' || (!userData.name || userData.name.trim() === '');
   
   const { verifyOTP, sendOTP, loading } = useAuth();
   const navigate = useNavigate();
@@ -45,14 +50,31 @@ const OTPVerification: React.FC = () => {
       await verifyOTP(email, otp, userData);
       setVerificationStatus('success');
       
-      // Check if user should skip onboarding (handled in AuthContext)
-      const onboardingComplete = localStorage.getItem('onboardingComplete');
-      if (onboardingComplete === 'true') {
+      // Handle success based on auth flow type
+      if (isSigninFlow) {
+        // Signin flow - always go to dashboard (existing user)
         setMessage('Welcome back! Redirecting to your dashboard...');
         setTimeout(() => navigate('/dashboard'), 2000);
+      } else if (isSignupFlow) {
+        // Signup flow - check if onboarding needed
+        const onboardingComplete = localStorage.getItem('onboardingComplete');
+        if (onboardingComplete === 'true') {
+          setMessage('Account created! Redirecting to your dashboard...');
+          setTimeout(() => navigate('/dashboard'), 2000);
+        } else {
+          setMessage('Email verified successfully! Let\'s set up your preferences...');
+          setTimeout(() => navigate('/onboarding'), 2000);
+        }
       } else {
-        setMessage('Email verified successfully! Redirecting to onboarding...');
-        setTimeout(() => navigate('/onboarding'), 2000);
+        // Fallback - check onboarding status
+        const onboardingComplete = localStorage.getItem('onboardingComplete');
+        if (onboardingComplete === 'true') {
+          setMessage('Welcome back! Redirecting to your dashboard...');
+          setTimeout(() => navigate('/dashboard'), 2000);
+        } else {
+          setMessage('Email verified successfully! Redirecting to onboarding...');
+          setTimeout(() => navigate('/onboarding'), 2000);
+        }
       }
     } catch (error) {
       setVerificationStatus('error');
@@ -62,7 +84,10 @@ const OTPVerification: React.FC = () => {
 
   const handleResendOTP = async () => {
     try {
-      await sendOTP(email);
+      // Pass correct auth mode when resending OTP
+      const authMode = isSignupFlow ? 'signup' : 'signin';
+      const name = userData.name || '';
+      await sendOTP(email, name, authMode);
       setTimeLeft(600); // Reset timer
       setMessage('New OTP sent! Please check your email.');
       setVerificationStatus('pending');
@@ -115,8 +140,11 @@ const OTPVerification: React.FC = () => {
                 <div className="neural-icon">🧠</div>
                 <h1>Vidyagam</h1>
               </div>
-              <h2>Verify Your Email</h2>
-              <p>Enter the 6-digit code sent to your email to activate your Vidyagam account.</p>
+              <h2>{isSigninFlow ? 'Verify Your Identity' : 'Verify Your Email'}</h2>
+              <p>{isSigninFlow 
+                ? 'Enter the 6-digit code sent to your email to sign in to your account.'
+                : 'Enter the 6-digit code sent to your email to activate your Vidyagam account.'
+              }</p>
             </div>
           </div>
         </div>
@@ -165,7 +193,12 @@ const OTPVerification: React.FC = () => {
                 disabled={loading || verificationStatus === 'verifying' || otp.length !== 6}
                 className="auth-submit"
               >
-                {verificationStatus === 'verifying' ? 'Verifying...' : 'Verify Email'}
+                {verificationStatus === 'verifying' 
+                  ? 'Verifying...' 
+                  : isSigninFlow 
+                    ? 'Sign In' 
+                    : 'Verify Email'
+                }
               </button>
             </form>
 
@@ -190,10 +223,10 @@ const OTPVerification: React.FC = () => {
             <div className="auth-footer">
               <div className="auth-links">
                 <button 
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate(`/auth${isSignupFlow ? '?mode=signup' : ''}`)}
                   className="auth-link-btn"
                 >
-                  ← Back to Sign Up
+                  ← Back to {isSignupFlow ? 'Sign Up' : 'Sign In'}
                 </button>
               </div>
             </div>

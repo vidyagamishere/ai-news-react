@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, Link2 } from 'lucide-react';
 import type { TopStory } from '../services/api';
 import SmartImage from './SmartImage';
+import TopicLabels from './TopicLabels';
 
 interface TopStoriesProps {
   stories: TopStory[];
@@ -94,6 +95,14 @@ const TopStories: React.FC<TopStoriesProps> = ({ stories }) => {
                       <span>{story.significanceScore.toFixed(1)}</span>
                     </div>
                   </div>
+                  
+                  <TopicLabels 
+                    topics={story.topics}
+                    topic_names={story.topic_names}
+                    topic_categories={story.topic_categories}
+                    maxTopics={2}
+                    size="small"
+                  />
                 </div>
                 
                 <div className="story-right">

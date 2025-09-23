@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import SimplifiedOnboarding from '../components/onboarding/SimplifiedOnboarding';
+import ComprehensiveOnboarding from '../components/onboarding/ComprehensiveOnboarding';
 import Loading from '../components/Loading';
 import './onboarding.css';
 
@@ -32,7 +32,7 @@ const Onboarding: React.FC = () => {
 
   return (
     <div className="onboarding-page">
-      <SimplifiedOnboarding 
+      <ComprehensiveOnboarding 
         onComplete={handleComplete}
         onSkip={handleSkip}
       />

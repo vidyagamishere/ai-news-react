@@ -67,16 +67,23 @@ const Auth: React.FC = () => {
         // Existing user - always use OTP verification
         console.log('📧 Sending OTP for signin mode');
         await sendOTP(formData.email, '', 'signin');
-        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify({name: '', email: formData.email})));
+        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify({name: '', email: formData.email})) + '&authMode=signin');
       } else {
         // New user signup - always use OTP verification
         console.log('📧 Sending OTP for signup mode');
         await sendOTP(formData.email, formData.name, 'signup');
-        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)));
+        navigate('/verify-otp?email=' + encodeURIComponent(formData.email) + '&userData=' + encodeURIComponent(JSON.stringify(formData)) + '&authMode=signup');
       }
     } catch (err: any) {
       // Handle specific authentication errors
       console.error('Authentication error:', err);
+      console.log('🔍 Error details:', {
+        error_code: err.error_code,
+        message: err.message,
+        status: err.status,
+        redirect_to_signin: err.redirect_to_signin,
+        redirect_to_signup: err.redirect_to_signup
+      });
       
       // Check for specific error codes from backend
       if (err.error_code === 'EMAIL_EXISTS' && mode === 'signup') {
@@ -111,6 +118,31 @@ const Auth: React.FC = () => {
           setMode('signup');
           setFormErrors({});
         }, 5000); // Increased to 5 seconds to read the message
+      } else {
+        // Handle fallback cases - check error message content for known patterns
+        const errorMsg = err.message || '';
+        if (errorMsg.includes('Email ID already registered') && mode === 'signup') {
+          setFormErrors({ 
+            email: 'An account with this email already exists. Please sign in instead.'
+          });
+          setTimeout(() => {
+            setMode('signin');
+            setFormErrors({});
+          }, 5000);
+        } else if (errorMsg.includes('No account found') && mode === 'signin') {
+          setFormErrors({ 
+            email: 'No account found with this email. Please sign up first.'
+          });
+          setTimeout(() => {
+            setMode('signup');
+            setFormErrors({});
+          }, 5000);
+        } else {
+          // Generic error handling
+          setFormErrors({ 
+            email: errorMsg || 'An error occurred. Please try again.'
+          });
+        }
       }
     }
   };

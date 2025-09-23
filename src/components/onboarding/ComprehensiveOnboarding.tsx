@@ -34,7 +34,8 @@ const CONTENT_TYPES: { id: ContentType; name: string; description: string; icon:
   { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews', icon: '🎙️' },
   { id: 'videos', name: 'Videos', description: 'Visual content and tutorials', icon: '🎥' },
   { id: 'events', name: 'Events', description: 'Conferences and webinars', icon: '📅' },
-  { id: 'learning', name: 'Learning', description: 'Courses and educational resources', icon: '🎓' }
+  { id: 'learning', name: 'Learning', description: 'Courses and educational resources', icon: '🎓' },
+  { id: 'demos', name: 'Demos', description: 'Interactive demonstrations and showcases', icon: '🎮' }
 ];
 
 const NEWSLETTER_FREQUENCIES = [
@@ -77,7 +78,7 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
   // Step 3: Content Preferences
-  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles', 'podcasts', 'videos', 'events', 'learning']);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles', 'podcasts', 'videos', 'events', 'learning', 'demos']);
   const [newsletterFrequency, setNewsletterFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
   
   // Step 4: Notification Preferences
@@ -160,13 +161,14 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
           ...topic,
           selected: true
         })),
+        user_roles: [selectedRole], // Convert single role to array for backend
         content_types: selectedContentTypes,
         newsletter_frequency: newsletterFrequency,
         email_notifications: emailNotifications,
         breaking_news_alerts: breakingNewsAlerts,
         experience_level: selectedExperience,
         role_type: selectedRole,
-        onboardingCompleted: true
+        onboarding_completed: true // Use snake_case to match backend
       };
 
       await updatePreferences(preferences);

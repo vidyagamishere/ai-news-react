@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, User, Mail, Bell, Brain, Settings2, BookOpen, Save } from 'lucide-react';
+import { ChevronLeft, User, Mail, Bell, Brain, Settings2, BookOpen, Save, Briefcase, Star } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import type { ContentType } from '../types/auth';
 import Header from '../components/Header';
@@ -26,6 +26,12 @@ const Preferences: React.FC = () => {
   const [breakingNewsAlerts, setBreakingNewsAlerts] = useState(
     user?.preferences?.breaking_news_alerts || false
   );
+  const [selectedRole, setSelectedRole] = useState(
+    user?.preferences?.role_type || user?.preferences?.user_roles?.[0] || ''
+  );
+  const [selectedExperience, setSelectedExperience] = useState(
+    user?.preferences?.experience_level || ''
+  );
 
   const availableTopics = user?.preferences?.topics || [];
   const contentTypes = [
@@ -33,7 +39,24 @@ const Preferences: React.FC = () => {
     { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews', icon: '🎙️' },
     { id: 'videos', name: 'Videos', description: 'Visual content and tutorials', icon: '🎥' },
     { id: 'events', name: 'Events', description: 'Conferences and webinars', icon: '📅' },
-    { id: 'learning', name: 'Learning', description: 'Courses and educational resources', icon: '🎓' }
+    { id: 'learning', name: 'Learning', description: 'Courses and educational resources', icon: '🎓' },
+    { id: 'demos', name: 'Demos', description: 'Interactive demonstrations and showcases', icon: '🎮' }
+  ];
+
+  const experienceLevels = [
+    { id: 'beginner', name: 'Beginner', description: 'New to AI, want to learn basics', icon: '🌱' },
+    { id: 'intermediate', name: 'Intermediate', description: 'Some AI knowledge, want to stay updated', icon: '🚀' },
+    { id: 'advanced', name: 'Advanced', description: 'AI professional, need cutting-edge insights', icon: '⚡' },
+    { id: 'expert', name: 'Expert', description: 'AI researcher/leader, need comprehensive coverage', icon: '🎯' }
+  ];
+
+  const roleTypes = [
+    { id: 'developer', name: 'Developer', description: 'Software developer interested in AI tools', icon: '💻' },
+    { id: 'researcher', name: 'Researcher', description: 'Academic or industry researcher', icon: '🔬' },
+    { id: 'executive', name: 'Executive', description: 'Business leader exploring AI opportunities', icon: '👔' },
+    { id: 'student', name: 'Student', description: 'Learning AI/ML concepts and applications', icon: '🎓' },
+    { id: 'entrepreneur', name: 'Entrepreneur', description: 'Building AI-powered products or services', icon: '🚀' },
+    { id: 'enthusiast', name: 'Enthusiast', description: 'Passionate about AI developments', icon: '❤️' }
   ];
 
   const handleTopicToggle = (topicId: string) => {
@@ -67,7 +90,10 @@ const Preferences: React.FC = () => {
         topics: updatedTopics,
         content_types: selectedContentTypes as ContentType[],
         email_notifications: emailNotifications,
-        breaking_news_alerts: breakingNewsAlerts
+        breaking_news_alerts: breakingNewsAlerts,
+        role_type: selectedRole,
+        user_roles: selectedRole ? [selectedRole] : [],
+        experience_level: selectedExperience
       };
 
       await updatePreferences(newPreferences);
@@ -178,6 +204,64 @@ const Preferences: React.FC = () => {
                     <span className="topic-category">{topic.category}</span>
                     {selectedTopics.includes(topic.id) && (
                       <span className="topic-check">✓</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Professional Role Section */}
+            <div className="preferences-section">
+              <div className="section-header">
+                <Briefcase size={20} />
+                <h2>Professional Role</h2>
+              </div>
+              <p className="section-description">
+                Tell us about your professional background to get more relevant content
+              </p>
+              <div className="role-grid">
+                {roleTypes.map(role => (
+                  <button
+                    key={role.id}
+                    className={`role-card ${selectedRole === role.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedRole(role.id)}
+                  >
+                    <span className="role-icon">{role.icon}</span>
+                    <div className="role-info">
+                      <h4>{role.name}</h4>
+                      <p>{role.description}</p>
+                    </div>
+                    {selectedRole === role.id && (
+                      <span className="role-check">✓</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Experience Level Section */}
+            <div className="preferences-section">
+              <div className="section-header">
+                <Star size={20} />
+                <h2>AI Experience Level</h2>
+              </div>
+              <p className="section-description">
+                Help us tailor the complexity and depth of content to your experience
+              </p>
+              <div className="experience-grid">
+                {experienceLevels.map(level => (
+                  <button
+                    key={level.id}
+                    className={`experience-card ${selectedExperience === level.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedExperience(level.id)}
+                  >
+                    <span className="experience-icon">{level.icon}</span>
+                    <div className="experience-info">
+                      <h4>{level.name}</h4>
+                      <p>{level.description}</p>
+                    </div>
+                    {selectedExperience === level.id && (
+                      <span className="experience-check">✓</span>
                     )}
                   </button>
                 ))}

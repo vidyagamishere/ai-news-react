@@ -20,6 +20,9 @@ export interface UserPreferences {
   content_types: ContentType[];
   onboardingCompleted?: boolean;
   onboarding_completed?: boolean;
+  user_roles?: string[];  // Array of role IDs (novice, student, professional, executive)
+  role_type?: string;     // Single role type for backwards compatibility
+  experience_level?: string; // AI experience level (beginner, intermediate, advanced, expert)
 }
 
 export interface AITopic {
@@ -35,7 +38,7 @@ export interface AITopic {
   selected: boolean;
 }
 
-export type ContentType = 'articles' | 'podcasts' | 'videos' | 'events' | 'learning';
+export type ContentType = 'articles' | 'podcasts' | 'videos' | 'events' | 'learning' | 'demos';
 
 export interface AuthState {
   isAuthenticated: boolean;
