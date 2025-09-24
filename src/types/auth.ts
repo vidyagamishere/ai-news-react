@@ -9,6 +9,7 @@ export interface User {
   lastLoginAt: string;
   emailVerified?: boolean;
   emailVerifiedAt?: string;
+  is_admin?: boolean; // Admin flag for admin interface access
 }
 
 export interface UserPreferences {
