@@ -229,19 +229,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const isExistingUser = (response as any).isUserExist === true;
       const hasTopics = userWithPreferences.preferences?.topics && userWithPreferences.preferences.topics.length > 0;
       const hasCompletedOnboarding = userWithPreferences.preferences?.onboarding_completed === true;
+      const isAdmin = userWithPreferences.is_admin === true;
       
       console.log('🔍 User onboarding check:', {
         isExistingUser: (response as any).isUserExist,
         hasTopics,
         hasCompletedOnboarding,
+        isAdmin,
         topicsCount: userWithPreferences.preferences?.topics?.length || 0
       });
       
-      // Only existing users with topics and completed onboarding skip onboarding
-      const shouldSkipOnboarding = isExistingUser && hasTopics && hasCompletedOnboarding;
+      // Admin users always skip onboarding, or existing users with topics and completed onboarding
+      const shouldSkipOnboarding = isAdmin || (isExistingUser && hasTopics && hasCompletedOnboarding);
       
       if (shouldSkipOnboarding) {
-        console.log('✅ Existing user with preferences - skipping onboarding');
+        console.log(isAdmin ? '✅ Admin user - skipping onboarding' : '✅ Existing user with preferences - skipping onboarding');
         localStorage.setItem('onboardingComplete', 'true');
       } else {
         console.log('🔄 User needs onboarding - clearing completion flag');
@@ -366,10 +368,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Set onboarding status based on whether user exists and has completed onboarding
       const hasCompletedOnboarding = user.preferences?.onboarding_completed === true;
-      const shouldSkipOnboarding = isUserExist && hasCompletedOnboarding;
+      const isAdmin = user.is_admin === true;
+      const shouldSkipOnboarding = isAdmin || (isUserExist && hasCompletedOnboarding);
       
       if (shouldSkipOnboarding) {
-        console.log('✅ Existing user with completed onboarding - skipping onboarding');
+        console.log(isAdmin ? '✅ Admin user - skipping onboarding' : '✅ Existing user with completed onboarding - skipping onboarding');
         localStorage.setItem('onboardingComplete', 'true');
       } else {
         console.log('🔄 User needs onboarding - clearing completion flag');

@@ -41,15 +41,22 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-// Auto-redirect authenticated users from auth pages to dashboard
+// Auto-redirect authenticated users from auth pages to appropriate interface
 const AuthRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   
   if (loading) {
     return <Loading message="Loading..." />;
   }
   
   if (isAuthenticated) {
+    // Admin users go to admin interface
+    if (user?.is_admin) {
+      console.log('🔑 Authenticated admin user detected, redirecting to admin interface');
+      return <Navigate to="/admin" replace />;
+    }
+    
+    // Regular users go to dashboard (with onboarding check handled by HomeRoute)
     return <Navigate to="/dashboard" replace />;
   }
   
@@ -58,13 +65,19 @@ const AuthRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
 // Home Route Component - shows Home for non-authenticated, Dashboard for authenticated
 const HomeRoute: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   
   if (loading) {
     return <Loading message="Loading..." />;
   }
   
   if (isAuthenticated) {
+    // Admin users go directly to admin interface
+    if (user?.is_admin) {
+      console.log('🔑 Admin user detected, redirecting to admin interface');
+      return <Navigate to="/admin" replace />;
+    }
+    
     // Check if user has completed onboarding
     const onboardingComplete = localStorage.getItem('onboardingComplete');
     if (onboardingComplete === 'true') {
