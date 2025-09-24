@@ -287,15 +287,6 @@ const Dashboard: React.FC = () => {
                 window.history.replaceState({}, document.title, newUrl);
               }
             }}
-            onSkip={() => {
-              setShowOnboarding(false);
-              setShowWelcome(false);
-              // Clear force-onboarding parameter from URL
-              if (forceOnboarding) {
-                const newUrl = window.location.pathname + window.location.hash;
-                window.history.replaceState({}, document.title, newUrl);
-              }
-            }}
           />
         </Suspense>
       </div>
@@ -318,12 +309,6 @@ const Dashboard: React.FC = () => {
                 className="btn btn-primary"
               >
                 Get Started
-              </button>
-              <button 
-                onClick={() => setShowWelcome(false)}
-                className="btn btn-ghost"
-              >
-                Skip for now
               </button>
             </div>
           </div>

@@ -38,7 +38,7 @@ export interface AITopic {
   selected: boolean;
 }
 
-export type ContentType = 'articles' | 'podcasts' | 'videos' | 'events' | 'learning' | 'demos';
+export type ContentType = 'blogs' | 'podcasts' | 'videos' | 'events' | 'learning' | 'demos';
 
 export interface AuthState {
   isAuthenticated: boolean;

@@ -30,7 +30,7 @@ const CATEGORY_ICONS = {
 };
 
 const CONTENT_TYPES: { id: ContentType; name: string; description: string; icon: string }[] = [
-  { id: 'articles', name: 'Articles', description: 'In-depth analysis and news', icon: '📄' },
+  { id: 'blogs', name: 'Articles', description: 'In-depth analysis and news', icon: '📄' },
   { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews', icon: '🎙️' },
   { id: 'videos', name: 'Videos', description: 'Visual content and tutorials', icon: '🎥' },
   { id: 'events', name: 'Events', description: 'Conferences and webinars', icon: '📅' },
@@ -62,10 +62,9 @@ const ROLE_TYPES = [
 
 interface ComprehensiveOnboardingProps {
   onComplete: () => void;
-  onSkip?: () => void;
 }
 
-const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onComplete, onSkip }) => {
+const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   
@@ -78,7 +77,7 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
   // Step 3: Content Preferences
-  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles', 'podcasts', 'videos', 'events', 'learning', 'demos']);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['blogs', 'podcasts', 'videos', 'events', 'learning', 'demos']);
   const [newsletterFrequency, setNewsletterFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
   
   // Step 4: Notification Preferences
@@ -428,15 +427,6 @@ const ComprehensiveOnboarding: React.FC<ComprehensiveOnboardingProps> = ({ onCom
           </div>
 
           <div className="action-right">
-            {onSkip && currentStep === 1 && (
-              <button
-                onClick={onSkip}
-                className="btn btn-ghost"
-                disabled={loading}
-              >
-                Skip for now
-              </button>
-            )}
             <button
               onClick={handleNext}
               disabled={!canProceed() || loading}

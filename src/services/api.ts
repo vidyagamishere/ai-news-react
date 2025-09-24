@@ -147,7 +147,7 @@ export interface Article {
   source: string;
   time: string;
   impact: 'high' | 'medium' | 'low';
-  type: 'blog' | 'audio' | 'video';
+  type: 'blog' | 'audio' | 'video' | 'events' | 'learning' | 'demos';
   url: string;
   readTime: string;
   significanceScore: number;
@@ -197,6 +197,9 @@ export interface DigestResponse {
     blog: Article[];
     audio: Article[];
     video: Article[];
+    events: Article[];
+    learning: Article[];
+    demos: Article[];
   };
   timestamp: string;
   badge: string;

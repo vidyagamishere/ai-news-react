@@ -33,7 +33,7 @@ const CATEGORY_ICONS = {
 };
 
 const CONTENT_TYPES: { id: ContentType; name: string; description: string }[] = [
-  { id: 'articles', name: 'Articles', description: 'In-depth analysis and news' },
+  { id: 'blogs', name: 'Articles', description: 'In-depth analysis and news' },
   { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews' },
   { id: 'videos', name: 'Videos', description: 'Visual content and tutorials' },
   { id: 'events', name: 'Events', description: 'Conferences and webinars' },
@@ -43,13 +43,12 @@ const CONTENT_TYPES: { id: ContentType; name: string; description: string }[] = 
 
 interface TopicSelectorProps {
   onComplete: () => void;
-  onSkip?: () => void;
 }
 
-const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete, onSkip }) => {
+const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete }) => {
   const [availableTopics, setAvailableTopics] = useState<AITopic[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['articles']);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<ContentType[]>(['blogs']);
   const [newsletterFrequency, setNewsletterFrequency] = useState<'daily' | 'weekly'>('weekly');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -205,11 +204,6 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ onComplete, onSkip }) => 
           <button onClick={() => setStep(2)} className="btn btn-primary">
             Next: Content Preferences
           </button>
-          {onSkip && (
-            <button onClick={onSkip} className="btn btn-ghost">
-              Skip for now
-            </button>
-          )}
         </div>
       </div>
     );

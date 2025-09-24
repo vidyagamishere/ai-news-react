@@ -26,10 +26,9 @@ const ROLE_TYPES = [
 
 interface SimplifiedOnboardingProps {
   onComplete: () => void;
-  onSkip?: () => void;
 }
 
-const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete, onSkip }) => {
+const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +40,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
   
   // Step 2: Content Types & Topics
   const [availableContentTypes, setAvailableContentTypes] = useState<any[]>([]);
-  const [selectedContentTypes, setSelectedContentTypes] = useState<string[]>(['blogs', 'podcasts', 'videos']);
+  const [selectedContentTypes, setSelectedContentTypes] = useState<string[]>(['blogs', 'podcasts', 'videos', 'events', 'learning', 'demos']);
   const [availableTopics, setAvailableTopics] = useState<AITopic[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
@@ -91,7 +90,9 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
         { id: 'blogs', name: 'Blogs', description: 'Expert insights and articles', icon: '✍️', default: true },
         { id: 'podcasts', name: 'Podcasts', description: 'Audio content and interviews', icon: '🎧', default: true },
         { id: 'videos', name: 'Videos', description: 'Visual content and presentations', icon: '📹', default: true },
-        { id: 'newsletters', name: 'Newsletters', description: 'Daily and weekly digests', icon: '📬', default: false }
+        { id: 'events', name: 'Events', description: 'Conferences and webinars', icon: '📅', default: false },
+        { id: 'learning', name: 'Learning', description: 'Courses and educational resources', icon: '🎓', default: false },
+        { id: 'demos', name: 'Demos', description: 'Interactive demonstrations and showcases', icon: '🎮', default: false }
       ]);
       
       // Provide fallback topics
@@ -103,7 +104,7 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
         { id: 'ethics-safety', name: 'AI Ethics & Safety', category: 'ethics', selected: false, description: 'Responsible AI development' }
       ]);
       setSelectedTopics(['ai-research', 'machine-learning', 'industry-news']);
-      setSelectedContentTypes(['blogs', 'podcasts', 'videos']);
+      setSelectedContentTypes(['blogs', 'podcasts', 'videos', 'events', 'learning', 'demos']);
     }
   };
 
@@ -423,15 +424,6 @@ const SimplifiedOnboarding: React.FC<SimplifiedOnboardingProps> = ({ onComplete,
           </div>
 
           <div className="actions-right">
-            {onSkip && currentStep === 1 && (
-              <button
-                onClick={onSkip}
-                className="btn btn-ghost"
-                disabled={loading}
-              >
-                Skip for now
-              </button>
-            )}
             <button
               onClick={handleNext}
               disabled={!canProceed() || loading}

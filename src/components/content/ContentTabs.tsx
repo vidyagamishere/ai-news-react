@@ -215,7 +215,10 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
         articles = [
           ...(digestContent.blog || []),
           ...(digestContent.audio || []),
-          ...(digestContent.video || [])
+          ...(digestContent.video || []),
+          ...(digestContent.events || []),
+          ...(digestContent.learning || []),
+          ...(digestContent.demos || [])
         ];
       } else if (activeTab === 'blogs') {
         articles = digestContent.blog || [];
@@ -223,6 +226,8 @@ export default function ContentTabs({ userTier, topStories = [], isArchive = fal
         articles = digestContent.audio || [];
       } else if (activeTab === 'videos') {
         articles = digestContent.video || [];
+      } else if (activeTab === 'events') {
+        articles = digestContent.events || [];
       } else if (activeTab === 'learning') {
         articles = digestContent.learning || [];
       } else if (activeTab === 'demos') {

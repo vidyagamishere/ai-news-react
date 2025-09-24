@@ -21,11 +21,6 @@ const Onboarding: React.FC = () => {
     navigate('/dashboard');
   };
 
-  const handleSkip = () => {
-    localStorage.setItem('onboardingComplete', 'true');
-    navigate('/dashboard');
-  };
-
   if (!user) {
     return <Loading message="Loading..." />;
   }
@@ -34,7 +29,6 @@ const Onboarding: React.FC = () => {
     <div className="onboarding-page">
       <ComprehensiveOnboarding 
         onComplete={handleComplete}
-        onSkip={handleSkip}
       />
     </div>
   );
