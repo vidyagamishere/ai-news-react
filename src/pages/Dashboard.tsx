@@ -135,7 +135,10 @@ const Dashboard: React.FC = () => {
           content: {
             blog: [],
             audio: [],
-            video: []
+            video: [],
+            events: [],
+            learning: [],
+            demos: []
           },
           timestamp: new Date().toISOString(),
           badge: 'Loading'
