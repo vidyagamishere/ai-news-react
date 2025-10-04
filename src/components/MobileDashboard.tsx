@@ -42,13 +42,7 @@ interface PersonalizedFeedResponse {
   };
 }
 
-interface FilterOptions {
-  interests: string[];
-  content_types: string[];
-  publishers: string[];
-  time_filter: string;
-  search_query: string;
-}
+// FilterOptions interface removed - not used in current implementation
 
 const MobileDashboard: React.FC = () => {
   const [feedData, setFeedData] = useState<PersonalizedFeedResponse | null>(null);
@@ -66,7 +60,6 @@ const MobileDashboard: React.FC = () => {
   
   // Available options
   const [availableInterests, setAvailableInterests] = useState<string[]>([]);
-  const [availablePublishers, setAvailablePublishers] = useState<string[]>([]);
 
   // Detect screen size and set current screen
   useEffect(() => {
@@ -88,10 +81,7 @@ const MobileDashboard: React.FC = () => {
   // Load available options
   const loadAvailableOptions = useCallback(async () => {
     try {
-      const [interestsRes, publishersRes] = await Promise.all([
-        fetch('/api/v1/available-interests'),
-        fetch('/api/v1/available-publishers')
-      ]);
+      const interestsRes = await fetch('/api/v1/available-interests');
       
       if (interestsRes.ok) {
         const interestsData = await interestsRes.json();
@@ -100,11 +90,6 @@ const MobileDashboard: React.FC = () => {
         if (selectedInterests.length === 0 && interestsData.interests?.length > 0) {
           setSelectedInterests(interestsData.interests.slice(0, 3));
         }
-      }
-      
-      if (publishersRes.ok) {
-        const publishersData = await publishersRes.json();
-        setAvailablePublishers(publishersData.publishers || []);
       }
     } catch (error) {
       console.error('Failed to load available options:', error);
